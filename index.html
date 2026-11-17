@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Add Recipe — Voice Upsell Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0066ee; --brand-tint:#e3f4ff; --canvas:#ebebf0; --sunken:#f6f7f9; --surface:#fff;
+  --text:#000; --text2:#6c6c70; --divider:#bcbcc0; --subtle:#ebebf0; --ph:#99a5b2; --disabled:#bcbcc0; --inactive:#a2a2a2;
+  --success:#16d374; --amber:#9a5b00; --amber-bg:#fff4d6; --red:#e5484d;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Figtree",var(--font);
+  --top:env(safe-area-inset-top,0px); --bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);color:var(--text);background:#dedee4;display:flex;align-items:center;justify-content:center;min-height:100vh;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+input,textarea,select{font:inherit;color:inherit}
+svg{display:block;flex:none}
+.ic{display:inline-flex;flex:none}
+
+/* ---------- phone shell ---------- */
+.phone{position:relative;width:100vw;height:100vh;height:100dvh;background:var(--canvas);overflow:hidden}
+.status,.home-ind{display:none}
+@media (min-width:600px) and (min-height:780px){
+  .phone{--top:54px;--bottom:22px;width:393px;height:852px;border-radius:55px;box-shadow:0 0 0 11px #121214,0 0 0 13px #3b3b40,0 30px 80px rgba(0,0,0,.35)}
+  .status{display:block;position:absolute;top:0;left:0;right:0;height:54px;z-index:300;pointer-events:none}
+  .status .time{position:absolute;left:44.6px;top:18px;font-size:17px;line-height:22px;font-weight:600;letter-spacing:-.43px}
+  .status .ind{position:absolute;left:282px;top:22.5px}
+  .home-ind{display:block;position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#000;z-index:300;pointer-events:none}
+}
+
+/* ---------- screens & navigation ---------- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;transition:transform .36s cubic-bezier(.2,.85,.25,1)}
+.scr.off-right{transform:translateX(100%)}
+.scr.off-bottom{transform:translateY(100%)}
+.scr.behind{transform:translateX(-24%)}
+#sToday{z-index:1;background:linear-gradient(180deg,#e3f4ff 0%,#ebebf0 45%)}
+#sSearch{z-index:2;background:var(--canvas);box-shadow:-8px 0 24px rgba(0,0,0,.06)}
+#sAdd{z-index:3;background:var(--surface)}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.t-headline{font-size:17px;line-height:22px;font-weight:600;letter-spacing:-.43px}
+.t-body{font-size:17px;line-height:22px;letter-spacing:-.43px}
+.t-sub{font-size:15px;line-height:20px;letter-spacing:-.23px}
+.t-foot{font-size:13px;line-height:18px;letter-spacing:-.08px}
+.t-title3{font-size:20px;line-height:25px;font-weight:600;letter-spacing:-.45px}
+.press:active{opacity:.6}
+
+/* ---------- Today ---------- */
+.today-head{display:flex;align-items:center;justify-content:space-between;padding:20px 16px 8px}
+.date-pick{display:flex;align-items:center;gap:6px;font-size:28px;line-height:34px;font-weight:700;letter-spacing:.38px}
+.btn-prem{background:linear-gradient(90deg,#ffc446,#fae292);border-radius:999px;padding:8px 20px;font-size:15px;line-height:20px;font-weight:600;letter-spacing:-.23px;color:#000}
+.streak{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.days{display:flex;gap:10px}
+.day{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--text2)}
+.day i{width:32px;height:32px;border-radius:16px;background:var(--sunken);border:1px dashed var(--divider)}
+.vdiv{width:1px;height:36px;background:var(--divider)}
+.flame{position:relative;width:36px;height:44px}
+.flame .ic{position:absolute;left:2px;top:0}
+.flame b{position:absolute;left:9px;top:24px;width:18px;height:18px;border-radius:9px;background:#fff;display:grid;place-items:center;font-size:11px;line-height:13px;font-weight:600}
+.today-content{display:flex;flex-direction:column;gap:8px;padding:8px 16px calc(var(--bottom) + 110px)}
+.card{background:#fff;border-radius:20px;padding:20px 24px;display:flex;flex-direction:column;gap:12px;position:relative}
+.card .row2{display:flex;justify-content:space-between;align-items:baseline}
+.val{display:flex;gap:4px;align-items:baseline}
+.val .big{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.26px}
+.val .mid{font-size:17px;line-height:22px;font-weight:600;letter-spacing:-.43px}
+.val .goal{font-size:13px;line-height:18px;color:var(--text2);letter-spacing:-.08px}
+.track{height:8px;border-radius:4px;background:var(--subtle)}
+.macros{display:flex;gap:16px}
+.macros>div{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.swap{position:absolute;left:327px;top:10px}
+@media (max-width:420px){.swap{left:auto;right:10px}}
+.adslot{display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:8px}
+.app-ad{width:320px;max-width:100%;height:90px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 12px 0 20px}
+.app-ad .appicon{width:44px;height:44px;border-radius:10px;background:#6b5cf2;flex:none}
+.app-ad .copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.btn-primary-sm{background:var(--brand);color:#fff;border-radius:999px;padding:8px 20px;font-size:15px;line-height:20px;font-weight:600;letter-spacing:-.23px}
+.link-blue{color:var(--brand)}
+.meals-h{display:flex;justify-content:space-between;align-items:center;padding:16px 2px 0;font-weight:600}
+.meal{background:#fff;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.meal .name{flex:1}
+.meal .more{color:var(--inactive);font-size:13px;font-weight:600;letter-spacing:-.08px}
+.btn-tonal{background:var(--brand-tint);color:var(--brand);border-radius:999px;padding:8px 20px;font-size:15px;line-height:20px;font-weight:600;letter-spacing:-.23px}
+.mcard{background:#fff;border-radius:14px;overflow:hidden}
+.mc-hd{display:flex;justify-content:space-between;align-items:baseline;padding:15.7px 16.6px 0}
+.mc-t{font-family:var(--display);font-weight:700;font-size:21px;color:#0b0f1a}
+.mc-c{font-weight:700;font-size:17.5px;color:#0b0f1a}
+.mc-div{height:.75px;background:#dadbe0;margin:14px 16.6px 0}
+.sw.sw-row{border-radius:0;transition:height .26s ease,opacity .2s}
+.sw.sw-row .sw-del{border-radius:0}
+.sw.sw-row.gone{margin-top:0}
+.mi{display:flex;align-items:center;gap:12px;background:#fff;padding:14px 16.6px 13px}
+.mi-t{flex:1;min-width:0}
+.mi-n{display:flex;align-items:center;gap:6px;font-size:17.5px;letter-spacing:-.05px;color:#0b0f1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-s{font-size:15.5px;letter-spacing:-.05px;color:#6c6c70;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.mi-c{font-size:17.5px;color:#0b0f1a}
+.mc-ft{display:flex;justify-content:flex-end;padding:6px 16.6px 16px}
+.btn-logmore{background:#e1effc;color:#1468f0;border-radius:16.2px;height:32.4px;width:96.2px;font-size:13.75px;font-weight:600;text-align:center}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:calc(73px + var(--bottom));background:#fff;border-top:.5px solid var(--subtle);display:flex;justify-content:space-around;padding-top:10px}
+.tab{display:flex;flex-direction:column;align-items:center;gap:4px;width:72px;font-size:13px;line-height:18px;letter-spacing:-.08px;color:var(--text2)}
+.tab.on{color:#000}
+.fab{width:44.3px;height:44.3px;border-radius:999px;background:var(--brand);display:grid;place-items:center;margin-top:-1.5px}
+.fab svg{width:32px;height:32px}
+
+/* ---------- Food search / My Recipes ---------- */
+.nav{height:52px;position:relative;flex:none}
+.nav .lead{position:absolute;left:6px;top:4px;width:44px;height:44px;display:grid;place-items:center}
+.nav .trail{position:absolute;right:6px;top:4px;width:44px;height:44px;display:grid;place-items:center}
+.nav .ctr{position:absolute;left:50%;top:15px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.nav .picker{color:var(--brand)}
+.search-wrap{padding:4px 16px 0;flex:none}
+.searchf{height:42px;border:1px solid var(--divider);border-radius:999px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 16px}
+.searchf input{border:0;outline:0;flex:1;min-width:0;background:transparent;font-size:17px;line-height:22px;letter-spacing:-.43px}
+.searchf input::placeholder{color:var(--ph)}
+.searchf:focus-within{box-shadow:0 0 0 1.5px var(--brand);border-color:var(--brand)}
+.tabs{display:flex;gap:16px;padding:14px 16px 0;flex:none;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.utab{display:flex;flex-direction:column;gap:8px;white-space:nowrap}
+.utab i{display:block;height:2.5px;border-radius:1.25px}
+.utab.on span{font-weight:600}
+.utab.on i{background:#000}
+.tiles{display:flex;gap:8px;padding:16px 16px 0}
+.tile{flex:1;min-width:0;height:74px;background:#fff;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 8px;color:var(--brand);font-size:13px;line-height:18px;font-weight:600;letter-spacing:-.08px;white-space:nowrap}
+.list-h{display:flex;justify-content:space-between;align-items:center;padding:20px 16px 8px}
+.circ-btn{width:36px;height:36px;border-radius:999px;background:#fff;display:grid;place-items:center}
+.sortchip{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--subtle);border-radius:999px;padding:8px 14px 8px 12px}
+.rows{display:flex;flex-direction:column;gap:8px;padding:0 12px calc(var(--bottom) + 110px)}
+.frow{background:#fff;border-radius:16px;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px;transition:box-shadow .3s,background .6s}
+.frow .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.frow .nm{display:flex;align-items:center;gap:6px}
+.frow .dt{color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.addbtn{width:44px;height:44px;border-radius:999px;background:var(--sunken);display:grid;place-items:center;flex:none;transition:background .2s}
+.addbtn.added{background:var(--brand)}
+.frow.fresh{background:#eef5ff;box-shadow:inset 0 0 0 2px #9cc3ff}
+.newtag{font-size:11px;line-height:13px;font-weight:600;color:var(--brand);background:var(--brand-tint);border-radius:6px;padding:2px 6px}
+.sw{position:relative;border-radius:16px;overflow:hidden;transition:height .26s ease,margin .26s ease,opacity .2s}
+.sw-del{position:absolute;top:0;right:0;bottom:0;width:120px;border-radius:16px;background:#ff3b30;display:flex;align-items:center;justify-content:flex-end;padding-right:32px;visibility:hidden}
+.sw.reveal .sw-del{visibility:visible}
+.sw-fg{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .26s cubic-bezier(.2,.85,.25,1)}
+.sw.drag .sw-fg{transition:none}
+.sw.gone{opacity:0;margin-top:-8px}
+.empty{padding:48px 32px;text-align:center;color:var(--text2)}
+.qbar{position:absolute;left:12px;right:12px;bottom:calc(var(--bottom) + 2px);height:64px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 36px;box-shadow:0 1px 3px rgba(10,20,31,.04),0 4px 16px rgba(10,20,31,.08);z-index:5}
+.qbar button{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;line-height:13px;letter-spacing:.06px}
+@media (min-width:600px) and (min-height:780px){.qbar{bottom:24px}}
+
+/* ---------- Add Recipe ---------- */
+.topbar{background:var(--sunken);border-bottom:1px solid var(--subtle);padding-top:var(--top);flex:none}
+.nav .ttl{position:absolute;left:50%;top:15px;transform:translateX(-50%)}
+.adslot2{background:var(--canvas);display:flex;justify-content:center;flex:none}
+.banner{width:320px;height:50px;background:#fff;display:flex;align-items:center;gap:6px;padding:0 6px}
+.banner .copy{flex:1;min-width:0;display:flex;flex-direction:column}
+.banner .adv{font-size:11px;line-height:13px;color:var(--text2);letter-spacing:.06px}
+.banner .hl{font-size:13px;line-height:18px;letter-spacing:-.08px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .cta{display:flex;align-items:center;gap:4px;background:var(--brand);color:#fff;border-radius:999px;padding:6px 8px 6px 12px;font-size:13px;line-height:18px;font-weight:600;letter-spacing:-.08px}
+.sec-hd{background:var(--canvas);border-bottom:1px solid var(--subtle);height:44px;display:flex;align-items:flex-end;padding:0 16px 6px;color:var(--text2);font-size:15px;line-height:20px;letter-spacing:-.23px}
+.sec-hd.tall{height:48px}
+.frow2{background:#fff;border-bottom:1px solid var(--subtle);height:48px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;font-size:17px;line-height:22px;letter-spacing:-.43px}
+.frow2 input{border:0;outline:0;text-align:right;flex:1;min-width:0;background:transparent;font-size:17px;letter-spacing:-.43px}
+.frow2 input::placeholder{color:var(--disabled)}
+.frow2.invalid{background:#fff2f2}
+.frow2.invalid>span{color:var(--red)}
+.frow2.invalid input::placeholder{color:#f0a0a3}
+.trow{background:#fff;display:flex;align-items:center;justify-content:space-between;padding:8px 16px;min-height:54px}
+.trow .t1{font-size:15px;line-height:20px;letter-spacing:-.23px}
+.trow .t2{font-size:13px;line-height:18px;letter-spacing:-.08px}
+.switch{width:51px;height:31px;border-radius:15.5px;background:#e5e5ea;position:relative;transition:background .2s;flex:none}
+.switch::after{content:'';position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.15);transition:transform .2s}
+.switch[aria-checked=true]{background:var(--success)}
+.switch[aria-checked=true]::after{transform:translateX(20px)}
+.ta{display:block;width:100%;min-height:140px;border:0;outline:0;resize:none;padding:16px;font-size:16px;line-height:21px;letter-spacing:-.31px;background:#fff}
+.ta::placeholder{color:var(--disabled)}
+.ing{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 16px;border-bottom:1px solid var(--subtle);background:#fff}
+.ing .m{flex:1;min-width:0;display:flex;flex-direction:column}
+.ing .n{font-size:16px;font-weight:500;display:flex;align-items:center;gap:6px}
+.ing .a{font-size:13px;color:var(--text2)}
+.ing .c{font-size:15px;white-space:nowrap}
+.ing .c.unk{color:var(--amber);font-size:13px}
+.vtag{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:9px;background:var(--brand-tint);color:var(--brand)}
+.add-row{display:flex;align-items:center;gap:8px;color:var(--brand);font-weight:500;padding:14px 16px;width:100%;background:#fff;font-size:17px}
+.form-err{color:var(--red);font-size:13px;padding:8px 16px;background:#fff}
+.tot{padding:10px 16px;font-size:13px;color:var(--text2);text-align:right;background:#fff}
+
+/* ---------- sheets ---------- */
+.layer{position:absolute;inset:0;z-index:50;pointer-events:none}
+.backdrop{position:absolute;inset:0;background:rgba(0,0,0,.12);opacity:0;transition:opacity .25s}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;transform:translateY(105%);transition:transform .36s cubic-bezier(.2,.85,.25,1);max-height:calc(100% - var(--top) - 16px);overflow-y:auto;padding:8px 20px calc(var(--bottom) + 14px);box-shadow:0 -6px 24px rgba(0,0,0,.18)}
+.layer.open{pointer-events:auto}
+.layer.open .backdrop{opacity:1}
+.layer.open .sheet{transform:none}
+.grab{display:flex;justify-content:center;padding-bottom:10px}
+.grab i{width:36px;height:5px;border-radius:2.5px;background:#d1d3d9}
+/* upsell (from Figma "Half Sheet / AI Voice Upsell") */
+.up-hd{display:flex;align-items:center;justify-content:space-between}
+.eyebrow{display:inline-flex;align-items:center;gap:5px;background:#fff1c7;border-radius:12px;padding:4.5px 10px 4.5px 8px;color:#8a5a00;font-size:12.5px;font-weight:600;letter-spacing:.125px}
+.xbtn{width:30px;height:30px;border-radius:15px;background:#f0f1f4;display:grid;place-items:center}
+.up-h{font-family:var(--display);font-weight:700;font-size:22.5px;line-height:28px;letter-spacing:-.11px;color:#0b0f1a;margin:10px 0 6px}
+.up-b{font-size:15.5px;line-height:21px;color:#4a4d54;margin:0 0 14px}
+.demo{border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(155deg,#eef4ff 0%,#f5f1ff 71%)}
+.speech{display:flex;gap:10px;align-items:center}
+.orb{width:40px;height:40px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#3b8bff 0%,#0f55d6 71%);box-shadow:0 4px 10px rgba(20,102,240,.35);flex:none}
+.bubble{flex:1;min-width:0;background:#fff;border-radius:4px 14px 14px 14px;padding:9px 11px;display:flex;flex-direction:column;gap:6px}
+.bubble p{margin:0;font-style:italic;font-size:13.5px;line-height:18px;color:#3a3d45}
+.parsed{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.85);border-radius:10px;padding:7.5px 12px 7.5px 10px}
+.parsed .n{flex:1;font-size:14px;font-weight:500;color:#0b0f1a}
+.parsed .a{font-size:13.5px;color:#6c6c70}
+.parsed .c{font-size:13.5px;font-weight:600;color:#0b0f1a}
+.demo-ft{display:flex;justify-content:space-between;align-items:center;padding:2px 2px 0 4px;margin-top:-4px}
+.demo-ft span:first-child{font-size:12.5px;font-weight:500;color:#6c6c70}
+.speed{display:inline-flex;align-items:center;gap:3px;background:#fff4d6;border-radius:10px;padding:3px 8px 3px 6px;font-size:11.5px;font-weight:600;color:#9a5b00}
+.btn-gold{width:100%;height:52px;border-radius:26px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;background:linear-gradient(90deg,#ffc446,#fae292);font-family:var(--display);font-weight:700;font-size:17px;color:#111}
+.btn-gold:active{filter:brightness(.96)}
+.reassure{text-align:center;font-size:12.5px;color:#8a8d93;letter-spacing:.06px;margin-top:6px}
+.btn-tert{display:flex;width:100%;height:36px;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:#0b0f1a}
+.d-h{font-size:20px;margin:4px 0 6px;text-align:center}
+.d-p{font-size:15px;color:var(--text2);text-align:center;margin:0 0 18px}
+.btn-danger{width:100%;height:50px;border-radius:25px;background:#ffecec;color:var(--red);font-weight:600;font-size:17px;text-align:center}
+.btn-plain{width:100%;height:50px;font-weight:600;font-size:17px;text-align:center;margin-top:6px}
+.pw-list{list-style:none;padding:0;margin:4px 0 4px}
+.pw-list li{display:flex;gap:10px;align-items:center;font-size:16px;padding:7px 0}
+/* edit sheet */
+.e-head{display:flex;justify-content:space-between;align-items:center;margin:-4px -6px 14px}
+.e-head b{font-size:17px}
+.link{color:var(--brand);font-size:17px;padding:8px 6px}
+.link.strong{font-weight:600}
+.e-note{background:var(--amber-bg);color:#6b4a00;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.35;margin-bottom:14px}
+.e-lab{display:block;font-size:13px;color:var(--text2);margin:0 0 6px 2px}
+.e-inp{background:#f2f2f7;border-radius:12px;height:48px;display:flex;align-items:center;padding:0 14px;border:2px solid transparent}
+.e-inp.bad{border-color:#f3a6a8;background:#fff5f5}
+.e-inp input,.e-inp select{border:0;outline:0;background:transparent;width:100%;font-size:17px;height:100%}
+.e-sugg{margin:6px 0 10px}
+.sg{display:flex;justify-content:space-between;width:100%;padding:11px 4px;font-size:16px;border-bottom:1px solid #f0f0f3}
+.sg span{color:var(--text2);font-size:13px}
+.sg-none{font-size:13px;color:var(--text2);padding:8px 4px}
+.e-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.e-prev{font-size:14px;color:var(--text2);margin:12px 2px 4px}
+.e-prev .unk{color:var(--amber)}
+.e-remove{display:block;width:100%;text-align:center;color:var(--red);font-size:16px;font-weight:500;padding:14px 0 4px}
+
+/* ---------- voice flow ---------- */
+.voice{position:absolute;inset:0;z-index:40;background:#fff;display:flex;flex-direction:column;padding-top:var(--top);transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.85,.25,1)}
+.voice.open{transform:none}
+.vnav{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;flex:none}
+.vnav .l{font-size:17px;color:var(--brand);padding:0 10px;height:44px;min-width:70px}
+.vnav .sp{min-width:70px}
+.v-body{flex:1;overflow-y:auto;padding:8px 22px 20px;display:flex;flex-direction:column}
+.v-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+.v-center h2{font-family:var(--display);font-size:24px;margin:14px 0 4px;letter-spacing:-.2px}
+.v-center h3{font-size:20px;margin:16px 0 2px}
+.v-center p{font-size:16px;color:#4a4d54;line-height:1.45;margin:0 0 6px;max-width:310px}
+.v-msg{font-size:14px;color:var(--amber);background:var(--amber-bg);border-radius:10px;padding:8px 12px;margin-top:10px}
+.mic-big{width:104px;height:104px;border-radius:52px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#3b8bff 0%,#0f55d6 71%);box-shadow:0 12px 30px rgba(20,102,240,.35);margin-top:26px;position:relative}
+.mic-big svg{width:40px;height:40px}
+.mic-big:active{transform:scale(.97)}
+.mic-big.live::before,.mic-big.live::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(60,100,240,.45);animation:ring 1.8s ease-out infinite}
+.mic-big.live::after{animation-delay:.9s}
+@keyframes ring{from{transform:scale(1);opacity:1}to{transform:scale(1.6);opacity:0}}
+.v-hint{font-size:14px;color:var(--text2);margin-top:14px}
+.v-foot{flex:none;padding:12px 16px calc(var(--bottom) + 12px);border-top:1px solid #eeeef2;background:#fff;display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.v-foot .link{text-align:center}
+.btn-primary{height:52px;border-radius:26px;background:var(--brand);color:#fff;font-weight:600;font-size:17px;width:100%;text-align:center}
+.btn-primary:disabled{opacity:.4}
+.btn-secondary{height:50px;border-radius:25px;background:#eef3ff;color:var(--brand);font-weight:600;font-size:17px;width:100%;text-align:center}
+.listen-top{display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;color:var(--text2);margin:4px 0 18px}
+.rec-dot{width:9px;height:9px;border-radius:5px;background:#ff3b30;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.transcript{font-size:23px;line-height:1.38;font-weight:600;min-height:140px;letter-spacing:-.2px}
+.transcript .par{color:#9a9aa1}
+.transcript .ph{color:#c2c2c8}
+.wave{display:flex;align-items:center;justify-content:center;gap:4px;height:70px;margin:18px 0 6px}
+.wave i{display:block;width:5px;border-radius:3px;background:linear-gradient(#5a96ff,#1468f0);height:6px;transition:height .08s linear}
+.listen-mic{display:flex;justify-content:center}
+.listen-mic .mic-big{width:72px;height:72px;margin-top:6px}
+.listen-mic .mic-big svg{width:30px;height:30px}
+.spin{width:46px;height:46px;border-radius:50%;border:4px solid #e3e9ff;border-top-color:var(--brand);animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.steps{list-style:none;padding:0;margin:14px 0 0;text-align:left}
+.steps li{display:flex;align-items:center;gap:10px;font-size:15px;color:#a0a0a6;padding:6px 0}
+.steps li .sd{width:20px;height:20px;border-radius:10px;border:2px solid #d6d6db;display:grid;place-items:center;color:#fff}
+.steps li.done{color:var(--text)}
+.steps li.done .sd{background:#22c46b;border-color:#22c46b}
+.err-ic{width:64px;height:64px;border-radius:32px;display:grid;place-items:center;background:var(--amber-bg);color:var(--amber)}
+.err-ic svg{width:30px;height:30px}
+.said{background:#f5f6fa;border-radius:14px;padding:12px 14px;margin:2px 0 14px}
+.said-h{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);margin-bottom:4px}
+.said-h button{color:var(--brand);font-weight:600;font-size:14px;display:inline-flex;gap:5px;align-items:center}
+.said-t{font-size:15px;font-style:italic;color:#333;line-height:1.4;white-space:pre-line}
+.rv-sum{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:15px;font-weight:600;margin:0 2px 8px}
+.warn-t{color:var(--amber)}
+.rv-list{border-radius:14px;border:1px solid #ececf0;overflow:hidden}
+.rv-row{border-top:1px solid #ececf0}
+.rv-row:first-child{border-top:0}
+.rv-row.warn{background:#fffaf0}
+.rv-hit{display:flex;align-items:center;gap:12px;width:100%;padding:12px;text-align:left}
+.dot{width:22px;height:22px;border-radius:11px;display:grid;place-items:center;color:#fff;flex:none}
+.dot.ok{background:#22c46b}
+.dot.warn{background:#f2a100}
+.rv-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.rv-name{font-size:16px;font-weight:600}
+.rv-meta{font-size:13px;color:var(--text2);margin-top:2px}
+.rv-cal{font-size:15px;font-weight:600;white-space:nowrap}
+.rv-chev{color:#c4c4c9}
+.chip{margin:-4px 0 12px 46px;background:#fff;border:1px solid #f0d9a6;color:#6b4a00;border-radius:999px;padding:6px 12px;font-size:14px}
+.rv-add{display:flex;gap:8px;align-items:center;color:var(--brand);font-weight:500;font-size:16px;padding:14px 4px}
+.rv-total{display:flex;justify-content:space-between;font-size:14px;color:var(--text2);padding:0 4px 4px}
+.rv-total b{color:var(--text)}
+.toast{position:absolute;left:12px;right:12px;bottom:calc(var(--bottom) + 80px);z-index:70;background:#1c1c1e;color:#fff;border-radius:14px;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;transform:translateY(30px);opacity:0;transition:transform .3s,opacity .3s;pointer-events:none}
+.toast.show{transform:none;opacity:1;pointer-events:auto}
+.toast button{color:#ffd666;font-weight:600;white-space:nowrap}
+
+/* ---------- moderator panel (outside the phone) ---------- */
+.mod-btn.rec::after{content:'';position:absolute;top:3px;right:3px;width:10px;height:10px;border-radius:5px;background:#ff3b30;box-shadow:0 0 0 2px #dedee4;animation:blink 1.2s infinite}
+.rec{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;background:#f2f2f5;color:#55555c}
+.rec .rd{width:11px;height:11px;border-radius:6px;background:#b0b0b6;flex:none}
+.rec b{font-size:15px}
+.rec .rt{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:15px;font-weight:600}
+.rec.on{background:#ffeceb;color:#b3261e}
+.rec.on .rd{background:#ff3b30;animation:blink 1.2s infinite}
+.rec.ended{background:#eaf7ee;color:#1f6b33}
+.rec.ended .rd{background:#34c759}
+.p-btn.stop{background:#ff3b30;border-color:#ff3b30;color:#fff}
+.mod-btn{position:fixed;right:14px;bottom:14px;width:38px;height:38px;border-radius:19px;background:rgba(0,0,0,.07);color:#77777e;display:grid;place-items:center;z-index:900}
+@media (max-width:599px){.mod-btn{display:none}}
+.panel{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:#fff;z-index:1000;box-shadow:-10px 0 40px rgba(0,0,0,.2);transform:translateX(105%);transition:transform .3s;display:flex;flex-direction:column;font-size:14px;color:#222}
+.panel.open{transform:none}
+.p-head{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px;border-bottom:1px solid #eee}
+.p-head b{font-size:16px}
+.p-body{flex:1;overflow-y:auto;padding:4px 16px 40px}
+.p-body section{padding:12px 0;border-bottom:1px solid #f0f0f3}
+.p-body h4{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#8a8a90;margin:0 0 8px}
+.p-eng{font-size:13px;line-height:1.4;padding:8px 10px;border-radius:10px;background:#f2f6ff}
+.p-eng.warn{background:#fff4dc;color:#6b4a00}
+.p-hint,.p-sub{font-size:12px;color:#8a8a90;margin-top:6px}
+.p-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.p-row input{flex:1;min-width:120px}
+.panel input,.panel select,.panel textarea{border:1px solid #dcdce2;border-radius:8px;padding:7px 9px;font-size:14px;width:100%;background:#fff}
+.panel textarea{resize:vertical}
+.p-btn,.p-col button{border:1px solid #dcdce2;border-radius:8px;padding:7px 10px;font-size:13px;background:#fafafc;white-space:nowrap}
+.p-btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.p-btn.danger{color:var(--red);margin-top:8px}
+.p-col{display:flex;flex-direction:column;gap:6px}
+.p-col button{text-align:left}
+.p-tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.p-tile{background:#f6f6f9;border-radius:8px;padding:7px 9px}
+.p-tile span{display:block;font-size:11px;color:#8a8a90}
+.p-tile b{font-size:14px}
+.p-tile.yes b{color:#1f8a3b}
+.p-tile.bad b{color:var(--red)}
+.p-set{display:block;font-size:12px;color:#55555c;margin-bottom:10px}
+.p-set select,.p-set textarea{margin-top:4px}
+.p-check{display:flex;gap:8px;align-items:center;font-size:13px;margin-bottom:10px}
+.p-check input{width:auto}
+.p-card{background:#f6f6f9;border-radius:8px;padding:10px;font-family:var(--font);font-size:13px;white-space:pre-wrap;margin:0 0 6px}
+.p-log{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;max-height:320px;overflow-y:auto;border:1px solid #eee;border-radius:8px}
+.lg{display:grid;grid-template-columns:44px 1fr;gap:2px 8px;padding:5px 8px;border-top:1px solid #f2f2f4}
+.lg:first-child{border-top:0}
+.lg.err{background:#fff2f2}
+.lg.off{background:#f6f3ff}
+.lg-t{color:#999}
+.lg-e{font-weight:600}
+.lg-d{grid-column:2;color:#666;word-break:break-word}
+.p-export{margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:11px}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="status"><span class="time" id="clock">12:14</span><span class="ind" id="statusInd"></span></div>
+  <div class="scr" id="sToday"></div>
+  <div class="scr off-right" id="sSearch"></div>
+  <div class="scr off-bottom" id="sAdd"></div>
+  <div class="voice" id="voice"></div>
+  <div class="layer" id="layer"></div>
+  <div class="toast" id="toast"></div>
+  <div class="home-ind"></div>
+</div>
+
+<button class="mod-btn" id="modBtn" title="Moderator panel (Shift+M)" aria-label="Open moderator panel">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+</button>
+
+<aside class="panel" id="panel" aria-label="Moderator panel">
+  <div class="p-head"><b>Moderator panel</b><button class="p-btn" data-pact="close">Close</button></div>
+  <div class="p-body" id="pBody"></div>
+</aside>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const uid=()=>Math.random().toString(36).slice(2,9);
+
+/* ================= Icons (exported from the Figma file "Thesis" › Testing Flow 1) ================= */
+const FI={
+indicators:'<svg width="78" height="13" viewBox="0 0 78 13" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clipInd)"><path d="M2.2 8H1C0.447715 8 0 8.44772 0 9V11.5C0 12.0523 0.447715 12.5 1 12.5H2.2C2.75228 12.5 3.2 12.0523 3.2 11.5V9C3.2 8.44772 2.75228 8 2.2 8Z" fill="black"/><path d="M7.00005 5.69995H5.80005C5.24776 5.69995 4.80005 6.14767 4.80005 6.69995V11.5C4.80005 12.0522 5.24776 12.5 5.80005 12.5H7.00005C7.55233 12.5 8.00005 12.0522 8.00005 11.5V6.69995C8.00005 6.14767 7.55233 5.69995 7.00005 5.69995Z" fill="black"/><path d="M11.8 3.19995H10.6C10.0477 3.19995 9.59998 3.64767 9.59998 4.19995V11.5C9.59998 12.0522 10.0477 12.5 10.6 12.5H11.8C12.3523 12.5 12.8 12.0522 12.8 11.5V4.19995C12.8 3.64767 12.3523 3.19995 11.8 3.19995Z" fill="black"/><path d="M16.6 0.5H15.4C14.8477 0.5 14.4 0.947715 14.4 1.5V11.5C14.4 12.0523 14.8477 12.5 15.4 12.5H16.6C17.1523 12.5 17.6 12.0523 17.6 11.5V1.5C17.6 0.947715 17.1523 0.5 16.6 0.5Z" fill="black"/><path d="M28.3 4.89997C30.0927 3.15299 32.4969 2.17529 35 2.17529C37.5032 2.17529 39.9073 3.15299 41.7001 4.89997" stroke="black" stroke-width="2" stroke-linecap="round"/><path d="M31 7.59991C32.0664 6.54949 33.5032 5.96069 35 5.96069C36.4968 5.96069 37.9336 6.54949 39 7.59991" stroke="black" stroke-width="2" stroke-linecap="round"/><path d="M35 12.0999L32.9 9.99991C33.4608 9.45022 34.2148 9.14233 35 9.14233C35.7853 9.14233 36.5392 9.45022 37.1 9.99991L35 12.0999Z" fill="black"/><path d="M70.7 0.5H54.3C52.2013 0.5 50.5 2.20132 50.5 4.3V8.7C50.5 10.7987 52.2013 12.5 54.3 12.5H70.7C72.7987 12.5 74.5 10.7987 74.5 8.7V4.3C74.5 2.20132 72.7987 0.5 70.7 0.5Z" stroke="black"/><path d="M65.6 2H54.4C53.0745 2 52 3.07452 52 4.4V8.6C52 9.92548 53.0745 11 54.4 11H65.6C66.9255 11 68 9.92548 68 8.6V4.4C68 3.07452 66.9255 2 65.6 2Z" fill="black"/><path d="M76 4.5V8.5C76.8 8.2 77.4 7.4 77.4 6.5C77.4 5.6 76.8 4.8 76 4.5Z" fill="black"/></g><defs><clipPath id="clipInd"><rect width="78" height="13" fill="white"/></clipPath></defs></svg>',
+caretDown:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9H18L12 16L6 9Z" fill="black"/></svg>',
+flame:'<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 1C17 9 26 13 28 23C30 33 23 39 16 39C8.99998 39 1.99998 34 2.99998 25C3.99998 18 8.99998 15 9.99998 8C13 12 13 15 13 17C16 13 17 7 16 1Z" fill="#BCBCC0"/></svg>',
+swap:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clipSwap)"><path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#EBEBF0"/><path d="M7 10H17L14 7M11 17H7L10 20" stroke="black" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g><defs><clipPath id="clipSwap"><rect width="24" height="24" fill="white"/></clipPath></defs></svg>',
+dining:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 12.01C13.0055 12.01 13.01 12.0055 13.01 12C13.01 11.9945 13.0055 11.99 13 11.99C12.9945 11.99 12.99 11.9945 12.99 12C12.99 12.0055 12.9945 12.01 13 12.01Z" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 3V9C3 9.53043 3.21071 10.0391 3.58579 10.4142C3.96086 10.7893 4.46957 11 5 11" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 3V21" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 3V9C7 9.53043 6.78929 10.0391 6.41421 10.4142C6.03914 10.7893 5.53043 11 5 11" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 3V21" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 3C19.9391 3 18.9217 3.42143 18.1716 4.17157C17.4214 4.92172 17 5.93913 17 7V13H21" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+home:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3L21 10.5V20C21 20.2652 20.8946 20.5196 20.7071 20.7071C20.5196 20.8946 20.2652 21 20 21H15V15H9V21H4C3.73478 21 3.48043 20.8946 3.29289 20.7071C3.10536 20.5196 3 20.2652 3 20V10.5Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+plan:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 4H19C19.5304 4 20.0391 4.21071 20.4142 4.58579C20.7893 4.96086 21 5.46957 21 6V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V6C3 5.46957 3.21071 4.96086 3.58579 4.58579C3.96086 4.21071 4.46957 4 5 4Z" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 2V6" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 2V6" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10H21" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 14H8.01" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14H12.01" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 14H16.01" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 18H8.01" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 18H12.01" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+progress:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20V13H8V20H4Z" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 20V8H14V20H10Z" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 20V4H20V20H16Z" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+more:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H20" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12H20" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18H20" stroke="#A2A2A2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+fab:'<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 6.66663V25.3333" stroke="white" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.66663 16H25.3333" stroke="white" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+arrowLeft:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 12H4" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 19L4 12L11 5" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+pickerCaret:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H12L8 10.6667L4 6Z" fill="#0066EE"/></svg>',
+search:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16663 15.4167C12.6184 15.4167 15.4166 12.6185 15.4166 9.16675C15.4166 5.71497 12.6184 2.91675 9.16663 2.91675C5.71485 2.91675 2.91663 5.71497 2.91663 9.16675C2.91663 12.6185 5.71485 15.4167 9.16663 15.4167Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 17.5001L13.9166 13.9167" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+barcode:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H7" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V7" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 17V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H17" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V17" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 8V16" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 8V16" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 8V16" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 8V16" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+voiceLog:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C11.2044 2 10.4413 2.31607 9.87868 2.87868C9.31607 3.44129 9 4.20435 9 5V12C9 12.7956 9.31607 13.5587 9.87868 14.1213C10.4413 14.6839 11.2044 15 12 15C12.7956 15 13.5587 14.6839 14.1213 14.1213C14.6839 13.5587 15 12.7956 15 12V5C15 4.20435 14.6839 3.44129 14.1213 2.87868C13.5587 2.31607 12.7956 2 12 2Z" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 10V12C19 13.8565 18.2625 15.637 16.9497 16.9497C15.637 18.2625 13.8565 19 12 19C10.1435 19 8.36301 18.2625 7.05025 16.9497C5.7375 15.637 5 13.8565 5 12V10" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 19V22" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+mealScan:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16C13.933 16 15.5 14.433 15.5 12.5C15.5 10.567 13.933 9 12 9C10.067 9 8.5 10.567 8.5 12.5C8.5 14.433 10.067 16 12 16Z" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 6.5L15.5 5" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H7" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V7" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 17V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H17" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V17" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+quickAdd:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.5C15.7239 3.5 17.3772 4.18482 18.5962 5.40381C19.8152 6.62279 20.5 8.27609 20.5 10C20.5 11.7239 19.8152 13.3772 18.5962 14.5962C17.3772 15.8152 15.7239 16.5 14 16.5C12.2761 16.5 10.6228 15.8152 9.40381 14.5962C8.18482 13.3772 7.5 11.7239 7.5 10C7.5 8.27609 8.18482 6.62279 9.40381 5.40381C10.6228 4.18482 12.2761 3.5 14 3.5Z" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 7V13" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 10H17" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 15.5L3 21" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+filter:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 9C17.1046 9 18 8.10457 18 7C18 5.89543 17.1046 5 16 5C14.8954 5 14 5.89543 14 7C14 8.10457 14.8954 9 16 9Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 19C9.10457 19 10 18.1046 10 17C10 15.8954 9.10457 15 8 15C6.89543 15 6 15.8954 6 17C6 18.1046 6.89543 19 8 19Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7H14" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 7H21" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17H6" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 17H21" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+rowPlus:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 12H19" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+verified:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.6667 7.58331C11.6667 10.5 9.62504 11.9583 7.19837 12.8041C7.0713 12.8472 6.93327 12.8451 6.80754 12.7983C4.37504 11.9583 2.33337 10.5 2.33337 7.58331V3.49998C2.33337 3.34527 2.39483 3.19689 2.50423 3.0875C2.61362 2.9781 2.762 2.91664 2.91671 2.91664C4.08337 2.91664 5.54171 2.21664 6.55671 1.32998C6.68029 1.22439 6.8375 1.16638 7.00004 1.16638C7.16258 1.16638 7.31979 1.22439 7.44337 1.32998C8.46421 2.22248 9.91671 2.91664 11.0834 2.91664C11.2381 2.91664 11.3865 2.9781 11.4959 3.0875C11.6052 3.19689 11.6667 3.34527 11.6667 3.49998V7.58331Z" fill="#16D374"/><path d="M5.25 7.00004L6.41667 8.16671L8.75 5.83337" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+water:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.5C13.8565 21.5 15.637 20.7625 16.9497 19.4497C18.2625 18.137 19 16.3565 19 14.5C19 12.5 18 10.6 16 9C14 7.4 12.5 5 12 2.5C11.5 5 10 7.4 8 9C6 10.6 5 12.5 5 14.5C5 16.3565 5.7375 18.137 7.05025 19.4497C8.36301 20.7625 10.1435 21.5 12 21.5Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+weight:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 7H16.5L15 11H9L7.5 7Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11L13 8.5" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+exercise:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 14.5C9.16304 14.5 9.79893 14.2366 10.2678 13.7678C10.7366 13.2989 11 12.663 11 12C11 10.62 10.5 10 10 9C8.93 6.86 9.78 4.95 12 3C12.5 5.5 14 7.9 16 9.5C18 11.1 19 13 19 15C19 15.9193 18.8189 16.8295 18.4672 17.6788C18.1154 18.5281 17.5998 19.2997 16.9497 19.9497C16.2997 20.5998 15.5281 21.1154 14.6788 21.4672C13.8295 21.8189 12.9193 22 12 22C11.0807 22 10.1705 21.8189 9.32122 21.4672C8.47194 21.1154 7.70026 20.5998 7.05025 19.9497C6.40024 19.2997 5.88463 18.5281 5.53284 17.6788C5.18106 16.8295 5 15.9193 5 15C5 13.85 5.43 12.71 6 12C6 12.663 6.26339 13.2989 6.73223 13.7678C7.20107 14.2366 7.83696 14.5 8.5 14.5Z" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+discover:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3.5H17C17.3978 3.5 17.7794 3.65804 18.0607 3.93934C18.342 4.22064 18.5 4.60218 18.5 5V20.5H6.5C6.10218 20.5 5.72064 20.342 5.43934 20.0607C5.15804 19.7794 5 19.3978 5 19V3.5Z" stroke="#0066EE" stroke-width="1.75" stroke-linejoin="round"/><path d="M11.3 13.3C12.9569 13.3 14.3 11.9569 14.3 10.3C14.3 8.64319 12.9569 7.30005 11.3 7.30005C9.64319 7.30005 8.30005 8.64319 8.30005 10.3C8.30005 11.9569 9.64319 13.3 11.3 13.3Z" stroke="#0066EE" stroke-width="1.75"/><path d="M13.5 12.5L15.7 14.7" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round"/></svg>',
+import:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7893 18.5304 20 18 20H9" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round"/><path d="M3 12H14M10 16L14 12L10 8" stroke="#0066EE" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+sort:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.66675 4.66663H13.3334M4.66675 7.99996H11.3334M6.66675 11.3333H9.33341" stroke="black" stroke-width="1.75" stroke-linecap="round"/></svg>',
+close:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6L18 18" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+arrowRight:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12H20M14 18L20 12L14 6" stroke="black" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+adChoices:'<svg width="10" height="26" viewBox="0 0 10 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 2L8 7L1 12V2Z" stroke="#00AECD" stroke-width="1.4"/><path d="M2.99995 18.3C3.71792 18.3 4.29995 17.7179 4.29995 17C4.29995 16.282 3.71792 15.7 2.99995 15.7C2.28198 15.7 1.69995 16.282 1.69995 17C1.69995 17.7179 2.28198 18.3 2.99995 18.3Z" fill="#00AECD"/><path d="M2.99995 22.2999C3.71792 22.2999 4.29995 21.7179 4.29995 21C4.29995 20.282 3.71792 19.7 2.99995 19.7C2.28198 19.7 1.69995 20.282 1.69995 21C1.69995 21.7179 2.28198 22.2999 2.99995 22.2999Z" fill="#00AECD"/><path d="M3 26C3.55228 26 4 25.5523 4 25C4 24.4477 3.55228 24 3 24C2.44772 24 2 24.4477 2 25C2 25.5523 2.44772 26 3 26Z" fill="#00AECD"/></svg>',
+chevronRight:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.25 10.5L8.75 7L5.25 3.5" stroke="white" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+crown:'<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.625 4.33337L4.0625 6.50004L6.5 2.70837L8.9375 6.50004L11.375 4.33337L10.2917 9.75004H2.70833L1.625 4.33337Z" fill="#B7791F"/><path d="M9.74992 10.4H3.24992C2.95076 10.4 2.70825 10.6425 2.70825 10.9417C2.70825 11.2408 2.95076 11.4834 3.24992 11.4834H9.74992C10.0491 11.4834 10.2916 11.2408 10.2916 10.9417C10.2916 10.6425 10.0491 10.4 9.74992 10.4Z" fill="#B7791F"/></svg>',
+x:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.08325 4.08337L9.91659 9.91671M9.91659 4.08337L4.08325 9.91671" stroke="#5A5D66" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+micOrb:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.83325 9.16667C4.83325 10.537 5.3776 11.8511 6.34653 12.8201C7.31547 13.789 8.62963 14.3333 9.99992 14.3333M9.99992 14.3333C11.3702 14.3333 12.6844 13.789 13.6533 12.8201C14.6222 11.8511 15.1666 10.537 15.1666 9.16667M9.99992 14.3333V17.5M9.99992 2.5C9.33688 2.5 8.70099 2.76339 8.23215 3.23223C7.76331 3.70107 7.49992 4.33696 7.49992 5V9.16667C7.49992 9.82971 7.76331 10.4656 8.23215 10.9344C8.70099 11.4033 9.33688 11.6667 9.99992 11.6667C10.663 11.6667 11.2988 11.4033 11.7677 10.9344C12.2365 10.4656 12.4999 9.82971 12.4999 9.16667V5C12.4999 4.33696 12.2365 3.70107 11.7677 3.23223C11.2988 2.76339 10.663 2.5 9.99992 2.5Z" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+waveform:'<svg width="54" height="12" viewBox="0 0 54 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5.5C2 4.94772 1.55228 4.5 1 4.5C0.447715 4.5 0 4.94772 0 5.5V6.5C0 7.05228 0.447715 7.5 1 7.5C1.55228 7.5 2 7.05228 2 6.5V5.5Z" fill="#1468F0"/><path d="M6 3.5C6 2.94772 5.55228 2.5 5 2.5C4.44772 2.5 4 2.94772 4 3.5V8.5C4 9.05228 4.44772 9.5 5 9.5C5.55228 9.5 6 9.05228 6 8.5V3.5Z" fill="#1468F0"/><path d="M10 1.5C10 0.947715 9.55228 0.5 9 0.5C8.44772 0.5 8 0.947715 8 1.5V10.5C8 11.0523 8.44772 11.5 9 11.5C9.55228 11.5 10 11.0523 10 10.5V1.5Z" fill="#1468F0"/><path d="M14 4C14 3.44772 13.5523 3 13 3C12.4477 3 12 3.44772 12 4V8C12 8.55228 12.4477 9 13 9C13.5523 9 14 8.55228 14 8V4Z" fill="#1468F0"/><path d="M18 2.5C18 1.94772 17.5523 1.5 17 1.5C16.4477 1.5 16 1.94772 16 2.5V9.5C16 10.0523 16.4477 10.5 17 10.5C17.5523 10.5 18 10.0523 18 9.5V2.5Z" fill="#1468F0"/><path d="M22 5C22 4.44772 21.5523 4 21 4C20.4477 4 20 4.44772 20 5V7C20 7.55228 20.4477 8 21 8C21.5523 8 22 7.55228 22 7V5Z" fill="#1468F0"/><path d="M26 2C26 1.44772 25.5523 1 25 1C24.4477 1 24 1.44772 24 2V10C24 10.5523 24.4477 11 25 11C25.5523 11 26 10.5523 26 10V2Z" fill="#1468F0"/><path d="M30 3.5C30 2.94772 29.5523 2.5 29 2.5C28.4477 2.5 28 2.94772 28 3.5V8.5C28 9.05228 28.4477 9.5 29 9.5C29.5523 9.5 30 9.05228 30 8.5V3.5Z" fill="#1468F0"/><path d="M34 5.5C34 4.94772 33.5523 4.5 33 4.5C32.4477 4.5 32 4.94772 32 5.5V6.5C32 7.05228 32.4477 7.5 33 7.5C33.5523 7.5 34 7.05228 34 6.5V5.5Z" fill="#1468F0"/><path d="M38 3C38 2.44772 37.5523 2 37 2C36.4477 2 36 2.44772 36 3V9C36 9.55228 36.4477 10 37 10C37.5523 10 38 9.55228 38 9V3Z" fill="#1468F0"/><path d="M42 4.5C42 3.94772 41.5523 3.5 41 3.5C40.4477 3.5 40 3.94772 40 4.5V7.5C40 8.05228 40.4477 8.5 41 8.5C41.5523 8.5 42 8.05228 42 7.5V4.5Z" fill="#1468F0" fill-opacity="0.35"/><path d="M46 2.5C46 1.94772 45.5523 1.5 45 1.5C44.4477 1.5 44 1.94772 44 2.5V9.5C44 10.0523 44.4477 10.5 45 10.5C45.5523 10.5 46 10.0523 46 9.5V2.5Z" fill="#1468F0" fill-opacity="0.35"/><path d="M50 4C50 3.44772 49.5523 3 49 3C48.4477 3 48 3.44772 48 4V8C48 8.55228 48.4477 9 49 9C49.5523 9 50 8.55228 50 8V4Z" fill="#1468F0" fill-opacity="0.35"/><path d="M54 5.5C54 4.94772 53.5523 4.5 53 4.5C52.4477 4.5 52 4.94772 52 5.5V6.5C52 7.05228 52.4477 7.5 53 7.5C53.5523 7.5 54 7.05228 54 6.5V5.5Z" fill="#1468F0" fill-opacity="0.35"/></svg>',
+check:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00008 15.3333C12.0502 15.3333 15.3334 12.05 15.3334 7.99996C15.3334 3.94987 12.0502 0.666626 8.00008 0.666626C3.94999 0.666626 0.666748 3.94987 0.666748 7.99996C0.666748 12.05 3.94999 15.3333 8.00008 15.3333Z" fill="#22C46B"/><path d="M4.66675 8.2L6.93341 10.4L11.3334 6" stroke="white" stroke-width="1.73333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+bolt:'<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.1875 0.916626L2.0625 6.18746H5.04167L4.58333 10.0833L8.9375 4.81246H5.95833L6.1875 0.916626Z" fill="#E59A0B"/></svg>',
+micBtn:'<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.59155 8.70833C4.59155 10.0101 5.10868 11.2586 6.02917 12.179C6.94966 13.0995 8.19812 13.6167 9.49989 13.6167M9.49989 13.6167C10.8017 13.6167 12.0501 13.0995 12.9706 12.179C13.8911 11.2586 14.4082 10.0101 14.4082 8.70833M9.49989 13.6167V16.625M9.49989 2.375C8.87 2.375 8.26591 2.62522 7.82051 3.07062C7.37511 3.51602 7.12489 4.12011 7.12489 4.75V8.70833C7.12489 9.33822 7.37511 9.94231 7.82051 10.3877C8.26591 10.8331 8.87 11.0833 9.49989 11.0833C10.1298 11.0833 10.7339 10.8331 11.1793 10.3877C11.6247 9.94231 11.8749 9.33822 11.8749 8.70833V4.75C11.8749 4.12011 11.6247 3.51602 11.1793 3.07062C10.7339 2.62522 10.1298 2.375 9.49989 2.375Z" stroke="#111111" stroke-width="1.6625" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+/* Small UI glyphs for screens not in the Figma frame (voice flow, review, edit sheet) */
+const IC={
+ micW:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
+ micSm:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
+ check:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+ checkW:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+ checkG:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c46b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+ warn:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M12 6v8M12 18.5v.01"/></svg>',
+ plus:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+ chev:'<svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 1.5l5 5-5 5"/></svg>',
+ redo:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg>',
+ micOff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M9 9v2a3 3 0 0 0 5.1 2.1M15 10V6a3 3 0 0 0-5.7-1.3M5.5 11a6.5 6.5 0 0 0 10.6 5M18.5 11a6.4 6.4 0 0 1-.4 2.2M12 17.5V21"/></svg>',
+ trash:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
+ ear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6 6 0 1 1 12 0c0 3.5-3 4.5-3 7.5a3 3 0 0 1-6 0"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-1.5 3"/></svg>'
+};
+const fi=(k,cls)=>`<span class="ic ${cls||''}">${FI[k]}</span>`;
+
+/* ================= Food database (approximate calories) ================= */
+const F=(id,name,k,g,def,aliases,pc)=>({id,name,k,g,def,aliases,pc});
+const FOODS=[
+F('toor-dal','Toor dal',343,{cup:200},['cup',1],['toor dal','tur dal','tuvar dal','toor daal','toor dahl','tour dal','tor dal','arhar dal','pigeon peas','dal','daal','dahl','toor']),
+F('moong-dal','Moong dal',347,{cup:200},['cup',1],['moong dal','mung dal','moong daal','mung beans','moong']),
+F('masoor-dal','Masoor dal (red lentils)',352,{cup:190},['cup',1],['masoor dal','masoor daal','red lentils','lentils','lentil','masoor']),
+F('chana-dal','Chana dal',360,{cup:200},['cup',1],['chana dal','chana daal','bengal gram']),
+F('rice','White rice',365,{cup:185},['cup',1],['rice','white rice','basmati rice','basmati','jasmine rice']),
+F('brown-rice','Brown rice',370,{cup:190},['cup',1],['brown rice']),
+F('carrot','Carrots',41,{cup:128,piece:61},['piece',1],['carrot','carrots','gajar']),
+F('green-beans','Green beans',31,{cup:110,piece:5},['cup',1],['green beans','green bean','beans','bean','french beans','string beans']),
+F('potato','Potatoes',77,{cup:150,piece:213},['piece',1],['potato','potatoes','aloo']),
+F('onion','Onions',40,{cup:160,piece:110},['piece',1],['onion','onions','pyaz','red onion']),
+F('tomato','Tomatoes',18,{cup:180,piece:123},['piece',1],['tomato','tomatoes','tamatar']),
+F('garlic','Garlic',149,{tbsp:8.5,piece:3},['piece',2],['garlic','lahsun','garlic cloves'],'clove'),
+F('ginger','Ginger',80,{tbsp:6,piece:15},['tbsp',1],['ginger','adrak','ginger paste'],'inch'),
+F('green-chili','Green chilies',40,{piece:5,tsp:3},['piece',2],['green chili','green chilli','green chilies','green chillies','chili','chilli','chilies','chillies','hari mirch']),
+F('spinach','Spinach',23,{cup:30},['cup',1],['spinach','palak']),
+F('peas','Green peas',81,{cup:145},['cup',1],['peas','green peas','matar']),
+F('cauliflower','Cauliflower',25,{cup:107,piece:575},['cup',1],['cauliflower','gobi']),
+F('cabbage','Cabbage',25,{cup:89},['cup',1],['cabbage']),
+F('bell-pepper','Bell pepper',31,{cup:150,piece:120},['piece',1],['bell pepper','bell peppers','capsicum']),
+F('eggplant','Eggplant',25,{cup:82,piece:450},['cup',1],['eggplant','brinjal','aubergine','baingan']),
+F('okra','Okra',33,{cup:100},['cup',1],['okra','bhindi','ladyfinger','lady finger']),
+F('drumstick','Drumsticks (moringa)',37,{piece:30},['piece',2],['drumstick','drumsticks','moringa']),
+F('pumpkin','Pumpkin',26,{cup:116},['cup',1],['pumpkin','kaddu']),
+F('ghee','Ghee',900,{tbsp:13,tsp:4.3},['tbsp',1],['ghee','clarified butter']),
+F('butter','Butter',717,{tbsp:14},['tbsp',1],['butter']),
+F('oil','Vegetable oil',884,{tbsp:13.6},['tbsp',1],['oil','vegetable oil','cooking oil','olive oil','coconut oil','mustard oil','sunflower oil','canola oil']),
+F('salt','Salt',0,{tsp:6},['tsp',1],['salt','sea salt']),
+F('sugar','Sugar',387,{cup:200,tsp:4.2},['tsp',1],['sugar','white sugar']),
+F('jaggery','Jaggery',383,{tbsp:15},['tbsp',1],['jaggery','gur']),
+F('turmeric','Turmeric',312,{tsp:3},['tsp',0.5],['turmeric','turmeric powder','haldi']),
+F('chili-powder','Red chili powder',282,{tsp:2.7},['tsp',1],['red chili powder','red chilli powder','chili powder','chilli powder','lal mirch','kashmiri chili powder','kashmiri chilli powder','cayenne']),
+F('cumin','Cumin seeds',375,{tsp:2.1},['tsp',1],['cumin','cumin seeds','jeera','cumin powder']),
+F('mustard-seeds','Mustard seeds',508,{tsp:3.3},['tsp',1],['mustard seeds','mustard seed','rai','mustard']),
+F('coriander-powder','Coriander powder',298,{tsp:2},['tsp',1],['coriander powder','dhania powder']),
+F('cilantro','Coriander leaves',23,{cup:16,tbsp:1},['tbsp',2],['coriander leaves','cilantro','coriander','dhania','fresh coriander']),
+F('curry-leaves','Curry leaves',108,{piece:0.1,handful:4},['piece',10],['curry leaves','curry leaf','kadi patta','curry patta'],'leaf'),
+F('hing','Asafoetida (hing)',297,{tsp:1.4},['pinch',1],['asafoetida','hing']),
+F('garam-masala','Garam masala',379,{tsp:2},['tsp',1],['garam masala']),
+F('sambar-powder','Sambar powder',325,{tsp:2.5},['tbsp',1],['sambar powder','sambar masala','sambhar powder','sambhar masala','sambar','sambhar']),
+F('tamarind','Tamarind paste',239,{tbsp:15},['tbsp',1],['tamarind','tamarind paste','imli']),
+F('coconut','Grated coconut',354,{cup:80},['cup',0.25],['coconut','grated coconut','desiccated coconut']),
+F('coconut-milk','Coconut milk',230,{cup:240},['cup',1],['coconut milk']),
+F('milk','Milk',42,{cup:244},['cup',1],['milk','whole milk']),
+F('yogurt','Yogurt (curd)',61,{cup:245},['cup',1],['yogurt','yoghurt','curd','curds','dahi']),
+F('paneer','Paneer',265,{cup:140},['g',200],['paneer','cottage cheese']),
+F('cheese','Cheese',402,{cup:113,tbsp:7},['cup',0.25],['cheese','cheddar','cheddar cheese']),
+F('cream','Cream',340,{tbsp:15},['tbsp',2],['cream','heavy cream','fresh cream','malai']),
+F('egg','Eggs',155,{piece:50},['piece',2],['egg','eggs'],'large'),
+F('chicken','Chicken breast',165,{cup:140,piece:170},['g',250],['chicken','chicken breast','chicken breasts']),
+F('flour','All-purpose flour',364,{cup:125},['cup',1],['flour','all purpose flour','maida','plain flour']),
+F('atta','Whole wheat flour',340,{cup:120},['cup',1],['atta','whole wheat flour','wheat flour']),
+F('besan','Gram flour (besan)',387,{cup:92},['cup',0.5],['besan','gram flour','chickpea flour']),
+F('chickpeas','Chickpeas',164,{cup:164},['cup',1],['chickpeas','chickpea','chana','chole','garbanzo beans','kabuli chana']),
+F('kidney-beans','Kidney beans',127,{cup:177},['cup',1],['kidney beans','rajma','red kidney beans']),
+F('water','Water',0,{cup:240},['cup',2],['water']),
+F('lemon','Lemon',29,{piece:58,tbsp:15},['piece',1],['lemon','lime','lemon juice','lime juice','nimbu']),
+F('honey','Honey',304,{tbsp:21},['tbsp',1],['honey']),
+F('bread','Bread',265,{piece:30},['piece',2],['bread','bread slices'],'slice'),
+F('pasta','Pasta',371,{cup:100},['cup',1],['pasta','spaghetti','penne']),
+F('black-pepper','Black pepper',251,{tsp:2.3},['tsp',0.5],['black pepper','pepper','pepper powder','kali mirch']),
+F('cinnamon','Cinnamon',247,{tsp:2.6,piece:3},['piece',1],['cinnamon','cinnamon stick','dalchini'],'stick'),
+F('cardamom','Cardamom',311,{piece:0.2,tsp:2},['piece',3],['cardamom','elaichi','cardamom pods'],'pod'),
+F('bay-leaf','Bay leaf',313,{piece:0.6},['piece',2],['bay leaf','bay leaves','tej patta'],'leaf'),
+F('mint','Mint leaves',70,{cup:50},['cup',0.25],['mint','mint leaves','pudina'])
+];
+const FOODMAP={}; const ALIAS={}; let MAXN=1;
+FOODS.forEach(f=>{FOODMAP[f.id]=f;[f.name.toLowerCase(),...f.aliases].forEach(a=>{ALIAS[a]=f;MAXN=Math.max(MAXN,a.split(' ').length)})});
+const ALIAS_ENTRIES=Object.entries(ALIAS);
+const SOUND={gee:'ghee',ghi:'ghee',key:'ghee',gi:'ghee','g':'ghee',doll:'toor-dal','tour doll':'toor-dal','tore doll':'toor-dal','to dal':'toor-dal',dull:'toor-dal',door:'toor-dal',carats:'carrot',carets:'carrot','some bar':'sambar-powder','some bar powder':'sambar-powder','sambal powder':'sambar-powder',sambal:'sambar-powder','green beams':'green-beans',beams:'green-beans','on yen':'onion',sold:'salt',rise:'rice','tumeric':'turmeric','tomahto':'tomato','pot a toe':'potato','hinge':'hing','jeera':'cumin'};
+
+/* ================= Units & formatting ================= */
+const UNITW={cup:'cup',cups:'cup',tablespoon:'tbsp',tablespoons:'tbsp',tbsp:'tbsp',tbs:'tbsp',tbl:'tbsp',tablespoonful:'tbsp',tablespoonfuls:'tbsp',teaspoon:'tsp',teaspoons:'tsp',tsp:'tsp',teaspoonful:'tsp',teaspoonfuls:'tsp',gram:'g',grams:'g',g:'g',gm:'g',gms:'g',gr:'g',kilogram:'kg',kilograms:'kg',kg:'kg',kilo:'kg',kilos:'kg',ounce:'oz',ounces:'oz',oz:'oz',pound:'lb',pounds:'lb',lb:'lb',lbs:'lb',ml:'ml',milliliter:'ml',milliliters:'ml',millilitre:'ml',millilitres:'ml',liter:'l',liters:'l',litre:'l',litres:'l',pinch:'pinch',pinches:'pinch',handful:'handful',handfuls:'handful',bunch:'handful',bunches:'handful',clove:'piece',cloves:'piece',piece:'piece',pieces:'piece',pc:'piece',pcs:'piece',whole:'piece',nos:'piece',stalk:'piece',stalks:'piece',sprig:'piece',sprigs:'piece',leaf:'piece',leaves:'piece',slice:'piece',slices:'piece',inch:'piece',inches:'piece',medium:'piece',large:'piece',small:'piece',big:'piece',stick:'piece',sticks:'piece',pod:'piece',pods:'piece',can:'can',cans:'can'};
+const UNIT_OPTS=['piece','cup','tbsp','tsp','g','kg','oz','lb','ml','l','pinch','handful','can'];
+const PL={clove:'cloves',leaf:'leaves',slice:'slices',stick:'sticks',pod:'pods',inch:'inches'};
+function fmtQty(q){q=Number(q);if(!isFinite(q))return '';const w=Math.floor(q+1e-9),fr=q-w;const FR={0.25:'¼',0.5:'½',0.75:'¾',0.33:'⅓',0.67:'⅔'};for(const k in FR){if(Math.abs(fr-Number(k))<0.02)return (w||'')+FR[k]}return String(Math.round(q*100)/100)}
+function fmtUnit(u,q,f){if(!u)return '';const many=Number(q)>1;switch(u){case 'cup':return many?'cups':'cup';case 'piece':{const p=(f&&f.pc)||'whole';return many?(PL[p]||p):p}case 'pinch':return many?'pinches':'pinch';case 'handful':return many?'handfuls':'handful';case 'can':return many?'cans':'can';default:return u}}
+function unitLabel(u,f){return({cup:'cup',tbsp:'tbsp',tsp:'tsp',g:'grams',kg:'kg',oz:'oz',lb:'lb',ml:'ml',l:'liters',piece:(f&&f.pc)||'whole',pinch:'pinch',handful:'handful',can:'can'})[u]||u}
+function fmtAmt(it){const f=FOODMAP[it.foodId];return (fmtQty(it.qty)+' '+fmtUnit(it.unit,it.qty,f)).trim()}
+function grams(f,u,q){q=Number(q)||0;const g=f.g||{};const V={cup:1,tbsp:1/16,tsp:1/48};
+ if(u in V){if(g[u])return g[u]*q;for(const b of ['cup','tbsp','tsp'])if(g[b])return g[b]/V[b]*V[u]*q;return 240*V[u]*q}
+ switch(u){case 'g':case 'ml':return q;case 'kg':case 'l':return q*1000;case 'oz':return q*28.35;case 'lb':return q*453.6;case 'pinch':return q*0.3;case 'handful':return q*(g.handful||30);case 'can':return q*400;default:return q*(g.piece||(g.cup?g.cup/4:50))}}
+function kcalOf(it){const f=FOODMAP[it.foodId];if(!f)return null;return Math.round(grams(f,it.unit||f.def[0],it.qty)*f.k/100)}
+const fmtCal=n=>Number(n).toLocaleString();
+
+/* ================= Ingredient parser ================= */
+const NUMW={a:1,an:1,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,twenty:20,thirty:30,forty:40,fifty:50,hundred:100,half:.5,quarter:.25,couple:2,few:3,dozen:12};
+const FILLER=new Set(('of and some the then also plus about around approximately approx like add added adding with um uh umm uhh er hmm oh so okay ok i im ill need want have got fresh freshly chopped diced sliced minced grated finely roughly cut peeled boiled cooked raw dry dried ground to taste for it its is my recipe ingredients ingredient are you will we use using little bit more just next after that thats this these those put in into lot lots or sized size red green yellow white black brown organic frozen canned ripe split washed soaked thinly thick thin boneless skinless unsalted salted plain low fat full extra virgin homemade warm hot cold room temperature needed optional as per required each first second third last finally let lets me see start go done all everything think maybe well yeah yes no now here there can could should would be was our your his her their them they he she also enough few').split(' '));
+function tokenize(text){
+ let s=' '+String(text).toLowerCase()+' ';
+ s=s.replace(/½/g,' 1/2 ').replace(/¼/g,' 1/4 ').replace(/¾/g,' 3/4 ').replace(/⅓/g,' 1/3 ');
+ s=s.replace(/table\s+spoons/g,'tablespoons').replace(/table\s+spoon/g,'tablespoon').replace(/tea\s+spoons/g,'teaspoons').replace(/tea\s+spoon/g,'teaspoon');
+ s=s.replace(/(\d)\.(\d)/g,'$1#$2').replace(/[,;.!?\n\r:]+/g,' , ').replace(/#/g,'.');
+ s=s.replace(/(\d)([a-z])/g,'$1 $2').replace(/-/g,' ').replace(/'/g,'').replace(/[^a-z0-9\/., ]+/g,' ');
+ return s.split(/\s+/).filter(Boolean);
+}
+function numTok(t){if(t==null)return null;if(/^\d+(\.\d+)?$/.test(t))return parseFloat(t);const m=t.match(/^(\d+)\/(\d+)$/);if(m&&+m[2])return m[1]/m[2];return Object.prototype.hasOwnProperty.call(NUMW,t)?NUMW[t]:null}
+function readQty(T,i){
+ let v=numTok(T[i]);if(v==null)return null;let n=1;const t0=T[i];
+ if(t0==='a'||t0==='an'){const nx=T[i+1];if(nx==='half'){v=.5;n=2}else if(nx==='quarter'){v=.25;n=2}else if(nx==='couple'||nx==='few'||nx==='dozen'){v=NUMW[nx];n=2}}
+ else if(t0==='half'&&(T[i+1]==='a'||T[i+1]==='an'))n=2;
+ if(T[i+n]==='hundred'&&v<100){v*=100;n++}
+ if(v>=20&&v<100&&v%10===0&&/^[a-z]+$/.test(T[i+n]||'')){const u=numTok(T[i+n]);if(u!=null&&u>=1&&u<10&&T[i+n]!=='a'&&T[i+n]!=='an'){v+=u;n++}}
+ if(/^\d+$/.test(t0)&&/^\d+\/\d+$/.test(T[i+n]||'')){v+=numTok(T[i+n]);n++}
+ if((T[i+n]==='quarter'||T[i+n]==='quarters')&&v>=1&&v<4&&t0!=='a'){v*=.25;n++}
+ if(T[i+n]==='and'){let j=i+n+1;if(T[j]==='a'||T[j]==='an')j++;if(T[j]==='half'){v+=.5;n=j-i+1}else if(T[j]==='quarter'){v+=.25;n=j-i+1}}
+ if(T[i+n]==='of'&&(T[i+n-1]==='couple'||T[i+n-1]==='few'||T[i+n-1]==='dozen'))n++;
+ return {v,n};
+}
+function singular(w){if(w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.endsWith('oes'))return w.slice(0,-2);if(w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w}
+function lookup(ph){const k=ph.join(' ');if(ALIAS[k])return ALIAS[k];const s=ph.slice(0,-1).concat(singular(ph[ph.length-1])).join(' ');return ALIAS[s]||null}
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function suggest(name){const s=String(name).toLowerCase().trim();if(!s)return null;if(SOUND[s])return SOUND[s];let best=null,bd=99;for(const [al,f] of ALIAS_ENTRIES){const d=lev(s,al);if(d<bd){bd=d;best=f.id}}return bd<=Math.max(1,Math.floor(s.length*.34))?best:null}
+
+function parseIngredients(text){
+ const T=tokenize(text),typed=[];let i=0;
+ while(i<T.length){
+  const t=T[i];
+  if(t===','){typed.push({k:'sep'});i++;continue}
+  if(numTok(t)==null){let m=null;for(let n=Math.min(MAXN,T.length-i);n>=1;n--){const ph=T.slice(i,i+n);if(ph.includes(','))continue;const f=lookup(ph);if(f){m={f,n,said:ph.join(' ')};break}}
+   if(m){typed.push({k:'food',f:m.f,said:m.said});i+=m.n;continue}}
+  const q=readQty(T,i);if(q){typed.push({k:'qty',v:q.v,raw:T.slice(i,i+q.n).join(' ')});i+=q.n;continue}
+  if(UNITW[t]){typed.push({k:'unit',u:UNITW[t],raw:t});i++;continue}
+  if(FILLER.has(t)){i++;continue}
+  typed.push({k:'word',w:t});i++;
+ }
+ const items=[];let groups=[],cur=null;
+ const newGroup=()=>{cur={qty:null,unit:null,words:[],raw:[]};groups.push(cur)};
+ const flush=()=>{groups.forEach(g=>{if(g.words.length){const name=g.words.join(' ');items.push({id:uid(),foodId:null,name,said:g.raw.concat(g.words).join(' '),qty:g.qty!=null?g.qty:1,unit:g.unit,matched:false,sugg:suggest(name)})}});groups=[];cur=null};
+ for(const tk of typed){
+  if(tk.k==='sep'){
+   // quantity said after the food ("toor dal, one cup,")
+   if(groups.length===1&&cur===groups[0]&&!cur.words.length&&(cur.qty!=null||cur.unit)&&items.length){const last=items[items.length-1];if(last.foodId&&!last.explicit){const f=FOODMAP[last.foodId];last.qty=cur.qty!=null?cur.qty:1;last.unit=cur.unit||(f.g.piece?'piece':f.def[0]);last.explicit=true;groups=[]}}
+   cur=null;continue}
+  if(tk.k==='qty'){if(!cur||cur.qty!=null||cur.unit||cur.words.length)newGroup();cur.qty=tk.v;cur.raw.push(tk.raw);continue}
+  if(tk.k==='unit'){if(!cur||cur.unit||cur.words.length)newGroup();cur.unit=tk.u;cur.raw.push(tk.raw);continue}
+  if(tk.k==='word'){if(!cur)newGroup();cur.words.push(tk.w);continue}
+  if(tk.k==='food'){
+   let mine=null;if(groups.length&&cur===groups[groups.length-1]&&!cur.words.length){mine=groups.pop()}
+   flush();
+   const f=tk.f;let qty,unit;
+   if(mine){qty=mine.qty!=null?mine.qty:1;unit=mine.unit||(f.def[0]==='piece'||f.g.piece?'piece':f.def[0]);if(!mine.unit&&mine.qty==null){qty=f.def[1];unit=f.def[0]}}
+   else{qty=f.def[1];unit=f.def[0]}
+   items.push({id:uid(),foodId:f.id,name:f.name,qty,unit,said:(mine?mine.raw.join(' ')+' ':'')+tk.said,explicit:!!mine,matched:true});
+  }
+ }
+ flush();
+ return items;
+}
+const GARBLE={ghee:'gee','toor-dal':'tour doll',carrot:'carats',onion:'on yen',tomato:'tomahto',salt:'sold','green-beans':'green beams','sambar-powder':'some bar powder',rice:'rise',potato:'pot a toe',turmeric:'tumeric'};
+const WRONG={ghee:'cheese','toor-dal':'masoor-dal',carrot:'cabbage','green-beans':'kidney-beans',onion:'garlic',tomato:'potato',salt:'sugar',rice:'brown-rice','sambar-powder':'garam-masala',potato:'tomato','moong-dal':'masoor-dal',turmeric:'cumin'};
+function plantError(items){
+ const mode=CFG.plant;if(mode==='off')return;
+ const idx=items.map((x,i)=>x.foodId?i:-1).filter(i=>i>=0);if(!idx.length)return;
+ const i=idx[idx.length-1],it=items[i];
+ if(mode==='unrec'){items[i]=Object.assign({},it,{foodId:null,matched:false,name:GARBLE[it.foodId]||((it.said||it.name).split(' ').pop()+'h'),sugg:it.foodId,planted:'unrec',trueFood:it.foodId})}
+ else{let w=WRONG[it.foodId];if(!w){const k=FOODS.findIndex(f=>f.id===it.foodId);w=FOODS[(k+1)%FOODS.length].id}const wf=FOODMAP[w];items[i]=Object.assign({},it,{foodId:wf.id,name:wf.name,planted:'wrong',trueFood:it.foodId})}
+}
+
+
+/* ================= Config, state, logging ================= */
+const DEFAULT_SCRIPT='One cup of toor dal, two carrots, a cup of green beans, one onion, two tomatoes, one tablespoon sambar powder, half teaspoon turmeric, two tablespoons ghee, salt to taste.';
+const CARD="Mom's Sambar — serves 4\n\n• 1 cup toor dal\n• 2 carrots\n• 1 cup green beans\n• 1 onion\n• 2 tomatoes\n• 1 tbsp sambar powder\n• ½ tsp turmeric\n• 2 tbsp ghee\n• Salt to taste";
+const TASK="You just made your mom's sambar for breakfast and want to track it. Starting from the Today screen, save it in the app as a recipe called “Mom's Sambar” that serves 4. The ingredients are on this card.";
+const CFG=Object.assign({engine:'auto',lang:'en-US',trigger:'focus',plant:'off',showAd:true,bulkDefault:true,script:DEFAULT_SCRIPT},store.get('vp_cfg2',{}));
+const saveCfg=()=>store.set('vp_cfg2',CFG);
+const ERR_TYPES=new Set(['mic_denied','mic_prompt_dismissed','no_speech','speech_error','voice_unavailable','save_blocked','edit_invalid','added_with_unresolved','parse_empty','observed_error']);
+
+let SESSIONS=store.get('vp_sessions_v2',[]);
+let SESSION=null;
+function newSession(pid){
+ const id=(pid||'').trim()||('P'+(SESSIONS.filter(s=>s.events.length>1).length+1));
+ SESSION={id:Date.now().toString(36),participant:id,started:Date.now(),events:[],config:{engine:CFG.engine,trigger:CFG.trigger,plant:CFG.plant,lang:CFG.lang}};
+ SESSIONS=SESSIONS.filter(s=>s.events.length>1);SESSIONS.push(SESSION);if(SESSIONS.length>60)SESSIONS=SESSIONS.slice(-60);
+ log('session_start',{participant:id,engine:engineName(),trigger:CFG.trigger,planted_error:CFG.plant});
+}
+const isRec=()=>!!(SESSION&&!SESSION.ended);
+const nextId=()=>'P'+(SESSIONS.filter(s=>s.events.length>1).length+1);
+function endSession(){if(!isRec())return;log('session_end');SESSION.ended=Date.now();store.set('vp_sessions_v2',SESSIONS);updateRecBadge()}
+function updateRecBadge(){const b=$('#modBtn');if(b)b.classList.toggle('rec',isRec())}
+let persistT=null;
+function persist(){clearTimeout(persistT);persistT=setTimeout(()=>store.set('vp_sessions_v2',SESSIONS),250)}
+function currentScreen(){if(SHEET)return 'sheet:'+SHEET;if(VOPEN)return 'voice:'+VSTATE;if(NAV.add)return 'add-recipe';if(NAV.search)return NAV.tab==='recipes'?'my-recipes':'food-search:'+NAV.tab;return 'today'}
+function log(type,detail,opts){
+ if(!SESSION||SESSION.ended)return;
+ const ev={t:Date.now()-SESSION.started,type,screen:currentScreen(),detail:detail||{},error:!!((opts&&opts.error)||ERR_TYPES.has(type))};
+ SESSION.events.push(ev);persist();updatePanelLive();
+}
+
+const SEED_FOODS=[['Kakara Ka Booka','326 cal, 1 serving',0],['Roti','239 cal, 2 medium',1],['moong','110 cal, 0.5 cup, moong daal',0],['Belvita','138 cal, 0.6 pkg, Belvita',1],['Pistachios','80 cal, 0.25 cup without shells, Wonderful',1],['Bisi Bele Bath','80 cal, 1 serving',0],['Peanut Butter Toast','210 cal, 1 slice',0],['White Bread','120 cal, 2 slices, Stroehmann',1]];
+const SEED_RECIPES=[['Peanut Butter Tofu','413 cal, 1 serving'],['Kakara Ka Booka','326 cal, 1 serving'],['Peanut Butter Tofu','346 cal, 1 serving'],['Quinoa Behl','442 cal, 1 serving'],['Bisi Bele Bath','80 cal, 1 serving'],['Quesadilla','523 cal, 1 serving'],['Lemon Pepper Tofu Sandwich','310 cal, 1 serving'],['Tuscan Bean Pasta','480 cal, 1 serving']];
+const freshState=()=>({title:'',servings:'',bulk:CFG.bulkDefault,bulkText:'',ingredients:[],upsellShown:false,trialUsed:false,upsellCtx:null,err:{},
+ foods:SEED_FOODS.map(([n,d,v])=>({id:uid(),name:n,details:d,verified:!!v,added:false})),
+ recipes:SEED_RECIPES.map(([n,d])=>({id:uid(),name:n,details:d,added:false})),meal:'Breakfast',query:'',logged:{Breakfast:[],Lunch:[],Dinner:[]}});
+let S=freshState();
+const NAV={search:false,tab:'history',add:false};
+let sheetAt=0;
+let SHEET=null,EDIT=null,VOPEN=false,VSTATE='ready',VR={transcript:'',items:[],mode:'voice'},VMSG='',VTOKEN=0;
+
+/* ================= Voice engines ================= */
+const inClaude=!!(window.claude&&typeof window.claude.use==='function');
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let dict=null,dictChecked=!inClaude,downloadsCap=null;
+if(inClaude){
+ window.claude.use('dictation').then(d=>{dict=d||null;dictChecked=true;
+  if(d){
+   d.onPartial(({text})=>{if(VS.engine!=='claude'||!VS.active)return;VS.partial=text||'';activity()});
+   d.onFinal(({text})=>{if(VS.engine!=='claude'||!VS.active)return;VS.final+=(VS.final?' ':'')+(text||'');VS.partial='';activity()});
+   d.onState(({state,reason})=>{if(VS.engine!=='claude')return;if(state==='idle'&&VS.active&&!VS.stopping)endVoice(reason||'idle')});
+  }
+  refreshEngineLabel();
+ }).catch(()=>{dictChecked=true;refreshEngineLabel()});
+ window.claude.use('downloads').then(x=>{downloadsCap=x||null}).catch(()=>{});
+}
+function engineName(){if(CFG.engine==='sim')return 'sim';if(dict)return 'claude';if(!inClaude&&SR)return 'web';return 'none'}
+
+const VS={active:false,stopping:false,engine:null,final:'',partial:'',err:null,rec:null,t0:0,level:0,ivWave:null,ivTimer:null,silT:null,simIv:null,simT:null};
+const vText=()=>(VS.final+' '+VS.partial).replace(/\s+/g,' ').trim();
+function vClear(){clearInterval(VS.ivWave);clearInterval(VS.ivTimer);clearTimeout(VS.silT);clearInterval(VS.simIv);clearTimeout(VS.simT)}
+function vReset(){vClear();Object.assign(VS,{active:false,stopping:false,final:'',partial:'',err:null,rec:null,level:0})}
+function activity(){
+ VS.level=1;updateTranscript();clearTimeout(VS.silT);
+ if(vText())VS.silT=setTimeout(()=>{if(VS.active&&!VS.stopping){log('mic_autostop',{reason:'silence'});userStop(true)}},VS.engine==='sim'?2400:4500);
+}
+function micStart(){
+ if(VS.active)return;
+ const eng=engineName();vReset();VS.engine=eng;VMSG='';
+ if(eng==='none'){log('voice_unavailable',{inClaude,dictChecked});setV('unsupported');return}
+ if(eng==='claude'){
+  let p;try{p=dict.start()}catch(err){micFail(err);return}
+  beginListening();Promise.resolve(p).catch(micFail);return;
+ }
+ if(eng==='web'){
+  let r;try{r=new SR()}catch(err){micFail(err);return}
+  r.lang=CFG.lang;r.continuous=true;r.interimResults=true;r.maxAlternatives=1;
+  r.onresult=ev=>{let f='',p='';for(let i=0;i<ev.results.length;i++){const res=ev.results[i];if(res.isFinal)f+=res[0].transcript+' ';else p+=res[0].transcript+' '}VS.final=f.trim();VS.partial=p.trim();activity()};
+  r.onerror=ev=>{VS.err=ev.error};
+  r.onend=()=>{if(VS.rec===r)endVoice(VS.err||'ended')};
+  VS.rec=r;try{r.start()}catch(err){micFail(err);return}
+  beginListening();return;
+ }
+ // simulated (Wizard of Oz)
+ beginListening();
+ const words=(CFG.script||DEFAULT_SCRIPT).trim().split(/\s+/);let k=0;
+ VS.simT=setTimeout(()=>{VS.simIv=setInterval(()=>{
+  if(!VS.active||k>=words.length){clearInterval(VS.simIv);return}
+  VS.partial+=(VS.partial?' ':'')+words[k++];
+  if(/[,.]$/.test(words[k-1])||VS.partial.split(' ').length>=7){VS.final+=(VS.final?' ':'')+VS.partial;VS.partial=''}
+  activity();
+ },320)},800);
+}
+function beginListening(){VS.active=true;VS.t0=Date.now();setV('listening');log('mic_start',{engine:VS.engine})}
+function micFail(err){
+ const s=String(err&&(err.code||err.reason||err.name||err.message)||err);
+ VS.active=false;vClear();
+ if(/not_granted|not-allowed|notallowed|denied|permission/i.test(s)){log('mic_denied',{reason:s,engine:VS.engine});setV('denied')}
+ else if(/dismiss/i.test(s)){log('mic_prompt_dismissed',{reason:s});VMSG='The microphone prompt was closed. Tap the mic to try again.';setV('ready')}
+ else{log('speech_error',{reason:s,engine:VS.engine});setV('error')}
+}
+function userStop(auto){
+ if(!VS.active||VS.stopping)return;
+ if(!auto)log('mic_done',{seconds:+((Date.now()-VS.t0)/1000).toFixed(1)});
+ VS.stopping=true;const btn=$('#vDone');if(btn){btn.disabled=true;btn.textContent='Finishing…'}
+ if(VS.engine==='claude'){Promise.resolve().then(()=>dict.stop()).catch(()=>{}).then(()=>endVoice('stopped'))}
+ else if(VS.engine==='web'){try{VS.rec.stop()}catch(e){endVoice('stopped')}}
+ else endVoice('stopped');
+}
+function abortVoice(){
+ const was=VS.active;VS.active=false;VS.stopping=false;vClear();
+ if(was&&VS.engine==='claude'&&dict){try{Promise.resolve(dict.stop()).catch(()=>{})}catch(e){}}
+ if(VS.rec){const r=VS.rec;VS.rec=null;try{r.abort()}catch(e){}}
+}
+function endVoice(reason){
+ if(!VS.active)return;VS.active=false;VS.stopping=false;vClear();
+ const r=VS.rec;VS.rec=null;
+ const err=VS.err;
+ if(err==='not-allowed'||err==='service-not-allowed'){log('mic_denied',{reason:err,engine:VS.engine});setV('denied');return}
+ const text=vText();
+ if(!text){
+  if(err&&err!=='no-speech'&&err!=='aborted'){log('speech_error',{reason:err,engine:VS.engine});setV('error')}
+  else{log('no_speech',{reason:reason||err||'',engine:VS.engine});setV('nospeech')}
+  return;
+ }
+ log('transcript',{text,seconds:+((Date.now()-VS.t0)/1000).toFixed(1),engine:VS.engine});
+ startProcessing(text);
+}
+function startProcessing(text){
+ const tok=++VTOKEN;VR={transcript:text,items:[],mode:'voice'};setV('processing');const t0=Date.now();
+ setTimeout(()=>{if(tok===VTOKEN)markStep(1)},650);
+ setTimeout(()=>{if(tok===VTOKEN)markStep(2)},1150);
+ setTimeout(()=>{
+  if(tok!==VTOKEN)return;
+  const items=parseIngredients(text);plantError(items);VR.items=items;VR.secs=((Date.now()-t0)/1000).toFixed(1);
+  log('parse_result',{matched:items.filter(x=>x.foodId).length,unrecognized:items.filter(x=>!x.foodId).length,planted:CFG.plant,items:items.map(x=>x.foodId?x.name:'?'+x.name).join('; ')});
+  if(!items.length){log('parse_empty',{text});setV('empty')}else setV('review');
+ },1650);
+}
+function markStep(n){const li=$('#st'+n);if(li)li.classList.add('done')}
+
+
+/* ================= Screens ================= */
+function renderToday(){
+ const cal=S.logged.Breakfast.concat(S.logged.Lunch,S.logged.Dinner).reduce((a,x)=>a+(x.kcal||0),0);
+ const left=1600-cal;
+ const mealRow=m=>{const L=S.logged[m];
+  if(!L.length)return `<div class="meal">${fi('dining')}<span class="name t-headline">${m}</span><span class="more" data-off="${m} more menu">•••</span><button class="btn-tonal press" data-act="meal-log" data-meal="${m}">Log</button></div>`;
+  const tot=L.reduce((a,x)=>a+(x.kcal||0),0);
+  return `<div class="mcard"><div class="mc-hd"><span class="mc-t">${m}</span><span class="mc-c">${fmtCal(tot)} cal</span></div><div class="mc-div"></div>
+   ${L.map(x=>`<div class="sw sw-row" data-kind="logged" data-id="${x.id}" data-name="${esc(x.name)}"><button class="sw-del" data-act="logged-delete" data-meal="${m}" data-id="${x.id}" aria-label="Delete ${esc(x.name)}">${IC.trash}</button><div class="sw-fg mi" data-off="Diary item: ${esc(x.name)}"><div class="mi-t"><div class="mi-n">${esc(x.name)}${x.verified?FI.verified:''}</div><div class="mi-s">${esc(x.sub)}</div></div><div class="mi-c">${fmtCal(x.kcal)}</div></div></div>`).join('')}
+   <div class="mc-ft"><button class="btn-logmore press" data-act="meal-log" data-meal="${m}">Log more</button></div></div>`};
+ const prevScroll=$('#sToday .scroll')?$('#sToday .scroll').scrollTop:0;
+ $('#sToday').innerHTML=`
+ <div style="height:var(--top);flex:none;background:#e3f4ff"></div>
+ <div class="scroll">
+  <div class="today-head"><div class="date-pick" data-act="title-tap">Today${fi('caretDown')}</div><button class="btn-prem press" data-off="Go Premium">Go Premium</button></div>
+  <div class="streak"><div class="days">${['S','M','T','W','T','F','S'].map(d=>`<div class="day t-foot"><i></i>${d}</div>`).join('')}</div><div class="vdiv"></div><div class="flame">${fi('flame')}<b>0</b></div></div>
+  <div class="today-content">
+   <div class="card"><div class="t-sub" style="font-weight:600">Calories</div>
+    <div class="row2"><div class="val"><span class="big">${fmtCal(cal)} cal</span><span class="goal">/ 1,600</span></div><div class="val"><span class="mid">${fmtCal(left)}</span><span class="goal">left</span></div></div>
+    <div class="track"${cal?` style="background:linear-gradient(90deg,var(--brand) ${Math.min(100,cal/16)}%,var(--subtle) 0)"`:''}></div></div>
+   <div class="card"><div class="macros">${[['Carbs','200'],['Fat','53'],['Protein','80']].map(([l,g])=>`<div><span class="t-sub" style="font-weight:600">${l}</span><div class="val"><span class="mid">0 g</span><span class="goal">/ ${g}</span></div><div class="track"></div></div>`).join('')}</div><span class="swap" data-off="Macro swap">${FI.swap}</span></div>
+   ${CFG.showAd?`<div class="adslot"><div class="app-ad" data-off="App install ad"><div class="appicon"></div><div class="copy"><span class="t-body">QR Code Barcode Ai Reader</span><span class="t-foot" style="color:var(--text2)">4.6 ★&nbsp;&nbsp; Free</span></div><button class="btn-primary-sm" data-off="Ad Get button">Get</button></div><div class="t-foot" style="color:var(--text2)">Get ad-free tracking in Premium—<span class="link-blue" data-off="Upgrade now link">upgrade now</span></div></div>`:''}
+   <div class="meals-h"><span class="t-title3">Meals</span><span class="t-sub link-blue" style="font-weight:600" data-off="View diary">View diary</span></div>
+   ${['Breakfast','Lunch','Dinner'].map(mealRow).join('')}
+  </div>
+ </div>
+ <div class="tabbar">
+  <div class="tab on" data-off="Today tab">${fi('home')}Today</div>
+  <div class="tab" data-off="Plan tab">${fi('plan')}Plan</div>
+  <div class="tab" data-off="Log (+) button"><span class="fab">${FI.fab}</span></div>
+  <div class="tab" data-off="Progress tab">${fi('progress')}Progress</div>
+  <div class="tab" data-off="More tab">${fi('more')}More</div>
+ </div>`;
+ if(prevScroll)$('#sToday .scroll').scrollTop=prevScroll;
+}
+function rowsHTML(list,kind){
+ const q=S.query.trim().toLowerCase();const items=list.filter(x=>!q||x.name.toLowerCase().includes(q));
+ if(!items.length)return `<div class="empty t-sub">${q?`No ${kind==='recipe'?'recipes':'foods'} match “${esc(S.query)}”`:'Nothing here yet'}</div>`;
+ return items.map(x=>{
+  const row=`<div class="frow ${x.fresh?'fresh':''} ${kind==='recipe'?'sw-fg':''}" data-off="${kind==='recipe'?'Recipe':'Food'} row: ${esc(x.name)}"><div class="txt"><div class="nm"><span class="t-body">${esc(x.name)}</span>${x.verified?FI.verified:''}${x.fresh?'<span class="newtag">New</span>':''}</div><div class="dt t-sub">${esc(x.details)}</div></div><button class="addbtn ${x.added?'added':''}" data-act="${kind}-add" data-id="${x.id}" aria-label="${x.added?'Added':'Add'} ${esc(x.name)}">${x.added?IC.checkW:FI.rowPlus}</button></div>`;
+  return kind==='recipe'?`<div class="sw" data-kind="recipe" data-id="${x.id}" data-name="${esc(x.name)}"><button class="sw-del" data-act="recipe-delete" data-id="${x.id}" aria-label="Delete ${esc(x.name)}">${IC.trash}</button>${row}</div>`:row;
+ }).join('');
+}
+function renderSearch(){
+ const t=NAV.tab,isRec=t==='recipes';
+ const tab=(k,l)=>`<button class="utab t-body ${t===k?'on':''}" data-act="tab" data-tab="${k}"><span>${l}</span><i></i></button>`;
+ const tiles=isRec?`<div class="tiles"><button class="tile press" data-act="create-recipe">${FI.rowPlus}Create recipe</button><button class="tile press" data-off="Discover tile">${FI.discover}Discover</button><button class="tile press" data-off="Import tile">${FI.import}Import</button></div>`
+  :t==='history'?`<div class="tiles"><button class="tile press" data-off="Barcode scan tile">${FI.barcode}Barcode scan</button><button class="tile press" data-act="voice-log-tile">${FI.voiceLog}Voice log</button><button class="tile press" data-off="Meal scan tile">${FI.mealScan}Meal scan</button><button class="tile press" data-off="Quick add tile">${FI.quickAdd}Quick add</button></div>`:'';
+ const head=isRec?`<div class="list-h"><span class="t-title3">My Recipes</span><button class="sortchip t-sub" data-off="Sort chip">${FI.sort}Date Created</button></div>`
+  :t==='history'?`<div class="list-h"><span class="t-title3">Recently logged</span><button class="circ-btn" data-off="Filter button">${FI.filter}</button></div>`:'';
+ const body=isRec?rowsHTML(S.recipes,'recipe'):t==='history'?rowsHTML(S.foods,'food'):`<div class="empty t-sub">${t==='meals'?'You haven’t saved any meals yet.':'You haven’t created any foods yet.'}</div>`;
+ $('#sSearch').innerHTML=`
+  <div style="padding-top:var(--top);flex:none"></div>
+  <div class="nav"><button class="lead" data-act="search-back" aria-label="Back">${FI.arrowLeft}</button><button class="ctr picker t-headline" data-off="Meal picker">${isRec?'Select a Meal':esc(S.meal)}${FI.pickerCaret}</button></div>
+  <div class="search-wrap"><label class="searchf">${FI.search}<input id="qInput" placeholder="${isRec?'Search my recipes...':'Search foods, brands, fl...'}" value="${esc(S.query)}" autocomplete="off"></label></div>
+  <div class="tabs">${tab('history','History')}${tab('meals','My Meals')}${tab('recipes','My Recipes')}${tab('foods','My Foods')}</div>
+  <div class="scroll" id="searchScroll">${tiles}${head}<div class="rows">${body}</div></div>
+  <div class="qbar"><button data-off="Quick log: Water">${FI.water}Water</button><button data-off="Quick log: Weight">${FI.weight}Weight</button><button data-off="Quick log: Exercise">${FI.exercise}Exercise</button></div>`;
+ const qi=$('#qInput');
+ qi.addEventListener('input',()=>{S.query=qi.value;$('#searchScroll .rows').innerHTML=isRec?rowsHTML(S.recipes,'recipe'):t==='history'?rowsHTML(S.foods,'food'):''});
+ qi.addEventListener('change',()=>log('search_typed',{query:S.query,tab:t}));
+}
+function diaryEntry(src,kind){const parts=src.details.split(', ');const kcal=+(parts[0].match(/[\d,]+/)||['0'])[0].replace(/,/g,'');const serving=parts[1]||'1 serving';const brand=parts.slice(2).join(', ');
+ return {id:uid(),srcId:src.id,kind,name:src.name,kcal,verified:!!src.verified,sub:brand?`${brand} • ${serving}`:serving}}
+function unlogSource(srcId){['Breakfast','Lunch','Dinner'].forEach(m=>{S.logged[m]=S.logged[m].filter(x=>x.srcId!==srcId)})}
+function refreshRows(){const r=$('#searchScroll .rows');if(!r){renderSearch();return}r.innerHTML=NAV.tab==='recipes'?rowsHTML(S.recipes,'recipe'):NAV.tab==='history'?rowsHTML(S.foods,'food'):r.innerHTML}
+function ingRows(){return S.ingredients.map((it,i)=>{const k=kcalOf(it);return `<button class="ing" data-act="edit-ing" data-i="${i}"><span class="m"><span class="n">${esc(it.foodId?FOODMAP[it.foodId].name:it.name)}${it.source==='voice'?`<span class="vtag" title="Added by voice">${IC.micSm}</span>`:''}</span><span class="a">${esc(fmtAmt(it))}</span></span><span class="c ${k==null?'unk':''}">${k==null?'Calories unknown':fmtCal(k)+' cal'}</span></button>`}).join('')}
+function totalCal(list){return list.reduce((a,it)=>a+(kcalOf(it)||0),0)}
+function renderAdd(){
+ const tot=totalCal(S.ingredients),sv=parseFloat(S.servings);
+ const miss=[];if(S.err.title)miss.push('a recipe name');if(S.err.serv)miss.push('how many people it serves');
+ $('#sAdd').innerHTML=`
+ <div class="topbar"><div class="nav"><button class="lead" data-act="close-recipe" aria-label="Close">${FI.close}</button><span class="ttl t-headline" data-act="title-tap">Add Recipe</span><button class="trail" data-act="save" aria-label="Save recipe">${FI.arrowRight}</button></div></div>
+ <div class="scroll" id="addScroll">
+  ${CFG.showAd?`<div class="adslot2"><div class="banner" data-off="Banner ad">${FI.adChoices}<div class="copy"><span class="adv">Paper Mate</span><span class="hl">Make Every Page Come Alive</span></div><span class="cta">SHOP NOW${FI.chevronRight}</span></div></div>`:''}
+  <div class="sec-hd">Recipe Information</div>
+  <label class="frow2 ${S.err.title?'invalid':''}" id="rowTitle"><span>Title</span><input id="fTitle" placeholder="Recipe Name" autocomplete="off" value="${esc(S.title)}"></label>
+  <label class="frow2 ${S.err.serv?'invalid':''}" id="rowServ"><span>Servings</span><input id="fServ" inputmode="decimal" placeholder="Serves how many people?" autocomplete="off" value="${esc(S.servings)}"></label>
+  <div class="trow"><div><div class="t1">Bulk Import Ingredients</div><div class="t2">Optional</div></div><button class="switch" role="switch" aria-checked="${S.bulk}" aria-label="Bulk import ingredients" data-act="toggle-bulk"></button></div>
+  ${miss.length?`<div class="form-err">Add ${miss.join(' and ')} to save.</div>`:''}
+  <div class="sec-hd tall">Ingredients</div>
+  ${ingRows()}
+  ${S.bulk?`<textarea class="ta" id="fBulk" rows="5" placeholder="Paste or type your ingredient list here and we'll match them with foods in our database.&#10;&#10;Add one ingredient per line">${esc(S.bulkText)}</textarea>`:`<button class="add-row" data-act="add-ingredient">${IC.plus}Add Ingredient</button>`}
+  ${S.err.ing?'<div class="form-err">Add at least one ingredient to save.</div>':''}
+  ${S.ingredients.length?`<div class="tot">Total ≈ ${fmtCal(tot)} cal${sv>0?` · ${fmtCal(Math.round(tot/sv))} per serving`:''}</div>`:''}
+  <div style="height:calc(var(--bottom) + 40px)"></div>
+ </div>`;
+ const ft=$('#fTitle'),fs=$('#fServ'),fb=$('#fBulk');
+ ft.addEventListener('input',()=>{S.title=ft.value;if(S.err.title){S.err.title=false;$('#rowTitle').classList.remove('invalid')}});
+ ft.addEventListener('change',()=>log('title_entered',{title:S.title}));
+ fs.addEventListener('input',()=>{S.servings=fs.value;if(S.err.serv){S.err.serv=false;$('#rowServ').classList.remove('invalid')}});
+ fs.addEventListener('change',()=>log('servings_entered',{servings:S.servings}));
+ if(fb){
+  const grow=()=>{fb.style.height='auto';fb.style.height=Math.max(140,fb.scrollHeight)+'px'};grow();
+  fb.addEventListener('input',()=>{S.bulkText=fb.value;grow();if(S.err.ing){S.err.ing=false}});
+  fb.addEventListener('change',()=>log('ingredients_typed',{lines:S.bulkText.split('\n').filter(l=>l.trim()).length}));
+  const intercept=e=>{if(CFG.trigger==='focus'&&canUpsell()){e.preventDefault();fb.blur();log('ingredients_box_tap');showUpsell('ingredients-tap')}};
+  fb.addEventListener('pointerdown',intercept);fb.addEventListener('focus',intercept);
+ }
+}
+function openSearch(meal){S.meal=meal;S.query='';NAV.search=true;NAV.tab='history';renderSearch();$('#sToday').classList.add('behind');$('#sSearch').classList.remove('off-right');log('screen_view',{screen:'food-search',meal})}
+function closeSearch(){NAV.search=false;$('#sSearch').classList.add('off-right');$('#sToday').classList.remove('behind');renderToday();log('screen_view',{screen:'today'})}
+function openAdd(){
+ Object.assign(S,{title:'',servings:'',bulk:CFG.bulkDefault,bulkText:'',ingredients:[],err:{}});
+ NAV.add=true;renderAdd();$('#sAdd').scrollTop=0;$('#sAdd').classList.remove('off-bottom');log('screen_view',{screen:'add-recipe'});
+ clearTimeout(openAdd.t);if(CFG.trigger==='load')openAdd.t=setTimeout(()=>{if(NAV.add)showUpsell('load')},2000);
+}
+function closeAdd(){NAV.add=false;clearTimeout(openAdd.t);$('#sAdd').classList.add('off-bottom');document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}
+
+/* ================= Sheets ================= */
+const canUpsell=()=>!S.upsellShown&&!S.trialUsed&&!VOPEN&&!SHEET&&NAV.add;
+function upsellHTML(){return `<div class="grab"><i></i></div>
+<div class="up-hd"><span class="eyebrow">${FI.crown}Premium feature</span><button class="xbtn" data-act="upsell-close" aria-label="Close">${FI.x}</button></div>
+<h2 class="up-h">Tired of entering this manually?</h2>
+<p class="up-b">Let the AI Voice Assistant parse this recipe<br>in 2 seconds.</p>
+<div class="demo">
+ <div class="speech"><div class="orb">${FI.micOrb}</div><div class="bubble">${FI.waveform}<p>“…a cup of toor dal, carrots, beans, two tbsp ghee…”</p></div></div>
+ <div class="parsed">${FI.check}<span class="n">Carrots</span><span class="a">½ cup</span><span class="c">26 cal</span></div>
+ <div class="demo-ft"><span>+ 6 more ingredients matched</span><span class="speed">${FI.bolt}Parsed in 1.8s</span></div>
+</div>
+<button class="btn-gold" data-act="upsell-try">${FI.micBtn}Try it for this meal</button>
+<div class="reassure">Free for this recipe · No subscription needed</div>
+<button class="btn-tert" data-act="upsell-keep">Keep typing</button>`}
+function discardHTML(){return `<div class="grab"><i></i></div><h3 class="d-h">Discard this recipe?</h3><p class="d-p">Your title and ingredients will be lost.</p><button class="btn-danger" data-act="discard-yes">Discard recipe</button><button class="btn-plain" data-act="discard-no">Keep editing</button>`}
+function paywallHTML(){return `<div class="grab"><i></i></div><div class="up-hd"><span class="eyebrow">${FI.crown}Premium</span><button class="xbtn" data-act="paywall-close" aria-label="Close">${FI.x}</button></div>
+<h2 class="up-h">Keep adding recipes by voice</h2>
+<ul class="pw-list"><li>${IC.checkG} Voice entry for recipes and meals</li><li>${IC.checkG} Barcode and photo logging</li><li>${IC.checkG} Ad-free logging</li></ul>
+<button class="btn-gold" data-act="paywall-start">Start 7-day free trial</button><div class="reassure">Then $19.99/month · Cancel anytime</div><button class="btn-tert" data-act="paywall-close">Not now</button>`}
+function suggHTML(){
+ const E=EDIT,q=E.name.trim().toLowerCase();
+ if(!q)return '';
+ if(E.foodId&&FOODMAP[E.foodId].name.toLowerCase()===q)return '';
+ let res=FOODS.map(f=>{let s=99;[f.name.toLowerCase(),...f.aliases].forEach(a=>{if(a===q)s=Math.min(s,0);else if(a.startsWith(q))s=Math.min(s,1);else if(a.includes(q))s=Math.min(s,2)});return {f,s}}).filter(x=>x.s<99).sort((a,b)=>a.s-b.s).map(x=>x.f);
+ const sg=suggest(q);if(sg&&!res.some(f=>f.id===sg))res.unshift(FOODMAP[sg]);
+ if(E.sugg&&!res.some(f=>f.id===E.sugg))res.unshift(FOODMAP[E.sugg]);
+ res=res.slice(0,5);
+ if(!res.length)return '<div class="sg-none">No match in the food database. It will be saved as a custom item without calories.</div>';
+ return res.map(f=>`<button class="sg" data-act="pick-food" data-id="${f.id}">${esc(f.name)}<span>${f.k} cal / 100 g</span></button>`).join('');
+}
+function prevHTML(){const E=EDIT;const k=E.foodId?kcalOf({foodId:E.foodId,qty:parseFloat(E.qty)||0,unit:E.unit}):null;return k==null?'<span class="unk">Not matched to a food, so calories are unknown</span>':`≈ ${fmtCal(k)} cal`}
+function editHTML(){
+ const E=EDIT,f=FOODMAP[E.foodId],isNew=/new$/.test(E.mode);
+ return `<div class="grab"><i></i></div>
+ <div class="e-head"><button class="link" data-act="edit-cancel">Cancel</button><b>${isNew?'Add ingredient':'Edit ingredient'}</b><button class="link strong" data-act="edit-save">${isNew?'Add':'Save'}</button></div>
+ ${E.note?`<div class="e-note">${E.note}</div>`:''}
+ <label class="e-lab" for="eName">Ingredient</label>
+ <div class="e-inp ${E.err==='name'?'bad':''}"><input id="eName" placeholder="Search foods, e.g. ghee" autocomplete="off" value="${esc(E.name)}"></div>
+ <div id="eSugg" class="e-sugg">${suggHTML()}</div>
+ <div class="e-grid">
+  <div><label class="e-lab" for="eQty">Amount</label><div class="e-inp ${E.err==='qty'?'bad':''}"><input id="eQty" inputmode="decimal" value="${esc(E.qty)}"></div></div>
+  <div><label class="e-lab" for="eUnit">Unit</label><div class="e-inp"><select id="eUnit">${UNIT_OPTS.map(u=>`<option value="${u}" ${u===E.unit?'selected':''}>${esc(unitLabel(u,f))}</option>`).join('')}</select></div></div>
+ </div>
+ <div class="e-prev" id="ePrev">${prevHTML()}</div>
+ ${E.err?`<div class="form-err" style="padding:8px 2px">${E.err==='name'?'Enter an ingredient name.':'Enter an amount greater than 0.'}</div>`:''}
+ ${isNew?'':'<button class="e-remove" data-act="edit-remove">Remove ingredient</button>'}`;
+}
+function bindEdit(){
+ const n=$('#eName'),q=$('#eQty'),u=$('#eUnit');if(!n)return;
+ n.addEventListener('input',()=>{EDIT.name=n.value;const f=ALIAS[n.value.trim().toLowerCase()];EDIT.foodId=f?f.id:null;$('#eSugg').innerHTML=suggHTML();$('#ePrev').innerHTML=prevHTML()});
+ q.addEventListener('input',()=>{EDIT.qty=q.value;$('#ePrev').innerHTML=prevHTML()});
+ u.addEventListener('change',()=>{EDIT.unit=u.value;EDIT.unitTouched=true;$('#ePrev').innerHTML=prevHTML()});
+}
+function openSheet(type){
+ SHEET=type;sheetAt=Date.now();const L=$('#layer');
+ const html={upsell:upsellHTML,discard:discardHTML,paywall:paywallHTML,edit:editHTML}[type]();
+ L.innerHTML=`<div class="backdrop" data-act="backdrop"></div><div class="sheet sheet-${type}">${html}</div>`;
+ if(type==='edit')bindEdit();
+ void L.offsetWidth;L.classList.add('open');
+}
+function rerenderSheet(){if(SHEET!=='edit')return;$('#layer .sheet').innerHTML=editHTML();bindEdit()}
+function closeSheet(cb){
+ const L=$('#layer');L.classList.remove('open');SHEET=null;
+ setTimeout(()=>{if(!L.classList.contains('open'))L.innerHTML='';if(cb)cb()},300);
+}
+
+/* ================= Voice + review screens ================= */
+function setV(state){VSTATE=state;renderVoice()}
+function voiceNav(left,title){return `<div class="vnav"><button class="l" data-act="voice-cancel">${left}</button><div class="t-headline">${title}</div><div class="sp"></div></div>`}
+function errorBlock(icon,title,text,buttons){return `<div class="v-body"><div class="v-center"><div class="err-ic">${icon}</div><h3>${title}</h3><p>${text}</p></div></div><div class="v-foot">${buttons}</div>`}
+function renderVoice(){
+ const V=$('#voice');let h='';const typed=VR.mode==='typed';
+ switch(VSTATE){
+ case 'ready':
+  h=voiceNav('Cancel','Voice Assistant')+`<div class="v-body"><div class="v-center">
+   <span class="eyebrow">${FI.crown}Premium · free try</span>
+   <h2>Read your ingredients out loud</h2>
+   <p>Say the amounts too, like “one cup of toor dal, two carrots.” Tap Done when you finish.</p>
+   <button class="mic-big" data-act="mic" aria-label="Start speaking">${IC.micW}</button>
+   <div class="v-hint">Tap to start speaking</div>
+   ${VMSG?`<div class="v-msg">${esc(VMSG)}</div>`:''}
+  </div></div><div class="v-foot"><button class="link" data-act="voice-type-instead">Type ingredients instead</button></div>`;break;
+ case 'listening':
+  h=voiceNav('Cancel','Voice Assistant')+`<div class="v-body">
+   <div class="listen-top"><span class="rec-dot"></span>Listening… <span id="vTimer">0:00</span></div>
+   <div class="transcript" id="vTranscript"></div>
+   <div class="wave" id="vWave">${'<i></i>'.repeat(28)}</div>
+   <div class="listen-mic"><button class="mic-big live" data-act="mic-done" aria-label="Stop">${IC.micW}</button></div>
+  </div><div class="v-foot"><button class="btn-primary" id="vDone" data-act="mic-done">Done</button></div>`;break;
+ case 'processing':
+  h=voiceNav('Cancel',typed?'Matching ingredients':'Voice Assistant')+`<div class="v-body"><div class="v-center"><div class="spin"></div><h3>Matching ingredients…</h3>
+   <ul class="steps"><li id="st0" class="done"><span class="sd">${IC.check}</span>${typed?'Reading your list':'Transcribing what you said'}</li><li id="st1"><span class="sd">${IC.check}</span>Finding ingredients</li><li id="st2"><span class="sd">${IC.check}</span>Calculating calories</li></ul></div></div>`;break;
+ case 'review':{
+  const its=VR.items,warn=its.filter(x=>!x.foodId).length,tot=totalCal(its);
+  h=voiceNav(typed?'Back':'Cancel','Review ingredients')+`<div class="v-body">
+   <div class="said"><div class="said-h"><span>${typed?'Your list':'What you said'}</span>${typed?'':`<button data-act="rerecord">${IC.redo} Re-record</button>`}</div><div class="said-t">${typed?esc(VR.transcript):'“'+esc(VR.transcript)+'”'}</div></div>
+   <div class="rv-sum"><span>${its.length} ingredient${its.length===1?'':'s'} found${warn?` · <span class="warn-t">${warn} need${warn===1?'s':''} a check</span>`:''}</span>${typed?'':`<span class="speed">${FI.bolt}Parsed in ${VR.secs}s</span>`}</div>
+   ${its.length?`<div class="rv-list">${its.map(reviewRow).join('')}</div>`:''}
+   <button class="rv-add" data-act="add-missing">${IC.plus} Add a missing ingredient</button>
+  </div><div class="v-foot"><div class="rv-total"><span>Total</span><b>≈ ${fmtCal(tot)} cal</b></div>${typed?`<button class="btn-primary" data-act="typed-save" ${its.length?'':'disabled'}>Save recipe</button>`:`<button class="btn-primary" data-act="voice-add" ${its.length?'':'disabled'}>Add ${its.length} ingredient${its.length===1?'':'s'} to recipe</button>`}</div>`;break;}
+ case 'empty':h=voiceNav('Cancel','Voice Assistant')+errorBlock(IC.ear,'No ingredients found',`We heard “${esc(VR.transcript)}” but couldn't find any ingredients in it.`,'<button class="btn-primary" data-act="voice-retry">Try again</button><button class="link" data-act="voice-type-instead">Type ingredients instead</button>');break;
+ case 'nospeech':h=voiceNav('Cancel','Voice Assistant')+errorBlock(IC.ear,'We didn’t catch that','Make sure you’re in a quiet spot and speak after tapping the mic.','<button class="btn-primary" data-act="voice-retry">Try again</button><button class="link" data-act="voice-type-instead">Type ingredients instead</button>');break;
+ case 'denied':h=voiceNav('Close','Voice Assistant')+errorBlock(IC.micOff,'Microphone is off','Voice entry needs your microphone. You can allow it in your browser settings, or type your ingredients.',`${VS.engine==='web'?'<button class="btn-secondary" data-act="voice-retry">Try again</button>':''}<button class="btn-primary" data-act="voice-type-instead">Type ingredients instead</button>`);break;
+ case 'unsupported':h=voiceNav('Close','Voice Assistant')+errorBlock(IC.micOff,'Voice isn’t available here','Voice entry isn’t supported in this browser. Try Chrome, or type your ingredients.','<button class="btn-primary" data-act="voice-type-instead">Type ingredients instead</button>');break;
+ default:h=voiceNav('Close','Voice Assistant')+errorBlock(IC.micOff,'Something went wrong','We couldn’t process your voice this time.','<button class="btn-primary" data-act="voice-retry">Try again</button><button class="link" data-act="voice-type-instead">Type ingredients instead</button>');
+ }
+ V.innerHTML=h;
+ if(VSTATE==='listening'){
+  updateTranscript();
+  const bs=[...V.querySelectorAll('#vWave i')];
+  VS.ivWave=setInterval(()=>{VS.level*=.9;const n=bs.length;bs.forEach((b,i)=>{const env=Math.sin(Math.PI*(i+.5)/n);b.style.height=(5+Math.random()*3+env*VS.level*(30+Math.random()*34))+'px'})},90);
+  VS.ivTimer=setInterval(()=>{const s=Math.floor((Date.now()-VS.t0)/1000);const t=$('#vTimer');if(t)t.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(s>=90&&VS.active&&!VS.stopping){log('mic_autostop',{reason:'max_length'});userStop(true)}},500);
+ }
+}
+function updateTranscript(){const el=$('#vTranscript');if(!el)return;if(!vText()){el.innerHTML='<span class="ph">Start speaking…</span>';return}el.innerHTML=`<span>${esc(VS.final)}</span> <span class="par">${esc(VS.partial)}</span>`}
+function reviewRow(it,i){
+ if(!it.foodId)return `<div class="rv-row warn"><button class="rv-hit" data-act="edit-item" data-i="${i}"><span class="dot warn">${IC.warn}</span><span class="rv-main"><span class="rv-name">“${esc(it.name)}”</span><span class="rv-meta warn-t">Not recognized · tap to fix</span></span><span class="rv-chev">${IC.chev}</span></button>${it.sugg?`<button class="chip" data-act="accept-sugg" data-i="${i}">Did you mean <b>${esc(FOODMAP[it.sugg].name)}</b>?</button>`:''}</div>`;
+ return `<div class="rv-row"><button class="rv-hit" data-act="edit-item" data-i="${i}"><span class="dot ok">${IC.check}</span><span class="rv-main"><span class="rv-name">${esc(FOODMAP[it.foodId].name)}</span><span class="rv-meta">${esc(fmtAmt(it))}</span></span><span class="rv-cal">${fmtCal(kcalOf(it))} cal</span><span class="rv-chev">${IC.chev}</span></button></div>`;
+}
+function openVoice(){VR={transcript:'',items:[],mode:'voice'};VOPEN=true;VMSG='';setV('ready');$('#voice').classList.add('open')}
+function openTypedReview(text){
+ VR={transcript:text,items:[],mode:'typed'};VOPEN=true;setV('processing');$('#voice').classList.add('open');
+ const tok=++VTOKEN;
+ setTimeout(()=>{if(tok===VTOKEN)markStep(1)},350);setTimeout(()=>{if(tok===VTOKEN)markStep(2)},700);
+ setTimeout(()=>{if(tok!==VTOKEN)return;const items=parseIngredients(text.replace(/\n/g,', '));VR.items=items;
+  log('typed_parse_result',{matched:items.filter(x=>x.foodId).length,unrecognized:items.filter(x=>!x.foodId).length,items:items.map(x=>x.foodId?x.name:'?'+x.name).join('; ')});setV('review')},1000);
+}
+function closeVoice(){abortVoice();VTOKEN++;VOPEN=false;$('#voice').classList.remove('open')}
+
+/* ================= Misc ================= */
+let toastT=null,toastAct=null;
+function toast(text,action){const t=$('#toast');toastAct=action||null;t.innerHTML=`<span>${esc(text)}</span>${action?`<button data-act="toast-act">${esc(action.label)}</button>`:''}`;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),action?6000:3000)}
+function showUpsell(trigger){if(!canUpsell())return false;S.upsellShown=true;S.upsellCtx=trigger;openSheet('upsell');log('upsell_shown',{trigger});return true}
+function openEdit(mode,idx){
+ const base=mode==='recipe'?S.ingredients[idx]:mode==='voice'?VR.items[idx]:null;
+ EDIT={mode,idx,name:base?(base.foodId?FOODMAP[base.foodId].name:base.name):'',foodId:base?base.foodId:null,qty:base?String(base.qty):'1',unit:base?(base.unit||'piece'):'cup',err:null,
+  wasUnmatched:!!(base&&!base.foodId),sugg:base&&base.sugg,unitTouched:false,
+  note:base&&!base.foodId&&mode==='voice'?`We ${VR.mode==='typed'?'read':'heard'} “${esc(base.name)}” but couldn't match it. Search for the right food below.`:''};
+ openSheet('edit');log('edit_open',{mode,item:EDIT.name||'(new)'});
+}
+function saveEdit(){
+ const E=EDIT,qty=parseFloat(E.qty);
+ if(!E.name.trim()){E.err='name';log('edit_invalid',{reason:'no name'});rerenderSheet();return}
+ if(!(qty>0)){E.err='qty';log('edit_invalid',{reason:'bad amount',value:E.qty});rerenderSheet();return}
+ const it={id:uid(),foodId:E.foodId,name:E.foodId?FOODMAP[E.foodId].name:E.name.trim(),qty,unit:E.unit};
+ if(E.mode==='recipe-new'){it.source='manual';S.ingredients.push(it);log('manual_add',{name:it.name,matched:!!it.foodId,amount:fmtAmt(it)});closeSheet();renderAdd();return}
+ if(E.mode==='recipe'){const old=S.ingredients[E.idx];it.source=old.source;S.ingredients[E.idx]=it;log('ingredient_edited',{from:old.name,to:it.name,amount:fmtAmt(it)});closeSheet();renderAdd();return}
+ if(E.mode==='voice-new'){it.addedInReview=true;VR.items.push(it);log('item_added_in_review',{name:it.name,matched:!!it.foodId});closeSheet();renderVoice();return}
+ const old=VR.items[E.idx];
+ Object.assign(it,{said:old.said,planted:old.planted,trueFood:old.trueFood,fixed:true});
+ const changedFood=old.foodId!==it.foodId;
+ if(old.planted==='wrong'&&changedFood)it.planted=null;
+ VR.items[E.idx]=it;
+ if(!old.foodId||changedFood)log('item_corrected',{via:'edit',from:old.foodId?FOODMAP[old.foodId].name:'?'+old.name,to:it.name,planted:old.planted||'',now_matched:!!it.foodId,review:VR.mode});
+ else log('item_edited',{name:it.name,amount:fmtAmt(it),review:VR.mode});
+ closeSheet();renderVoice();
+}
+function removeEdit(){
+ const E=EDIT;
+ if(E.mode==='recipe'){const old=S.ingredients.splice(E.idx,1)[0];log('ingredient_removed',{name:old.name});closeSheet();renderAdd();return}
+ if(E.mode==='voice'){const old=VR.items.splice(E.idx,1)[0];log('item_removed',{name:old.name,was_unrecognized:!old.foodId,planted:old.planted||'',review:VR.mode});closeSheet();renderVoice()}
+}
+function trySave(){
+ const pending=S.bulk?S.bulkText.trim():'';
+ S.err={title:!S.title.trim(),serv:!(parseFloat(S.servings)>0),ing:!S.ingredients.length&&!pending};
+ const miss=Object.keys(S.err).filter(k=>S.err[k]);
+ if(miss.length){log('save_blocked',{missing:miss.join(',')});renderAdd();return}
+ if(pending){log('typed_review_open',{lines:pending.split('\n').filter(l=>l.trim()).length});openTypedReview(pending);return}
+ finalizeSave('direct');
+}
+function finalizeSave(via){
+ const tot=totalCal(S.ingredients),sv=parseFloat(S.servings);
+ const byVoice=S.ingredients.filter(x=>x.source==='voice').length,typed=S.ingredients.filter(x=>x.source==='typed').length,manual=S.ingredients.filter(x=>x.source==='manual').length;
+ const method=byVoice&&(typed||manual)?'mixed':byVoice?'voice':typed?'typed':'manual';
+ log('recipe_saved',{title:S.title,servings:sv,ingredients:S.ingredients.length,method,by_voice:byVoice,typed,manual,kcal:tot,via});
+ S.recipes.forEach(r=>r.fresh=false);
+ S.recipes.unshift({id:uid(),name:S.title.trim(),details:`${fmtCal(Math.round(tot/sv))} cal, 1 serving`,added:false,fresh:true,kcal:Math.round(tot/sv)});
+ S.query='';NAV.tab='recipes';renderSearch();closeAdd();
+ setTimeout(()=>{const sc=$('#searchScroll');if(sc)sc.scrollTop=0;toast('Recipe saved')},380);
+ log('screen_view',{screen:'my-recipes'});
+}
+function describe(el){const c=el.closest('[class]');const cls=c?String(c.className).split(' ')[0]:el.tagName.toLowerCase();const tx=(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,28);return cls+(tx?': '+tx:'')}
+
+/* ================= Actions ================= */
+let titleTaps=[];
+const ACT={
+ 'title-tap'(){const now=Date.now();titleTaps=titleTaps.filter(t=>now-t<700);titleTaps.push(now);if(titleTaps.length>=3){titleTaps=[];togglePanel(true)}},
+ 'meal-log'(el){const m=el.dataset.meal;log('meal_log_tap',{meal:m});openSearch(m)},
+ 'search-back'(){log('back_tap',{from:NAV.tab});closeSearch()},
+ 'tab'(el){const t=el.dataset.tab;if(t===NAV.tab)return;log('tab_tap',{tab:t});NAV.tab=t;S.query='';renderSearch();log('screen_view',{screen:t==='recipes'?'my-recipes':'food-search:'+t})},
+ 'voice-log-tile'(){log('voice_log_tile_tap');toast('Voice log isn’t part of this prototype')},
+ 'food-add'(el){const f=S.foods.find(x=>x.id===el.dataset.id);if(!f)return;f.added=!f.added;log(f.added?'food_logged':'food_unlogged',{name:f.name,meal:S.meal});if(f.added){S.logged[S.meal].push(diaryEntry(f,'food'));toast(`Added to ${S.meal}`)}else unlogSource(f.id);refreshRows()},
+ 'recipe-add'(el){const r=S.recipes.find(x=>x.id===el.dataset.id);if(!r)return;r.added=!r.added;log(r.added?'recipe_logged':'recipe_unlogged',{name:r.name,meal:S.meal,new_recipe:!!r.kcal});if(r.added){S.logged[S.meal].push(diaryEntry(r,'recipe'));toast(`Added to ${S.meal}`)}else unlogSource(r.id);refreshRows()},
+ 'logged-delete'(el){
+  const m=el.dataset.meal,id=el.dataset.id,i=S.logged[m].findIndex(x=>x.id===id);if(i<0)return;const it=S.logged[m][i],sw=el.closest('.sw');openSw=null;
+  log('diary_item_deleted',{name:it.name,meal:m,kind:it.kind});
+  sw.style.height=sw.offsetHeight+'px';void sw.offsetHeight;sw.classList.add('gone');sw.style.height='0px';
+  setTimeout(()=>{S.logged[m].splice(i,1);const src=(it.kind==='recipe'?S.recipes:S.foods).find(x=>x.id===it.srcId);if(src&&!S.logged.Breakfast.concat(S.logged.Lunch,S.logged.Dinner).some(x=>x.srcId===src.id))src.added=false;
+   lastDiaryDeleted={it,m,i};renderToday();refreshRows();toast(`Removed from ${m}`,{label:'Undo',act:'logged-undo'})},270);
+ },
+ 'logged-undo'(){if(!lastDiaryDeleted)return;const {it,m,i}=lastDiaryDeleted;lastDiaryDeleted=null;S.logged[m].splice(Math.min(i,S.logged[m].length),0,it);const src=(it.kind==='recipe'?S.recipes:S.foods).find(x=>x.id===it.srcId);if(src)src.added=true;log('diary_item_delete_undo',{name:it.name,meal:m});renderToday();refreshRows()},
+ 'recipe-delete'(el){
+  const id=el.dataset.id,i=S.recipes.findIndex(r=>r.id===id);if(i<0)return;const r=S.recipes[i],sw=el.closest('.sw');openSw=null;
+  log('recipe_deleted',{name:r.name,new_recipe:!!r.kcal,position:i+1});
+  sw.style.height=sw.offsetHeight+'px';void sw.offsetHeight;sw.classList.add('gone');sw.style.height='0px';
+  setTimeout(()=>{S.recipes.splice(i,1);lastDeleted={r,i};refreshRows();toast(`“${r.name}” deleted`,{label:'Undo',act:'recipe-undo'})},270);
+ },
+ 'recipe-undo'(){if(!lastDeleted)return;const {r,i}=lastDeleted;lastDeleted=null;S.recipes.splice(Math.min(i,S.recipes.length),0,r);log('recipe_delete_undo',{name:r.name});refreshRows()},
+ 'create-recipe'(){log('create_recipe_tap');openAdd()},
+ 'close-recipe'(){log('close_tap');if(S.title||S.servings||S.bulkText.trim()||S.ingredients.length)openSheet('discard');else{log('add_recipe_closed');closeAdd();log('screen_view',{screen:'my-recipes'})}},
+ 'discard-yes'(){log('recipe_discarded',{ingredients:S.ingredients.length});closeSheet(()=>{closeAdd();log('screen_view',{screen:'my-recipes'})})},
+ 'discard-no'(){log('discard_cancelled');closeSheet()},
+ 'save'(){log('save_tap');trySave()},
+ 'toggle-bulk'(){S.bulk=!S.bulk;log('bulk_toggle',{on:S.bulk});renderAdd()},
+ 'add-ingredient'(){log('add_ingredient_tap');if(CFG.trigger==='focus'&&showUpsell('add-ingredient-tap'))return;openEdit('recipe-new')},
+ 'edit-ing'(el){openEdit('recipe',+el.dataset.i)},
+ 'backdrop'(){const s=SHEET;if(s==='upsell'){log('upsell_dismiss_outside');closeSheet()}else if(s==='edit'){log('edit_cancel',{via:'outside'});closeSheet()}else{log(s+'_dismiss');closeSheet()}},
+ 'upsell-try'(){log('upsell_try');closeSheet();setTimeout(openVoice,150)},
+ 'upsell-keep'(){log('upsell_keep_typing');const ctx=S.upsellCtx;closeSheet(()=>{if(ctx==='add-ingredient-tap')openEdit('recipe-new');else{const fb=$('#fBulk');if(fb)fb.focus()}})},
+ 'upsell-close'(){log('upsell_close_x');closeSheet()},
+ 'mic'(){micStart()},
+ 'mic-done'(){userStop(false)},
+ 'voice-cancel'(){log(VR.mode==='typed'?'typed_review_back':'voice_cancel',{stage:VSTATE,heard:VR.mode==='typed'?'':vText()});closeVoice()},
+ 'voice-retry'(){log('voice_retry',{from:VSTATE});VMSG='';VR={transcript:'',items:[],mode:'voice'};setV('ready')},
+ 'voice-type-instead'(){log('voice_type_instead',{from:VSTATE});closeVoice();setTimeout(()=>{if(S.bulk){const fb=$('#fBulk');if(fb)fb.focus()}else openEdit('recipe-new')},380)},
+ 'rerecord'(){log('rerecord');VR={transcript:'',items:[],mode:'voice'};setV('ready')},
+ 'edit-item'(el){openEdit('voice',+el.dataset.i)},
+ 'accept-sugg'(el){const i=+el.dataset.i,it=VR.items[i],f=FOODMAP[it.sugg];if(!f)return;log('item_corrected',{via:'suggestion',from:'?'+it.name,to:f.name,planted:it.planted||'',review:VR.mode});VR.items[i]=Object.assign({},it,{foodId:f.id,name:f.name,unit:it.unit||f.def[0],fixed:true,matched:true});renderVoice()},
+ 'add-missing'(){openEdit('voice-new')},
+ 'voice-add'(){
+  const its=VR.items;if(!its.length)return;
+  const unres=its.filter(x=>!x.foodId).length,wrong=its.filter(x=>x.planted==='wrong').length;
+  log('voice_added',{count:its.length,unrecognized_left:unres,planted_wrong_left:wrong});
+  if(unres||wrong)log('added_with_unresolved',{unrecognized:unres,wrong_match:wrong,review:'voice'});
+  its.forEach(x=>S.ingredients.push(Object.assign({},x,{source:'voice'})));
+  S.trialUsed=true;S.err.ing=false;closeVoice();renderAdd();
+  setTimeout(()=>toast(`Added ${its.length} ingredients · free voice try used`,{label:'Upgrade',act:'upgrade'}),400);
+ },
+ 'typed-save'(){
+  const its=VR.items;if(!its.length)return;
+  const unres=its.filter(x=>!x.foodId).length;
+  log('typed_added',{count:its.length,unrecognized_left:unres});
+  if(unres)log('added_with_unresolved',{unrecognized:unres,review:'typed'});
+  its.forEach(x=>S.ingredients.push(Object.assign({},x,{source:'typed'})));
+  S.bulkText='';closeVoice();finalizeSave('typed-review');
+ },
+ 'edit-cancel'(){log('edit_cancel',{via:'button'});closeSheet()},
+ 'edit-save'(){saveEdit()},
+ 'edit-remove'(){removeEdit()},
+ 'pick-food'(el){const f=FOODMAP[el.dataset.id];EDIT.foodId=f.id;EDIT.name=f.name;EDIT.err=null;if(/new$/.test(EDIT.mode)&&!EDIT.unitTouched){EDIT.unit=f.def[0];EDIT.qty=String(f.def[1])}log('food_picked',{food:f.name,mode:EDIT.mode});rerenderSheet()},
+ 'toast-act'(){if(toastAct&&ACT[toastAct.act]){$('#toast').classList.remove('show');ACT[toastAct.act]()}},
+ 'upgrade'(){log('upgrade_tap');openSheet('paywall')},
+ 'paywall-start'(){log('upgrade_intent');closeSheet(()=>toast('Prototype only: no purchase was made'))},
+ 'paywall-close'(){log('paywall_dismiss');closeSheet()}
+};
+const phone=$('#phone');
+phone.addEventListener('click',e=>{
+ if(swSwallow){swSwallow=false;return}
+ const el=e.target.closest('[data-act]');
+ if(e.target.closest('#layer')&&Date.now()-sheetAt<450)return; // swallow the tap that opened the sheet (touch devices)
+ if(el){const fn=ACT[el.dataset.act];if(fn)fn(el,e);return}
+ const off=e.target.closest('[data-off]');
+ if(off){log('off_path_tap',{on:off.dataset.off});return}
+ if(!e.target.closest('button,input,textarea,select,label,a'))log('dead_tap',{on:describe(e.target)});
+});
+
+/* ================= Moderator panel ================= */
+function engineLabel(){
+ if(CFG.engine==='sim')return {t:'<b>Simulated voice (Wizard of Oz).</b> When the participant taps the mic, the script below types out as if heard. Ask them to read the recipe card aloud.',w:false};
+ if(dict)return {t:'<b>Real voice is on</b> (Claude dictation). Works in Chrome or the Claude desktop app, for people signed in to your Claude organization.',w:false};
+ if(!inClaude&&SR)return {t:'<b>Real voice is on</b> (browser speech recognition, '+esc(CFG.lang)+'). Works in Chrome and Safari.',w:false};
+ if(inClaude&&!dictChecked)return {t:'Checking voice support…',w:false};
+ return {t:'<b>Real voice isn’t available in this browser.</b> Open the page in Chrome, or switch the voice engine to Simulated below.',w:true};
+}
+function refreshEngineLabel(){const el=$('#pEng');if(!el)return;const l=engineLabel();el.innerHTML=l.t;el.className='p-eng'+(l.w?' warn':'')}
+function metrics(s){
+ const E=s.events,first=t=>E.find(e=>e.type===t),cnt=t=>E.filter(e=>e.type===t).length,sec=(a,b)=>a&&b?+((b.t-a.t)/1000).toFixed(1):'';
+ const firstView=sc=>E.find(e=>e.type==='screen_view'&&e.detail.screen===sc);
+ const sh=first('upsell_shown'),tr=first('upsell_try'),va=first('voice_added'),rs=first('recipe_saved'),ar=firstView('add-recipe'),mr=firstView('my-recipes');
+ const choice=tr?'Tried it':first('upsell_keep_typing')?'Keep typing':first('upsell_close_x')?'Closed (X)':first('upsell_dismiss_outside')?'Tapped outside':sh?'No choice yet':'Not shown';
+ const unres=E.filter(e=>e.type==='added_with_unresolved').reduce((a,e)=>a+(e.detail.unrecognized||0)+(e.detail.wrong_match||0),0);
+ return {participant:s.participant,session:s.id,started:new Date(s.started).toLocaleString(),engine:s.config.engine,trigger:s.config.trigger,planted_error:s.config.plant,
+  found_my_recipes:mr?'yes':'no',sec_to_my_recipes:mr?+(mr.t/1000).toFixed(1):'',reached_add_recipe:ar?'yes':'no',sec_to_add_recipe:ar?+(ar.t/1000).toFixed(1):'',
+  saw_upsell:sh?'yes':'no',upsell_choice:choice,mic_started:first('mic_start')?'yes':'no',voice_completed:va?'yes':'no',ingredients_by_voice:va?va.detail.count:0,
+  unresolved_on_add:(va||first('typed_added'))?unres:'',corrections:cnt('item_corrected'),rerecords:cnt('rerecord')+cnt('voice_retry'),
+  recipe_saved:rs?'yes':'no',recipes_deleted:cnt('recipe_deleted'),diary_items_deleted:cnt('diary_item_deleted'),logged_new_recipe:E.some(e=>e.type==='recipe_logged'&&e.detail.new_recipe)?'yes':'no',deleted_own_recipe:E.some(e=>e.type==='recipe_deleted'&&e.detail.new_recipe)&&!E.some(e=>e.type==='recipe_delete_undo')?'yes':'no',save_method:rs?rs.detail.method:'',errors:E.filter(e=>e.error).length,off_path_taps:cnt('off_path_tap'),dead_taps:cnt('dead_tap'),voice_log_tile_taps:cnt('voice_log_tile_tap'),
+  sec_upsell_to_try:sec(sh,tr),sec_try_to_voice_added:sec(tr,va),sec_add_recipe_to_save:sec(ar,rs),sec_total_to_save:rs?+(rs.t/1000).toFixed(1):''};
+}
+function fmtT(ms){const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function detailStr(d){return Object.keys(d||{}).map(k=>k+'='+(typeof d[k]==='string'?d[k]:JSON.stringify(d[k]))).join(' · ')}
+function renderPanel(){
+ const sel=(k,opts)=>`<select data-pset="${k}">${opts.map(([v,l])=>`<option value="${v}" ${String(CFG[k])===v?'selected':''}>${l}</option>`).join('')}</select>`;
+ const canDl=!!downloadsCap||!inClaude;
+ $('#pBody').innerHTML=`
+ <section><div id="pEng" class="p-eng"></div><div class="p-hint">Open or close this panel: triple-tap the “Today” or “Add Recipe” title, or press Shift+M.</div></section>
+ <section><h4>Session</h4><div id="pRec"></div>
+  ${isRec()?`<div class="p-row"><button class="p-btn stop" data-pact="end">■ End session</button></div><div class="p-sub">End the session after any follow-up questions. Its data is saved for export.</div>`
+   :`<div class="p-row"><input id="pId" placeholder="Participant ID (e.g. P3)" value="${esc(nextId())}"><button class="p-btn primary" data-pact="start">● Start recording</button></div><div class="p-sub">Starting resets the app to the Today screen, starts the clock, and closes this panel. Nothing the participant does is logged until you start.</div>`}</section>
+ <section><h4>Live results</h4><div id="pSum" class="p-tiles"></div></section>
+ <section><h4>Log what you observe</h4><textarea id="pNote" rows="2" placeholder="e.g. Looked for recipes under My Meals first"></textarea><div class="p-row"><button class="p-btn" data-pact="obs-error">+ Observed error</button><button class="p-btn" data-pact="obs-assist">+ Moderator assist</button><button class="p-btn" data-pact="obs-note">+ Note</button></div></section>
+ <section><h4>Test settings</h4>
+  <label class="p-set">Voice engine ${sel('engine',[['auto','Real voice (microphone)'],['sim','Simulated: plays the script below']])}</label>
+  <label class="p-set">Speech language (browser engine only) ${sel('lang',[['en-US','English (US)'],['en-IN','English (India)'],['en-GB','English (UK)']])}</label>
+  <label class="p-set">When the upsell appears ${sel('trigger',[['focus','When they tap the Ingredients box (or Add Ingredient)'],['load','2 seconds after Add Recipe opens'],['off','Never (control group)']])}</label>
+  <label class="p-set">Bulk Import toggle starts ${sel('bulkDefault',[['true','On (as in Figma)'],['false','Off']])}</label>
+  <label class="p-set">Planted parsing error ${sel('plant',[['off','None: show real results'],['unrec','Last item shows as “not recognized”'],['wrong','Last item silently matched to the wrong food']])}</label>
+  <label class="p-check"><input type="checkbox" data-pset="showAd" ${CFG.showAd?'checked':''}> Show the ad banners</label>
+  <label class="p-set">Simulated script<textarea data-pset="script" rows="3">${esc(CFG.script)}</textarea></label>
+  <div class="p-sub">Start a new session after changing settings so each participant gets the same setup.</div>
+ </section>
+ <section><h4>Task to read aloud</h4><pre class="p-card">${esc(TASK)}</pre><button class="p-btn" data-pact="copy-task">Copy task</button></section>
+ <section><h4>Recipe card for participants</h4><pre class="p-card">${esc(CARD)}</pre><button class="p-btn" data-pact="copy-card">Copy card text</button></section>
+ <section><h4>Event log (this session) <span id="pCount"></span></h4><div id="pLog" class="p-log"></div></section>
+ <section><h4>Export</h4><div class="p-col">
+  <button data-pact="copy-summary">Copy summary CSV (one row per participant)</button>
+  <button data-pact="copy-all">Copy all events CSV (every session)</button>
+  <button data-pact="copy-session">Copy this session’s events CSV</button>
+  ${canDl?'<button data-pact="dl-summary">Download summary CSV</button><button data-pact="dl-all">Download all events CSV</button>':''}
+ </div><div class="p-sub" id="pExpMsg"></div><textarea id="pExport" class="p-export" rows="4" readonly placeholder="Exported text also appears here, in case copying is blocked."></textarea>
+ <div class="p-sub" id="pStored"></div><button class="p-btn danger" data-pact="clear">Delete saved sessions</button></section>`;
+ refreshEngineLabel();updatePanelLive();
+}
+function updatePanelLive(){
+ if(!$('#panel').classList.contains('open')||!$('#pSum'))return;
+updateRecStatus();
+ if(!SESSION){$('#pSum').innerHTML='<div class="p-sub" style="grid-column:1/-1">Results appear here once you start recording.</div>';$('#pLog').innerHTML='';$('#pCount').textContent='';$('#pStored').textContent=doneSessions().length+' session(s) saved in this browser.';return}
+ const m=metrics(SESSION);
+ const tile=(l,v,cls)=>`<div class="p-tile ${cls||''}"><span>${l}</span><b>${esc(v===''?'–':v)}</b></div>`;
+ const y=v=>v==='yes'?'yes':'';
+ $('#pSum').innerHTML=[tile('Found My Recipes',m.found_my_recipes+(m.sec_to_my_recipes!==''?` (${m.sec_to_my_recipes}s)`:''),y(m.found_my_recipes)),tile('Reached Add Recipe',m.reached_add_recipe+(m.sec_to_add_recipe!==''?` (${m.sec_to_add_recipe}s)`:''),y(m.reached_add_recipe)),
+  tile('Saw upsell',m.saw_upsell,y(m.saw_upsell)),tile('Upsell choice',m.upsell_choice,m.upsell_choice==='Tried it'?'yes':''),
+  tile('Voice completed',m.voice_completed+(m.voice_completed==='yes'?` (${m.ingredients_by_voice})`:''),y(m.voice_completed)),tile('Recipe saved (task done)',m.recipe_saved+(m.save_method?` · ${m.save_method}`:''),y(m.recipe_saved)),
+  tile('Errors',m.errors,m.errors?'bad':''),tile('Left unresolved',m.unresolved_on_add,m.unresolved_on_add>0?'bad':''),
+  tile('Corrections in review',m.corrections),tile('Off-path / dead taps',m.off_path_taps+' / '+m.dead_taps),
+  tile('Recipes deleted',m.recipes_deleted+(m.deleted_own_recipe==='yes'?' (incl. theirs)':''),m.deleted_own_recipe==='yes'?'bad':''),tile('Voice log tile taps',m.voice_log_tile_taps),
+  tile('Upsell → Try (s)',m.sec_upsell_to_try),tile('Try → added (s)',m.sec_try_to_voice_added),
+  tile('Add Recipe → saved (s)',m.sec_add_recipe_to_save),tile('Total time to save (s)',m.sec_total_to_save)].join('');
+ $('#pLog').innerHTML=SESSION.events.slice().reverse().map(e=>`<div class="lg ${e.error?'err':e.type==='off_path_tap'?'off':''}"><span class="lg-t">${fmtT(e.t)}</span><span class="lg-e">${esc(e.type)}</span><span class="lg-d">${esc(e.screen)}${Object.keys(e.detail).length?' · '+esc(detailStr(e.detail)):''}</span></div>`).join('');
+ $('#pCount').textContent='· '+SESSION.events.length+' events';
+ $('#pStored').textContent=SESSIONS.filter(s=>s.events.length>1).length+' session(s) saved in this browser.';
+}
+function updateRecStatus(){
+ const el=$('#pRec');if(!el)return;
+ if(!SESSION){el.className='rec';el.innerHTML='<span class="rd"></span><b>Not recording</b>';return}
+ const done=SESSION.events.find(e=>e.type==='recipe_saved');
+ const end=SESSION.ended||Date.now(),el2=fmtT(end-SESSION.started);
+ if(isRec()){el.className='rec on';el.innerHTML=`<span class="rd"></span><b>Recording · ${esc(SESSION.participant)}</b>${done?`<span style="font-size:12px">task done at ${fmtT(done.t)}</span>`:''}<span class="rt">${el2}</span>`}
+ else{el.className='rec ended';el.innerHTML=`<span class="rd"></span><b>Ended · ${esc(SESSION.participant)}</b><span style="font-size:12px">saved</span><span class="rt">${el2}</span>`}
+}
+function togglePanel(open){const p=$('#panel');const o=open==null?!p.classList.contains('open'):open;p.classList.toggle('open',o);if(o)renderPanel()}
+const csvq=v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
+function eventsCSV(list){const rows=[['participant','session','seconds','screen','event','is_error','details']];list.forEach(s=>s.events.forEach(e=>rows.push([s.participant,s.id,(e.t/1000).toFixed(1),e.screen,e.type,e.error?1:0,detailStr(e.detail)])));return rows.map(r=>r.map(csvq).join(',')).join('\n')}
+function summaryCSV(list){if(!list.length)return '';const ms=list.map(metrics);const keys=Object.keys(ms[0]);return [keys.map(csvq).join(',')].concat(ms.map(m=>keys.map(k=>csvq(m[k])).join(','))).join('\n')}
+const doneSessions=()=>SESSIONS.filter(s=>s.events.length>1);
+function pmsg(t){const el=$('#pExpMsg');if(el)el.textContent=t}
+function copyOut(text,label){const ta=$('#pExport');ta.value=text;let p;try{p=navigator.clipboard.writeText(text)}catch(e){p=Promise.reject(e)}Promise.resolve(p).then(()=>pmsg('Copied: '+label)).catch(()=>{pmsg('Copying was blocked. Select the text below and copy it.');ta.focus();ta.select()})}
+function downloadOut(text,name){
+ $('#pExport').value=text;
+ if(downloadsCap){Promise.resolve().then(()=>downloadsCap.save({filename:name,data:text})).then(()=>pmsg('Saved '+name)).catch(()=>pmsg('Download was declined or blocked. The text is below.'));return}
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();a.remove();pmsg('Downloaded '+name)}catch(e){pmsg('Download blocked. The text is below.')}
+}
+let clearArm=false;
+$('#panel').addEventListener('click',e=>{
+ const b=e.target.closest('[data-pact]');if(!b)return;const a=b.dataset.pact;const note=()=>{const n=$('#pNote');const v=n.value.trim();n.value='';return v};
+ const stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
+ switch(a){
+  case 'close':togglePanel(false);break;
+  case 'start':{const id=$('#pId').value.trim()||nextId();resetApp();newSession(id);log('screen_view',{screen:'today'});updateRecBadge();renderPanel();pmsg('');setTimeout(()=>togglePanel(false),900);break}
+  case 'end':endSession();renderPanel();break;
+  case 'obs-error':log('observed_error',{note:note()});break;
+  case 'obs-assist':log('moderator_assist',{note:note()});break;
+  case 'obs-note':log('note',{note:note()});break;
+  case 'copy-task':copyOut(TASK,'task');break;
+  case 'copy-card':copyOut(CARD,'recipe card');break;
+  case 'copy-session':if(SESSION)copyOut(eventsCSV([SESSION]),'this session');else pmsg('No session yet.');break;
+  case 'copy-all':copyOut(eventsCSV(doneSessions()),'all events');break;
+  case 'copy-summary':copyOut(summaryCSV(doneSessions()),'summary');break;
+  case 'dl-all':downloadOut(eventsCSV(doneSessions()),'voice-upsell-events-'+stamp+'.csv');break;
+  case 'dl-summary':downloadOut(summaryCSV(doneSessions()),'voice-upsell-summary-'+stamp+'.csv');break;
+  case 'clear':if(!clearArm){clearArm=true;b.textContent='Tap again to delete every saved session';setTimeout(()=>{clearArm=false;b.textContent='Delete saved sessions'},4000)}else{clearArm=false;SESSIONS=isRec()?[SESSION]:[];if(!isRec())SESSION=null;store.set('vp_sessions_v2',[]);renderPanel();pmsg('Saved sessions deleted.')}break;
+ }
+});
+$('#panel').addEventListener('change',e=>{
+ const k=e.target.dataset.pset;if(!k)return;
+ let v=e.target.type==='checkbox'?e.target.checked:e.target.value;if(k==='bulkDefault')v=v==='true';
+ CFG[k]=v;saveCfg();
+ if(isRec())SESSION.config={engine:CFG.engine,trigger:CFG.trigger,plant:CFG.plant,lang:CFG.lang};
+ log('setting_changed',{[k]:k==='script'?'(edited)':CFG[k]});
+ if(k==='showAd'){renderToday();renderAdd()}if(k==='engine'||k==='lang')refreshEngineLabel();
+});
+$('#panel').addEventListener('input',e=>{if(e.target.dataset.pset==='script'){CFG.script=e.target.value;saveCfg()}});
+$('#modBtn').addEventListener('click',()=>togglePanel());
+document.addEventListener('keydown',e=>{if(e.shiftKey&&(e.key==='M'||e.key==='m')&&!/input|textarea|select/i.test(e.target.tagName)){e.preventDefault();togglePanel()}if(e.key==='Escape'&&$('#panel').classList.contains('open'))togglePanel(false)});
+setInterval(()=>{const c=$('#clock');if(c){const d=new Date();c.textContent=(d.getHours()%12||12)+':'+String(d.getMinutes()).padStart(2,'0')}if($('#panel').classList.contains('open'))updateRecStatus()},1000);
+
+
+/* ================= Swipe to delete (My Recipes rows + Today diary items) ================= */
+const SW_W=88;let SWG={sw:null},openSw=null,swSwallow=false,lastDeleted=null,lastDiaryDeleted=null;
+function swallowNextClick(){swSwallow=true;setTimeout(()=>{swSwallow=false},450)}
+function swClose(sw){if(!sw)return;const fg=sw.querySelector('.sw-fg');if(fg)fg.style.transform='';sw.classList.remove('open');if(openSw===sw)openSw=null;setTimeout(()=>{if(!sw.classList.contains('open')&&!sw.classList.contains('drag'))sw.classList.remove('reveal')},270)}
+const swKindLabel=sw=>sw.dataset.kind==='logged'?'diary_item':'recipe';
+function swEnd(e){
+ const g=SWG;if(!g.sw||(e&&e.pointerId!==g.pid))return;SWG={sw:null};
+ if(!g.drag)return;
+ swallowNextClick();g.sw.classList.remove('drag');
+ if(g.dx<-SW_W/2){g.fg.style.transform=`translateX(${-SW_W}px)`;g.sw.classList.add('open');openSw=g.sw;log(swKindLabel(g.sw)+'_swipe_open',{name:g.sw.dataset.name||''})}
+ else swClose(g.sw);
+}
+[$('#sSearch'),$('#sToday')].forEach(box=>{
+ box.addEventListener('pointerdown',e=>{
+  if(e.button>0)return;
+  const sw=e.target.closest('.sw');
+  if(openSw){if(e.target.closest('.sw-del')&&sw===openSw)return;log(swKindLabel(openSw)+'_swipe_closed',{via:'tap'});swClose(openSw);swallowNextClick();return}
+  if(!sw)return;
+  SWG={sw,fg:sw.querySelector('.sw-fg'),x0:e.clientX,y0:e.clientY,dx:0,drag:false,pid:e.pointerId};
+ });
+ box.addEventListener('pointermove',e=>{
+  const g=SWG;if(!g.sw||e.pointerId!==g.pid)return;
+  const dx=e.clientX-g.x0,dy=e.clientY-g.y0;
+  if(!g.drag){
+   if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.2){g.drag=true;g.sw.classList.add('reveal','drag');try{g.fg.setPointerCapture(g.pid)}catch(err){}}
+   else{if(Math.abs(dy)>10)SWG={sw:null};return}
+  }
+  let x=Math.min(0,dx);if(x<-SW_W)x=-SW_W+(x+SW_W)*0.3;
+  g.dx=x;g.fg.style.transform=`translateX(${x}px)`;e.preventDefault();
+ });
+ box.addEventListener('pointerup',swEnd);box.addEventListener('pointercancel',swEnd);
+ box.addEventListener('scroll',()=>{if(openSw)swClose(openSw)},true);
+});
+
+/* ================= Boot ================= */
+$('#statusInd').innerHTML=FI.indicators;
+function resetApp(){
+ closeVoice();const L=$('#layer');L.classList.remove('open');L.innerHTML='';SHEET=null;EDIT=null;$('#toast').classList.remove('show');
+ S=freshState();NAV.search=false;NAV.add=false;NAV.tab='history';openSw=null;lastDeleted=null;lastDiaryDeleted=null;SWG={sw:null};
+ $('#sSearch').classList.add('off-right');$('#sAdd').classList.add('off-bottom');$('#sToday').classList.remove('behind');
+ renderToday();renderSearch();renderAdd();
+}
+resetApp();
+togglePanel(true); // moderator starts recording from the panel
+})();
+</script>
+</body>
+</html>
