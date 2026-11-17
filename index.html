@@ -332,7 +332,11 @@ svg{display:block;flex:none}
 .rec.ended .rd{background:#34c759}
 .p-btn.stop{background:#ff3b30;border-color:#ff3b30;color:#fff}
 .mod-btn{position:fixed;right:14px;bottom:14px;width:38px;height:38px;border-radius:19px;background:rgba(0,0,0,.07);color:#77777e;display:grid;place-items:center;z-index:900}
-@media (max-width:599px){.mod-btn{display:none}}
+/* On phones: show the moderator button only while NOT recording, so participants never see it mid-session */
+@media not all and (min-width:600px) and (min-height:780px){
+  .mod-btn{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);width:44px;height:44px;border-radius:22px;background:rgba(20,20,24,.72);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  .mod-btn.rec{display:none}
+}
 .panel{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:#fff;z-index:1000;box-shadow:-10px 0 40px rgba(0,0,0,.2);transform:translateX(105%);transition:transform .3s;display:flex;flex-direction:column;font-size:14px;color:#222}
 .panel.open{transform:none}
 .p-head{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px;border-bottom:1px solid #eee}
@@ -527,7 +531,11 @@ F('black-pepper','Black pepper',251,{tsp:2.3},['tsp',0.5],['black pepper','peppe
 F('cinnamon','Cinnamon',247,{tsp:2.6,piece:3},['piece',1],['cinnamon','cinnamon stick','dalchini'],'stick'),
 F('cardamom','Cardamom',311,{piece:0.2,tsp:2},['piece',3],['cardamom','elaichi','cardamom pods'],'pod'),
 F('bay-leaf','Bay leaf',313,{piece:0.6},['piece',2],['bay leaf','bay leaves','tej patta'],'leaf'),
-F('mint','Mint leaves',70,{cup:50},['cup',0.25],['mint','mint leaves','pudina'])
+F('mint','Mint leaves',70,{cup:50},['cup',0.25],['mint','mint leaves','pudina']),
+F('banana','Banana',89,{cup:150,piece:118},['piece',1],['banana','bananas','banana medium'],'medium'),
+F('strawberries','Strawberries',32,{cup:152,piece:12},['cup',0.5],['strawberries','strawberry','fresh strawberries','frozen strawberries']),
+F('blueberries','Blueberries',57,{cup:148,piece:1},['cup',0.5],['blueberries','blueberry']),
+F('raspberries','Raspberries',52,{cup:123,piece:2},['cup',0.5],['raspberries','raspberry'])
 ];
 const FOODMAP={}; const ALIAS={}; let MAXN=1;
 FOODS.forEach(f=>{FOODMAP[f.id]=f;[f.name.toLowerCase(),...f.aliases].forEach(a=>{ALIAS[a]=f;MAXN=Math.max(MAXN,a.split(' ').length)})});
@@ -551,6 +559,36 @@ const fmtCal=n=>Number(n).toLocaleString();
 /* ================= Ingredient parser ================= */
 const NUMW={a:1,an:1,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,twenty:20,thirty:30,forty:40,fifty:50,hundred:100,half:.5,quarter:.25,couple:2,few:3,dozen:12};
 const FILLER=new Set(('of and some the then also plus about around approximately approx like add added adding with um uh umm uhh er hmm oh so okay ok i im ill need want have got fresh freshly chopped diced sliced minced grated finely roughly cut peeled boiled cooked raw dry dried ground to taste for it its is my recipe ingredients ingredient are you will we use using little bit more just next after that thats this these those put in into lot lots or sized size red green yellow white black brown organic frozen canned ripe split washed soaked thinly thick thin boneless skinless unsalted salted plain low fat full extra virgin homemade warm hot cold room temperature needed optional as per required each first second third last finally let lets me see start go done all everything think maybe well yeah yes no now here there can could should would be was our your his her their them they he she also enough few').split(' '));
+/* Fix common speech-to-text mishearings of food words before parsing (context-aware, so everyday words are left alone) */
+const SPEECH_FIXES=[
+ [/\b(tour|toor|tor|tore|door|tur|tool|torr|tour's)\s+(doll|dolls|dull|dal|daal|dahl|dhal|deal|dial|del)\b/gi,'toor dal'],
+ [/\b(moon|moons|mung|moong|mong|mooing)\s+(doll|dolls|dull|dal|daal|dahl|dhal|deal)\b/gi,'moong dal'],
+ [/\b(masoor|mosur|masur|ma sure|mussoorie|mysore)\s+(doll|dolls|dull|dal|daal|dahl|dhal|deal)\b/gi,'masoor dal'],
+ [/\b(chana|channa|chan a)\s+(doll|dolls|dull|dal|daal|dahl|dhal|deal)\b/gi,'chana dal'],
+ [/\b(arhar|ar har)\s+(doll|dull|dal|daal|dahl|dhal)\b/gi,'arhar dal'],
+ [/\b(doll|dolls|dahl|dhal|daal)\b/gi,'dal'],
+ [/\b(somber|sombre|sambal|samba|sambhar|sombar|sambaar|some bar|sum bar|some bars)\b/gi,'sambar'],
+ [/\b(tablespoons?|teaspoons?|tbsps?|tsps?|cups?|spoons?|spoonfuls?)\s+(of\s+)?(g|gee|ghi|gi|key|keys|she|he|tea|gees|g's|gee's|ghee|gheeh)\b/gi,(m,u,o)=>u+' '+(o||'')+'ghee'],
+ [/\b(gee|ghi|ghie|g h e e)\b/gi,'ghee'],
+ [/\b(tumeric|termeric|tumaric|turmaric|tumeric|tomeric|turmerik)\b/gi,'turmeric'],
+ [/\b(zeera|jira|gira|jeeraa)\b/gi,'jeera'],
+ [/\bhinge\b/gi,'hing'],
+ [/\b(carry|kari|curie|kerry|corey|curry)\s+(leaves|leaf|leafs|lease)\b/gi,'curry leaves'],
+ [/\b(panir|pan ear|panier|panner|paneer)\b/gi,'paneer'],
+ [/\b(beson|basin)\b/gi,'besan'],
+ [/\b(raj ma|rajmah|rajma)\b/gi,'rajma'],
+ [/\b(tamron|tamarin)\b/gi,'tamarind'],
+ [/\b(asafetida|asa fetida|asafoetida)\b/gi,'asafoetida'],
+ [/\b(garam marsala|garam masala|gram masala|graham masala)\b/gi,'garam masala'],
+ [/\b(green chilly|green chillies|green chilli)\b/gi,'green chili'],
+ [/\b(straw berries|straw berry|strawberry's|strawberrys)\b/gi,'strawberries'],
+ [/\b(banana's|bananna|bananas)\b/gi,'banana'],
+ [/\b(coriander leafs)\b/gi,'coriander leaves']
+];
+function fixSpeech(text){let s=String(text||'');for(const [re,to] of SPEECH_FIXES)s=s.replace(re,to);return s.replace(/\s+/g,' ').trim()}
+/* How well a transcript reads as an ingredient list: used to pick the best of the engine's alternatives */
+function ingredientScore(text){const items=parseIngredients(fixSpeech(text));return items.filter(x=>x.foodId).length*2-items.filter(x=>!x.foodId).length}
+const VOCAB=(()=>{const s=new Set();FOODS.forEach(f=>{s.add(f.name.toLowerCase().replace(/\s*\(.*\)/,''));f.aliases.forEach(a=>{if(a.length>3)s.add(a)})});return [...s]})();
 function tokenize(text){
  let s=' '+String(text).toLowerCase()+' ';
  s=s.replace(/½/g,' 1/2 ').replace(/¼/g,' 1/4 ').replace(/¾/g,' 3/4 ').replace(/⅓/g,' 1/3 ');
@@ -612,8 +650,8 @@ function parseIngredients(text){
  flush();
  return items;
 }
-const GARBLE={ghee:'gee','toor-dal':'tour doll',carrot:'carats',onion:'on yen',tomato:'tomahto',salt:'sold','green-beans':'green beams','sambar-powder':'some bar powder',rice:'rise',potato:'pot a toe',turmeric:'tumeric'};
-const WRONG={ghee:'cheese','toor-dal':'masoor-dal',carrot:'cabbage','green-beans':'kidney-beans',onion:'garlic',tomato:'potato',salt:'sugar',rice:'brown-rice','sambar-powder':'garam-masala',potato:'tomato','moong-dal':'masoor-dal',turmeric:'cumin'};
+const GARBLE={banana:'bandana',strawberries:'straw berries',milk:'mill',ghee:'gee','toor-dal':'tour doll',carrot:'carats',onion:'on yen',tomato:'tomahto',salt:'sold','green-beans':'green beams','sambar-powder':'some bar powder',rice:'rise',potato:'pot a toe',turmeric:'tumeric'};
+const WRONG={banana:'potato',strawberries:'raspberries',milk:'coconut-milk',ghee:'cheese','toor-dal':'masoor-dal',carrot:'cabbage','green-beans':'kidney-beans',onion:'garlic',tomato:'potato',salt:'sugar',rice:'brown-rice','sambar-powder':'garam-masala',potato:'tomato','moong-dal':'masoor-dal',turmeric:'cumin'};
 function plantError(items){
  const mode=CFG.plant;if(mode==='off')return;
  const idx=items.map((x,i)=>x.foodId?i:-1).filter(i=>i>=0);if(!idx.length)return;
@@ -624,11 +662,13 @@ function plantError(items){
 
 
 /* ================= Config, state, logging ================= */
-const DEFAULT_SCRIPT='One cup of toor dal, two carrots, a cup of green beans, one onion, two tomatoes, one tablespoon sambar powder, half teaspoon turmeric, two tablespoons ghee, salt to taste.';
-const CARD="Mom's Sambar — serves 4\n\n• 1 cup toor dal\n• 2 carrots\n• 1 cup green beans\n• 1 onion\n• 2 tomatoes\n• 1 tbsp sambar powder\n• ½ tsp turmeric\n• 2 tbsp ghee\n• Salt to taste";
-const TASK="You just made your mom's sambar for breakfast and want to track it. Starting from the Today screen, save it in the app as a recipe called “Mom's Sambar” that serves 4. The ingredients are on this card.";
+const DEFAULT_SCRIPT='1 banana, 1/2 cup of strawberries, 1/2 cup milk.';
+const OLD_SCRIPTS=['One cup of toor dal, two carrots, a cup of green beans, one onion, two tomatoes, one tablespoon sambar powder, half teaspoon turmeric, two tablespoons ghee, salt to taste.'];
+const CARD="Strawberry Banana Smoothie — serves 1\n\n• 1 banana\n• ½ cup strawberries\n• ½ cup milk";
+const TASK="You just made a strawberry banana smoothie for breakfast and want to track it. Starting from the Today screen, save it in the app as a recipe called “Strawberry Banana Smoothie” that serves 1. The ingredients are on this card.";
 const CFG=Object.assign({engine:'auto',lang:'en-US',trigger:'focus',plant:'off',showAd:true,bulkDefault:true,script:DEFAULT_SCRIPT},store.get('vp_cfg2',{}));
 const saveCfg=()=>store.set('vp_cfg2',CFG);
+if(!CFG.script||OLD_SCRIPTS.includes(CFG.script.trim())){CFG.script=DEFAULT_SCRIPT;saveCfg()} // replace the old saved sambar script
 const ERR_TYPES=new Set(['mic_denied','mic_prompt_dismissed','no_speech','speech_error','voice_unavailable','save_blocked','edit_invalid','added_with_unresolved','parse_empty','observed_error']);
 
 let SESSIONS=store.get('vp_sessions_v2',[]);
@@ -696,12 +736,8 @@ function micStart(){
   beginListening();Promise.resolve(p).catch(micFail);return;
  }
  if(eng==='web'){
-  let r;try{r=new SR()}catch(err){micFail(err);return}
-  r.lang=CFG.lang;r.continuous=true;r.interimResults=true;r.maxAlternatives=1;
-  r.onresult=ev=>{let f='',p='';for(let i=0;i<ev.results.length;i++){const res=ev.results[i];if(res.isFinal)f+=res[0].transcript+' ';else p+=res[0].transcript+' '}VS.final=f.trim();VS.partial=p.trim();activity()};
-  r.onerror=ev=>{VS.err=ev.error};
-  r.onend=()=>{if(VS.rec===r)endVoice(VS.err||'ended')};
-  VS.rec=r;try{r.start()}catch(err){micFail(err);return}
+  VS.base='';VS.restarts=0;
+  if(!startWebRec(true))return;
   beginListening();return;
  }
  // simulated (Wizard of Oz)
@@ -713,6 +749,35 @@ function micStart(){
   if(/[,.]$/.test(words[k-1])||VS.partial.split(' ').length>=7){VS.final+=(VS.final?' ':'')+VS.partial;VS.partial=''}
   activity();
  },320)},800);
+}
+/* Browser speech recognition: several alternatives per phrase (we keep the one that reads most like an
+   ingredient list), and an automatic restart when
+   iPhone Safari stops listening on its own before the participant taps Done. */
+function startWebRec(first){
+ let r;try{r=new SR()}catch(err){micFail(err);return false}
+ r.lang=CFG.lang;r.continuous=true;r.interimResults=true;r.maxAlternatives=5;
+ const picked={};
+ r.onresult=ev=>{
+  let f='',p='';
+  for(let i=0;i<ev.results.length;i++){
+   const res=ev.results[i];
+   if(res.isFinal){
+    if(!(i in picked)){let best=res[0].transcript,bs=-1e9;for(let a=0;a<res.length;a++){const sc=ingredientScore(res[a].transcript)+(a===0?0.5:0);if(sc>bs){bs=sc;best=res[a].transcript}}picked[i]=best}
+    f+=picked[i]+' ';
+   }else p+=res[0].transcript+' ';
+  }
+  VS.final=(VS.base+' '+f).trim();VS.partial=p.trim();activity();
+ };
+ r.onerror=ev=>{VS.err=ev.error};
+ r.onend=()=>{
+  if(VS.rec!==r)return;
+  const err=VS.err,elapsed=Date.now()-VS.t0;
+  const canRestart=VS.active&&!VS.stopping&&VS.restarts<8&&elapsed<85000&&(!err||(err==='no-speech'&&vText()));
+  if(canRestart){VS.base=vText();VS.partial='';VS.err=null;VS.restarts++;log('speech_restart',{after_s:+(elapsed/1000).toFixed(1),heard_so_far:VS.base});if(startWebRec(false))return}
+  endVoice(err||'ended');
+ };
+ VS.rec=r;try{r.start()}catch(err){if(first){micFail(err);return false}endVoice('restart_failed');return false}
+ return true;
 }
 function beginListening(){VS.active=true;VS.t0=Date.now();setV('listening');log('mic_start',{engine:VS.engine})}
 function micFail(err){
@@ -746,8 +811,9 @@ function endVoice(reason){
   else{log('no_speech',{reason:reason||err||'',engine:VS.engine});setV('nospeech')}
   return;
  }
- log('transcript',{text,seconds:+((Date.now()-VS.t0)/1000).toFixed(1),engine:VS.engine});
- startProcessing(text);
+ const cleaned=fixSpeech(text);
+ log('transcript',{heard:text,cleaned:cleaned===text?'(same)':cleaned,seconds:+((Date.now()-VS.t0)/1000).toFixed(1),engine:VS.engine,restarts:VS.restarts||0});
+ startProcessing(cleaned);
 }
 function startProcessing(text){
  const tok=++VTOKEN;VR={transcript:text,items:[],mode:'voice'};setV('processing');const t0=Date.now();
@@ -777,7 +843,7 @@ function renderToday(){
  $('#sToday').innerHTML=`
  <div style="height:var(--top);flex:none;background:#e3f4ff"></div>
  <div class="scroll">
-  <div class="today-head"><div class="date-pick" data-act="title-tap">Today${fi('caretDown')}</div><button class="btn-prem press" data-off="Go Premium">Go Premium</button></div>
+  <div class="today-head"><div class="date-pick tt">Today${fi('caretDown')}</div><button class="btn-prem press" data-off="Go Premium">Go Premium</button></div>
   <div class="streak"><div class="days">${['S','M','T','W','T','F','S'].map(d=>`<div class="day t-foot"><i></i>${d}</div>`).join('')}</div><div class="vdiv"></div><div class="flame">${fi('flame')}<b>0</b></div></div>
   <div class="today-content">
    <div class="card"><div class="t-sub" style="font-weight:600">Calories</div>
@@ -835,7 +901,7 @@ function renderAdd(){
  const tot=totalCal(S.ingredients),sv=parseFloat(S.servings);
  const miss=[];if(S.err.title)miss.push('a recipe name');if(S.err.serv)miss.push('how many people it serves');
  $('#sAdd').innerHTML=`
- <div class="topbar"><div class="nav"><button class="lead" data-act="close-recipe" aria-label="Close">${FI.close}</button><span class="ttl t-headline" data-act="title-tap">Add Recipe</span><button class="trail" data-act="save" aria-label="Save recipe">${FI.arrowRight}</button></div></div>
+ <div class="topbar"><div class="nav"><button class="lead" data-act="close-recipe" aria-label="Close">${FI.close}</button><span class="ttl t-headline tt">Add Recipe</span><button class="trail" data-act="save" aria-label="Save recipe">${FI.arrowRight}</button></div></div>
  <div class="scroll" id="addScroll">
   ${CFG.showAd?`<div class="adslot2"><div class="banner" data-off="Banner ad">${FI.adChoices}<div class="copy"><span class="adv">Paper Mate</span><span class="hl">Make Every Page Come Alive</span></div><span class="cta">SHOP NOW${FI.chevronRight}</span></div></div>`:''}
   <div class="sec-hd">Recipe Information</div>
@@ -941,7 +1007,7 @@ function closeSheet(cb){
 
 /* ================= Voice + review screens ================= */
 function setV(state){VSTATE=state;renderVoice()}
-function voiceNav(left,title){return `<div class="vnav"><button class="l" data-act="voice-cancel">${left}</button><div class="t-headline">${title}</div><div class="sp"></div></div>`}
+function voiceNav(left,title){return `<div class="vnav"><button class="l" data-act="voice-cancel">${left}</button><div class="t-headline tt">${title}</div><div class="sp"></div></div>`}
 function errorBlock(icon,title,text,buttons){return `<div class="v-body"><div class="v-center"><div class="err-ic">${icon}</div><h3>${title}</h3><p>${text}</p></div></div><div class="v-foot">${buttons}</div>`}
 function renderVoice(){
  const V=$('#voice');let h='';const typed=VR.mode==='typed';
@@ -950,7 +1016,7 @@ function renderVoice(){
   h=voiceNav('Cancel','Voice Assistant')+`<div class="v-body"><div class="v-center">
    <span class="eyebrow">${FI.crown}Premium · free try</span>
    <h2>Read your ingredients out loud</h2>
-   <p>Say the amounts too, like “one cup of toor dal, two carrots.” Tap Done when you finish.</p>
+   <p>Say the amounts too, like “one banana, half a cup of strawberries.” Tap Done when you finish.</p>
    <button class="mic-big" data-act="mic" aria-label="Start speaking">${IC.micW}</button>
    <div class="v-hint">Tap to start speaking</div>
    ${VMSG?`<div class="v-msg">${esc(VMSG)}</div>`:''}
@@ -997,7 +1063,7 @@ function openTypedReview(text){setTimeout(syncTheme,0);
  VR={transcript:text,items:[],mode:'typed'};VOPEN=true;setV('processing');$('#voice').classList.add('open');
  const tok=++VTOKEN;
  setTimeout(()=>{if(tok===VTOKEN)markStep(1)},350);setTimeout(()=>{if(tok===VTOKEN)markStep(2)},700);
- setTimeout(()=>{if(tok!==VTOKEN)return;const items=parseIngredients(text.replace(/\n/g,', '));VR.items=items;
+ setTimeout(()=>{if(tok!==VTOKEN)return;const items=parseIngredients(fixSpeech(text).replace(/\n/g,', '));VR.items=items;
   log('typed_parse_result',{matched:items.filter(x=>x.foodId).length,unrecognized:items.filter(x=>!x.foodId).length,items:items.map(x=>x.foodId?x.name:'?'+x.name).join('; ')});setV('review')},1000);
 }
 function closeVoice(){setTimeout(syncTheme,0);abortVoice();VTOKEN++;VOPEN=false;$('#voice').classList.remove('open')}
@@ -1059,7 +1125,6 @@ function describe(el){const c=el.closest('[class]');const cls=c?String(c.classNa
 /* ================= Actions ================= */
 let titleTaps=[];
 const ACT={
- 'title-tap'(){const now=Date.now();titleTaps=titleTaps.filter(t=>now-t<700);titleTaps.push(now);if(titleTaps.length>=3){titleTaps=[];togglePanel(true)}},
  'meal-log'(el){const m=el.dataset.meal;log('meal_log_tap',{meal:m});openSearch(m)},
  'search-back'(){log('back_tap',{from:NAV.tab});closeSearch()},
  'tab'(el){const t=el.dataset.tab;if(t===NAV.tab)return;log('tab_tap',{tab:t});NAV.tab=t;S.query='';renderSearch();log('screen_view',{screen:t==='recipes'?'my-recipes':'food-search:'+t})},
@@ -1129,12 +1194,18 @@ const ACT={
  'paywall-close'(){log('paywall_dismiss');closeSheet()}
 };
 const phone=$('#phone');
+// Moderator gesture that works on every screen: press and hold with two fingers (~0.8 s)
+let twoT=null;
+phone.addEventListener('touchstart',e=>{if(e.touches.length>=2){clearTimeout(twoT);twoT=setTimeout(()=>{twoT=null;togglePanel(true)},800)}},{passive:true});
+['touchend','touchcancel'].forEach(ev=>phone.addEventListener(ev,e=>{if(e.touches.length<2){clearTimeout(twoT);twoT=null}},{passive:true}));
+phone.addEventListener('touchmove',e=>{if(twoT&&e.touches.length>=2){/* small finger drift is fine */}},{passive:true});
 // The shell must never scroll (browsers nudge focused buttons into view); real scrolling happens inside .scroll areas.
 [phone,$('#sToday'),$('#sSearch'),$('#sAdd'),$('#voice')].forEach(el=>el.addEventListener('scroll',()=>{if(el.scrollTop||el.scrollLeft){el.scrollTop=0;el.scrollLeft=0}}));
 phone.addEventListener('click',e=>{
  if(swSwallow){swSwallow=false;return}
+ if(e.target.closest('.tt')){const now=Date.now();titleTaps=titleTaps.filter(x=>now-x<800);titleTaps.push(now);if(titleTaps.length>=3){titleTaps=[];togglePanel(true)}return} // moderator gesture: not logged
  const el=e.target.closest('[data-act]');
- if(e.target.closest('#layer')&&Date.now()-sheetAt<450)return; // swallow the tap that opened the sheet (touch devices)
+ if(Date.now()-sheetAt<450)return; // swallow the tap that opened the sheet (touch devices)
  if(el){const fn=ACT[el.dataset.act];if(fn)fn(el,e);return}
  const off=e.target.closest('[data-off]');
  if(off){log('off_path_tap',{on:off.dataset.off});return}
@@ -1169,7 +1240,7 @@ function renderPanel(){
  const sel=(k,opts)=>`<select data-pset="${k}">${opts.map(([v,l])=>`<option value="${v}" ${String(CFG[k])===v?'selected':''}>${l}</option>`).join('')}</select>`;
  const canDl=!!downloadsCap||!inClaude;
  $('#pBody').innerHTML=`
- <section><div id="pEng" class="p-eng"></div><div class="p-hint">Open or close this panel: triple-tap the “Today” or “Add Recipe” title, or press Shift+M.</div></section>
+ <section><div id="pEng" class="p-eng"></div><div class="p-hint"><b>Reopening this panel during a session:</b> on a phone, press and hold anywhere with <b>two fingers</b> for about a second, or tap the “Today”, “Add Recipe” or “Voice Assistant” title three times quickly. On a laptop, press <b>Shift+M</b>. When you’re not recording, a round button also shows in the bottom-right corner.</div></section>
  <section><h4>Session</h4><div id="pRec"></div>
   ${isRec()?`<div class="p-row"><button class="p-btn stop" data-pact="end">■ End session</button></div><div class="p-sub">End the session after any follow-up questions. Its data is saved for export.</div>`
    :`<div class="p-row"><input id="pId" placeholder="Participant ID (e.g. P3)" value="${esc(nextId())}"><button class="p-btn primary" data-pact="start">● Start recording</button></div><div class="p-sub">Starting resets the app to the Today screen, starts the clock, and closes this panel. Nothing the participant does is logged until you start.</div>`}</section>
@@ -1177,7 +1248,7 @@ function renderPanel(){
  <section><h4>Log what you observe</h4><textarea id="pNote" rows="2" placeholder="e.g. Looked for recipes under My Meals first"></textarea><div class="p-row"><button class="p-btn" data-pact="obs-error">+ Observed error</button><button class="p-btn" data-pact="obs-assist">+ Moderator assist</button><button class="p-btn" data-pact="obs-note">+ Note</button></div></section>
  <section><h4>Test settings</h4>
   <label class="p-set">Voice engine ${sel('engine',[['auto','Real voice (microphone)'],['sim','Simulated: plays the script below']])}</label>
-  <label class="p-set">Speech language (browser engine only) ${sel('lang',[['en-US','English (US)'],['en-IN','English (India)'],['en-GB','English (UK)']])}</label>
+  <label class="p-set">Speech language (browser engine only) ${sel('lang',[['en-US','English (US)'],['en-IN','English (India)'],['en-GB','English (UK)']])}<span class="p-sub" style="display:block">If ingredient names keep coming out wrong, try switching the language here (e.g. English (India) for Indian dish names). Check what was heard in the event log (“transcript” rows).</span></label>
   <label class="p-set">When the upsell appears ${sel('trigger',[['focus','When they tap the Ingredients box (or Add Ingredient)'],['load','2 seconds after Add Recipe opens'],['off','Never (control group)']])}</label>
   <label class="p-set">Bulk Import toggle starts ${sel('bulkDefault',[['true','On (as in Figma)'],['false','Off']])}</label>
   <label class="p-set">Planted parsing error ${sel('plant',[['off','None: show real results'],['unrec','Last item shows as “not recognized”'],['wrong','Last item silently matched to the wrong food']])}</label>
@@ -1313,8 +1384,9 @@ function resetApp(){setTimeout(syncTheme,0);
  $('#sSearch').classList.add('off-right');$('#sAdd').classList.add('off-bottom');$('#sToday').classList.remove('behind');
  renderToday();renderSearch();renderAdd();
 }
-resetApp();
+resetApp();updateRecBadge();
 togglePanel(true); // moderator starts recording from the panel
+window.addEventListener('hashchange',()=>{if(location.hash==='#moderator')togglePanel(true)});
 })();
 </script>
 </body>
