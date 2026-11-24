@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type="text/javascript">
+  
+ <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -104,7 +105,9 @@ svg{display:block;flex:none}
 .mc-hd{display:flex;justify-content:space-between;align-items:baseline;padding:15.7px 16.6px 0}
 .mc-t{font-family:var(--display);font-weight:700;font-size:21px;color:#0b0f1a}
 .mc-c{font-weight:700;font-size:17.5px;color:#0b0f1a}
-.mc-div{height:.75px;background:#dadbe0;margin:14px 16.6px 0}
+.mc-mac{display:flex;gap:13px;padding:4px 16.6px 0;font-size:13.5px;color:#6c6c70;letter-spacing:.13px}
+.mc-mac b{font-weight:700}
+.mc-div{height:.75px;background:#dadbe0;margin:12px 16.6px 0}
 .sw.sw-row{border-radius:0;transition:height .26s ease,opacity .2s}
 .sw.sw-row .sw-del{border-radius:0}
 .sw.sw-row.gone{margin-top:0}
@@ -146,7 +149,9 @@ svg{display:block;flex:none}
 .rows{display:flex;flex-direction:column;gap:8px;padding:0 12px calc(var(--bottom) + 110px)}
 .frow{background:#fff;border-radius:16px;display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px;transition:box-shadow .3s,background .6s}
 .frow .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.frow .nm{display:flex;align-items:center;gap:6px}
+.frow .nm{display:flex;align-items:center;gap:6px;min-width:0}
+.frow .nm .t-body{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.frow .nm svg{flex:none}
 .frow .dt{color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .addbtn{width:44px;height:44px;border-radius:999px;background:var(--sunken);display:grid;place-items:center;flex:none;transition:background .2s}
 .addbtn.added{background:var(--brand)}
@@ -158,6 +163,131 @@ svg{display:block;flex:none}
 .sw-fg{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .26s cubic-bezier(.2,.85,.25,1)}
 .sw.drag .sw-fg{transition:none}
 .sw.gone{opacity:0;margin-top:-8px}
+.sclear{width:28px;height:28px;display:grid;place-items:center;margin-right:-8px}
+.mip{margin:10px 16px 0;height:40px;background:#fff;border-radius:12px;display:flex;align-items:center;gap:8px;padding:0 12px}
+.mip p{flex:1;min-width:0;margin:0;font-size:13.5px;color:#3a3d45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mip b{font-weight:600}
+.mip .el{display:flex;align-items:center;gap:3px;font-size:12.5px;font-weight:500;color:#8e8e93;font-variant-numeric:tabular-nums}
+.aic{margin:12px 16px 0;border:1px solid #dce3fa;border-radius:18px;padding:14px 16px 16px;box-shadow:0 4px 14px rgba(64,77,178,.08);background:linear-gradient(132.5deg,#eaf1ff 0%,#f1edff 45.8%,#fdf0f7 83.3%);animation:aicIn .35s cubic-bezier(.2,.85,.25,1)}
+@keyframes aicIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.aic-hd{display:flex;justify-content:space-between;align-items:center}
+.aic-who{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.13px;color:#4338ca}
+.aic-orb{width:28px;height:28px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#3b8bff 0%,#8b5cf6 71%)}
+.aic-x{width:28px;height:28px;display:grid;place-items:center;margin:-6px -6px -6px 0}
+.aic h3{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.06px;color:#0b0f1a;margin:10px 0 4px}
+.aic p{margin:0;font-size:14.5px;line-height:20px;color:#4a4d55}
+.aic-chips{display:flex;gap:6px;margin-top:12px}
+.aic-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.9);border-radius:14px;padding:6px 11px 6px 9px;font-size:12.5px;font-weight:500;color:#3a3d45}
+.aic-chip.fast{background:rgba(255,244,214,.9);color:#8a5a00}
+.aic-cta{width:100%;height:46px;border-radius:23px;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(90deg,#ffc446,#fae292);font-family:var(--display);font-weight:700;font-size:16px;color:#111}
+.aic-cta:active{filter:brightness(.96)}
+.aic-chips.emoji{gap:5px}
+.aic-chips.emoji .aic-chip{padding:6px 7px;font-size:11.5px;white-space:nowrap;flex:none}
+.aic-chips{overflow:hidden}
+.sg-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sg-head .t{font-family:var(--display);font-weight:700;font-size:21px;color:#0b0f1a}
+.sg-goal{font-size:14.5px;line-height:20px;color:#4a4d55;margin:0 0 14px}
+.sg-goal b{color:#0b0f1a;font-weight:600}
+.sg-sec{font-size:12.5px;font-weight:600;color:#4338ca;margin:14px 2px 6px}
+.sg-sec.on{color:#0b0f1a}
+.sg-row{display:flex;align-items:center;gap:12px;background:#f6f7fb;border-radius:14px;padding:12px;transition:box-shadow .3s}
+.sg-row.hl{box-shadow:0 0 0 2px #b7a6ff}
+.sg-row .m{flex:1;min-width:0}
+.sg-row .n{font-size:15.5px;font-weight:600;color:#0b0f1a}
+.sg-row .w{font-size:13px;color:#6c6c70;margin-top:2px;line-height:1.35}
+.sg-row .gain{display:inline-block;margin-top:5px;font-size:12px;font-weight:600;color:#1f7a45;background:#e3f6ea;border-radius:8px;padding:2px 7px}
+.sg-add{flex:none;background:var(--brand-tint);color:var(--brand);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600}
+.sg-add.done{background:var(--brand);color:#fff}
+.sg-fine{text-align:center;font-size:12.5px;color:#8a8d93;margin-top:8px}
+.coach{position:absolute;inset:0;z-index:43;display:flex;flex-direction:column;padding-top:var(--top);background:linear-gradient(180deg,#b9d6f9 0%,#e7eaef 55%);transform:translateX(100%);transition:transform .36s cubic-bezier(.2,.85,.25,1)}
+.coach.open{transform:none}
+.co-conv>:first-child{margin-top:auto}
+.co-conv{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px 16px;display:flex;flex-direction:column;gap:14px}
+.co-user{align-self:flex-end;max-width:85%;background:#b8cae0;border-radius:20px;padding:12px 16px;font-size:17px;line-height:22px;letter-spacing:-.43px;color:#0b141e;animation:coIn .25s ease}
+.co-msg{display:flex;flex-direction:column;gap:10px;width:100%;color:#0b141e;font-size:17px;line-height:22px;letter-spacing:-.43px}
+.co-msg p{margin:0}
+.co-msg b{font-weight:600}
+.co-msg>*{animation:coIn .35s ease both}
+@keyframes coIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.co-typing{display:flex;gap:5px;padding:6px 2px}
+.co-typing i{width:8px;height:8px;border-radius:4px;background:#5b6b80;opacity:.35;animation:coDot 1s infinite}
+.co-typing i:nth-child(2){animation-delay:.15s}.co-typing i:nth-child(3){animation-delay:.3s}
+@keyframes coDot{0%,100%{opacity:.25;transform:none}50%{opacity:.9;transform:translateY(-3px)}}
+.co-sug{background:#fff;border-radius:16px;padding:12px 12px 12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(10,20,31,.04)}
+.co-sug .m{flex:1;min-width:0}
+.co-sug .k{font-size:12.5px;font-weight:600;color:#4338ca;letter-spacing:.1px}
+.co-sug .n{font-size:16px;font-weight:600;line-height:21px;margin-top:2px}
+.co-sug .w{font-size:13.5px;line-height:18px;color:#6c6c70;margin-top:2px}
+.co-sug .gain{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;color:#1f7a45;background:#e3f6ea;border-radius:8px;padding:2px 7px}
+.co-go{flex:none;height:36px;padding:0 12px 0 14px;border-radius:18px;background:#e8f0fe;color:var(--brand);font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.co-go:active{background:#d6e4fd}
+.frow.coach-pick{background:#eef5ff;box-shadow:inset 0 0 0 2px #9cc3ff}
+.co-fb{display:flex;gap:18px;color:#0b141e}
+.co-fb button{display:grid;place-items:center;color:inherit}
+.co-fb button.on{color:var(--brand)}
+.co-up{background:#fffaf0;border:1px solid #f3e3b5;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.co-up .t{font-size:15px;line-height:20px;color:#3a3d45}
+.co-up .t b{color:#0b141e}
+.co-up .btn-gold{margin-top:6px;height:46px;border-radius:23px;font-size:16px}
+.co-starters{display:flex;gap:10px}
+.co-start{flex:1;min-width:0;background:#f6f7f9;border-radius:20px;padding:16px 16px 28px;display:flex;flex-direction:column;gap:14px;text-align:left;font-size:17px;line-height:22px;letter-spacing:-.43px;color:#0b141e}
+.co-start .e{font-size:22px;line-height:28px}
+.co-comp{flex:none;padding:8px 16px calc(var(--bottom) + 14px)}
+.co-in{height:48px;border-radius:999px;background:#fff;display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 1px 3px rgba(10,20,31,.04),0 4px 16px rgba(10,20,31,.08)}
+.co-in input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:17px;letter-spacing:-.43px}
+.co-in input::placeholder{color:#99a5b2}
+.co-in button{display:grid;place-items:center}
+.co-send{width:30px;height:30px;border-radius:15px;background:var(--brand);color:#fff;display:none!important;place-items:center}
+.co-in.has .co-send{display:grid!important}
+.co-in.has .co-mic{display:none}
+.res-h{display:flex;justify-content:space-between;align-items:baseline;padding:18px 16.6px 10px}
+.res-h b{font-family:var(--display);font-weight:700;font-size:20px;color:#0b0f1a}
+.res-h span{font-size:14.5px;color:#6c6c70}
+.tile{position:relative}
+.tile .lk{position:absolute;top:5px;right:5px}
+.layer[data-type=barcode] .backdrop{background:rgba(0,0,0,.42)}
+.bc-b{margin:0 0 14px;font-size:15px;line-height:20px;color:#4a4d55}
+.bc-b b{font-weight:600;color:#0b0f1a}
+.bc-demo{background:#f4f6fa;border-radius:18px;padding:12px;display:flex;gap:12px;align-items:center}
+.bc-demo>svg{flex:none}
+.bc-res{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.bc-match{background:#fff;border-radius:10px;padding:8px 9px;display:flex;gap:8px;align-items:flex-start;width:100%}
+.bc-match .n{font-size:13.5px;font-weight:500;color:#0b0f1a}
+.bc-match .s{font-size:12px;color:#6c6c70;margin-top:1px}
+.bc-cmp{display:flex;flex-direction:column;gap:5px;width:100%}
+.bc-cmp div{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6c6c70}
+.bc-cmp span:first-child{width:42px;font-weight:500}
+.bc-cmp i{flex:1;height:6px;border-radius:3px;background:#e4e6eb;overflow:hidden;display:block}
+.bc-cmp i b{display:block;height:6px;border-radius:3px}
+.bc-cmp span:last-child{width:30px;text-align:right;font-weight:600}
+.btn-gold.plain{margin-top:16px}
+.bc-fine{text-align:center;font-size:12.5px;color:#8a8d93;letter-spacing:.06px;margin-top:7px}
+/* simulated barcode scanner */
+.scan{position:absolute;inset:0;z-index:42;background:radial-gradient(120% 80% at 50% 40%,#2a3347 0%,#0b0f18 70%);color:#fff;display:flex;flex-direction:column;padding-top:var(--top);transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.85,.25,1)}
+.scan.open{transform:none}
+.sc-top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;flex:none}
+.sc-top .l{color:#fff;font-size:17px;padding:0 10px;height:44px;min-width:70px;text-align:left}
+.sc-top .sp{min-width:70px}
+.sc-cam{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:0 24px}
+.sc-vf{width:232px;height:248px;position:relative}
+.sc-vf>svg{width:232px;height:248px}
+.sc-ok svg{width:34px;height:34px}
+.scan .vf-laser{animation:laser 1.6s ease-in-out infinite}
+@keyframes laser{0%,100%{transform:translateY(-22px)}50%{transform:translateY(22px)}}
+.scan.found .vf-laser{animation:none;opacity:0}
+.scan.found .vf-corners{stroke:#34c759}
+.sc-ok{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:32px;background:#22c46b;display:grid;place-items:center;transform:scale(0);transition:transform .3s cubic-bezier(.2,1.4,.4,1)}
+.scan.found .sc-ok{transform:scale(1)}
+.sc-hint{font-size:15px;color:rgba(255,255,255,.8);text-align:center}
+.sc-res{background:#fff;color:#0b0f1a;border-radius:24px 24px 0 0;padding:16px 20px calc(var(--bottom) + 14px);display:none;flex-direction:column;gap:12px;animation:resUp .32s cubic-bezier(.2,.85,.25,1)}
+@keyframes resUp{from{transform:translateY(100%)}to{transform:none}}
+.scan.found .sc-res{display:flex}
+.scan.found .sc-foot{display:none}
+.sc-item{display:flex;gap:10px;align-items:flex-start;background:#f4f6fa;border-radius:14px;padding:12px}
+.sc-item b{display:block;font-size:16px;font-weight:600}
+.sc-item span{display:block;font-size:14px;color:#6c6c70;margin-top:2px}
+.sc-foot{padding:12px 16px calc(var(--bottom) + 16px);text-align:center;flex:none}
+.sc-foot button{color:#fff;font-size:16px;font-weight:500;opacity:.9;padding:10px}
 .empty{padding:48px 32px;text-align:center;color:var(--text2)}
 .qbar{position:absolute;left:12px;right:12px;bottom:calc(var(--bottom) + 10px);height:64px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 36px;box-shadow:0 1px 3px rgba(10,20,31,.04),0 4px 16px rgba(10,20,31,.08);z-index:5}
 .qbar button{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;line-height:13px;letter-spacing:.06px}
@@ -342,7 +472,7 @@ svg{display:block;flex:none}
 /* On phones: show the moderator button only while NOT recording, so participants never see it mid-session */
 @media not all and (min-width:600px) and (min-height:780px){
   .mod-btn{right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);width:44px;height:44px;border-radius:22px;background:rgba(20,20,24,.72);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.25)}
-  .mod-btn.rec{display:none}
+  .mod-btn.rec{opacity:.6;width:38px;height:38px;border-radius:19px}
 }
 .panel{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:#fff;z-index:1000;box-shadow:-10px 0 40px rgba(0,0,0,.2);transform:translateX(105%);transition:transform .3s;display:flex;flex-direction:column;font-size:14px;color:#222}
 .panel.open{transform:none}
@@ -364,6 +494,8 @@ svg{display:block;flex:none}
 .p-col{display:flex;flex-direction:column;gap:6px}
 .p-col button{text-align:left}
 .p-tiles{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.p-grp{grid-column:1/-1;font-size:12px;font-weight:700;color:#1c1c1e;margin:6px 0 0}
+.p-grp:first-child{margin-top:0}
 .p-tile{background:#f6f6f9;border-radius:8px;padding:7px 9px}
 .p-tile span{display:block;font-size:11px;color:#8a8a90}
 .p-tile b{font-size:14px}
@@ -382,6 +514,10 @@ svg{display:block;flex:none}
 .lg-t{color:#999}
 .lg-e{font-weight:600}
 .lg-d{grid-column:2;color:#666;word-break:break-word}
+.p-recs{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.p-recrow{display:flex;align-items:center;gap:8px;justify-content:space-between;background:#f6f6f9;border-radius:8px;padding:8px 10px;font-size:12px;color:#55555c;word-break:break-all}
+.p-recrow b{color:#1c1c1e}
+.p-body select:disabled,.p-btn:disabled{opacity:.5}
 .p-export{margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:11px}
 </style>
 </head>
@@ -393,6 +529,8 @@ svg{display:block;flex:none}
   <div class="scr off-right" id="sSearch"></div>
   <div class="scr off-bottom" id="sAdd"></div>
   <div class="voice" id="voice"></div>
+  <div class="scan" id="scan"></div>
+  <div class="coach" id="coach"></div>
   <div class="layer" id="layer"></div>
   <div class="toast" id="toast"></div>
   <div class="home-ind"></div>
@@ -453,7 +591,23 @@ micOrb:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http:
 waveform:'<svg width="54" height="12" viewBox="0 0 54 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5.5C2 4.94772 1.55228 4.5 1 4.5C0.447715 4.5 0 4.94772 0 5.5V6.5C0 7.05228 0.447715 7.5 1 7.5C1.55228 7.5 2 7.05228 2 6.5V5.5Z" fill="#1468F0"/><path d="M6 3.5C6 2.94772 5.55228 2.5 5 2.5C4.44772 2.5 4 2.94772 4 3.5V8.5C4 9.05228 4.44772 9.5 5 9.5C5.55228 9.5 6 9.05228 6 8.5V3.5Z" fill="#1468F0"/><path d="M10 1.5C10 0.947715 9.55228 0.5 9 0.5C8.44772 0.5 8 0.947715 8 1.5V10.5C8 11.0523 8.44772 11.5 9 11.5C9.55228 11.5 10 11.0523 10 10.5V1.5Z" fill="#1468F0"/><path d="M14 4C14 3.44772 13.5523 3 13 3C12.4477 3 12 3.44772 12 4V8C12 8.55228 12.4477 9 13 9C13.5523 9 14 8.55228 14 8V4Z" fill="#1468F0"/><path d="M18 2.5C18 1.94772 17.5523 1.5 17 1.5C16.4477 1.5 16 1.94772 16 2.5V9.5C16 10.0523 16.4477 10.5 17 10.5C17.5523 10.5 18 10.0523 18 9.5V2.5Z" fill="#1468F0"/><path d="M22 5C22 4.44772 21.5523 4 21 4C20.4477 4 20 4.44772 20 5V7C20 7.55228 20.4477 8 21 8C21.5523 8 22 7.55228 22 7V5Z" fill="#1468F0"/><path d="M26 2C26 1.44772 25.5523 1 25 1C24.4477 1 24 1.44772 24 2V10C24 10.5523 24.4477 11 25 11C25.5523 11 26 10.5523 26 10V2Z" fill="#1468F0"/><path d="M30 3.5C30 2.94772 29.5523 2.5 29 2.5C28.4477 2.5 28 2.94772 28 3.5V8.5C28 9.05228 28.4477 9.5 29 9.5C29.5523 9.5 30 9.05228 30 8.5V3.5Z" fill="#1468F0"/><path d="M34 5.5C34 4.94772 33.5523 4.5 33 4.5C32.4477 4.5 32 4.94772 32 5.5V6.5C32 7.05228 32.4477 7.5 33 7.5C33.5523 7.5 34 7.05228 34 6.5V5.5Z" fill="#1468F0"/><path d="M38 3C38 2.44772 37.5523 2 37 2C36.4477 2 36 2.44772 36 3V9C36 9.55228 36.4477 10 37 10C37.5523 10 38 9.55228 38 9V3Z" fill="#1468F0"/><path d="M42 4.5C42 3.94772 41.5523 3.5 41 3.5C40.4477 3.5 40 3.94772 40 4.5V7.5C40 8.05228 40.4477 8.5 41 8.5C41.5523 8.5 42 8.05228 42 7.5V4.5Z" fill="#1468F0" fill-opacity="0.35"/><path d="M46 2.5C46 1.94772 45.5523 1.5 45 1.5C44.4477 1.5 44 1.94772 44 2.5V9.5C44 10.0523 44.4477 10.5 45 10.5C45.5523 10.5 46 10.0523 46 9.5V2.5Z" fill="#1468F0" fill-opacity="0.35"/><path d="M50 4C50 3.44772 49.5523 3 49 3C48.4477 3 48 3.44772 48 4V8C48 8.55228 48.4477 9 49 9C49.5523 9 50 8.55228 50 8V4Z" fill="#1468F0" fill-opacity="0.35"/><path d="M54 5.5C54 4.94772 53.5523 4.5 53 4.5C52.4477 4.5 52 4.94772 52 5.5V6.5C52 7.05228 52.4477 7.5 53 7.5C53.5523 7.5 54 7.05228 54 6.5V5.5Z" fill="#1468F0" fill-opacity="0.35"/></svg>',
 check:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00008 15.3333C12.0502 15.3333 15.3334 12.05 15.3334 7.99996C15.3334 3.94987 12.0502 0.666626 8.00008 0.666626C3.94999 0.666626 0.666748 3.94987 0.666748 7.99996C0.666748 12.05 3.94999 15.3333 8.00008 15.3333Z" fill="#22C46B"/><path d="M4.66675 8.2L6.93341 10.4L11.3334 6" stroke="white" stroke-width="1.73333" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 bolt:'<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.1875 0.916626L2.0625 6.18746H5.04167L4.58333 10.0833L8.9375 4.81246H5.95833L6.1875 0.916626Z" fill="#E59A0B"/></svg>',
-micBtn:'<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.59155 8.70833C4.59155 10.0101 5.10868 11.2586 6.02917 12.179C6.94966 13.0995 8.19812 13.6167 9.49989 13.6167M9.49989 13.6167C10.8017 13.6167 12.0501 13.0995 12.9706 12.179C13.8911 11.2586 14.4082 10.0101 14.4082 8.70833M9.49989 13.6167V16.625M9.49989 2.375C8.87 2.375 8.26591 2.62522 7.82051 3.07062C7.37511 3.51602 7.12489 4.12011 7.12489 4.75V8.70833C7.12489 9.33822 7.37511 9.94231 7.82051 10.3877C8.26591 10.8331 8.87 11.0833 9.49989 11.0833C10.1298 11.0833 10.7339 10.8331 11.1793 10.3877C11.6247 9.94231 11.8749 9.33822 11.8749 8.70833V4.75C11.8749 4.12011 11.6247 3.51602 11.1793 3.07062C10.7339 2.62522 10.1298 2.375 9.49989 2.375Z" stroke="#111111" stroke-width="1.6625" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+micBtn:'<svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.59155 8.70833C4.59155 10.0101 5.10868 11.2586 6.02917 12.179C6.94966 13.0995 8.19812 13.6167 9.49989 13.6167M9.49989 13.6167C10.8017 13.6167 12.0501 13.0995 12.9706 12.179C13.8911 11.2586 14.4082 10.0101 14.4082 8.70833M9.49989 13.6167V16.625M9.49989 2.375C8.87 2.375 8.26591 2.62522 7.82051 3.07062C7.37511 3.51602 7.12489 4.12011 7.12489 4.75V8.70833C7.12489 9.33822 7.37511 9.94231 7.82051 10.3877C8.26591 10.8331 8.87 11.0833 9.49989 11.0833C10.1298 11.0833 10.7339 10.8331 11.1793 10.3877C11.6247 9.94231 11.8749 9.33822 11.8749 8.70833V4.75C11.8749 4.12011 11.6247 3.51602 11.1793 3.07062C10.7339 2.62522 10.1298 2.375 9.49989 2.375Z" stroke="#111111" stroke-width="1.6625" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+aicSparkle:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.66667 1.33331C7.2 4.79998 9.08889 6.79998 12.3333 7.33331C9.08889 7.86665 7.2 9.86665 6.66667 13.3333C6.13333 9.86665 4.24444 7.86665 1 7.33331C4.24444 6.79998 6.13333 4.79998 6.66667 1.33331Z" fill="white"/><path d="M13 1C13.1778 2.37778 13.8444 3.15556 15 3.33333C13.8444 3.51111 13.1778 4.28889 13 5.66667C12.8222 4.28889 12.1556 3.51111 11 3.33333C12.1556 3.15556 12.8222 2.37778 13 1Z" fill="white"/><path d="M12.6667 10.3333C12.8 11.4444 13.3556 12.0666 14.3333 12.2C13.3556 12.3333 12.8 12.9333 12.6667 14C12.5333 12.9333 11.9778 12.3333 11 12.2C11.9778 12.0666 12.5333 11.4444 12.6667 10.3333Z" fill="white"/></svg>',
+aicDismiss:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.66675 4.66669L11.3334 11.3334M11.3334 4.66669L4.66675 11.3334" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round" stroke="#8B8FA3"/></svg>',
+aicPhoto:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.33337 4.95835C2.33337 4.72629 2.42556 4.50373 2.58966 4.33964C2.75375 4.17554 2.97631 4.08335 3.20837 4.08335H4.55004L5.48337 2.91669H8.51671L9.45004 4.08335H10.7917C11.0238 4.08335 11.2463 4.17554 11.4104 4.33964C11.5745 4.50373 11.6667 4.72629 11.6667 4.95835V10.5C11.6667 10.7321 11.5745 10.9546 11.4104 11.1187C11.2463 11.2828 11.0238 11.375 10.7917 11.375H3.20837C2.97631 11.375 2.75375 11.2828 2.58966 11.1187C2.42556 10.9546 2.33337 10.7321 2.33337 10.5V4.95835Z" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round" stroke="#3A3D45"/><path d="M8.98339 7.58331C8.98339 8.67867 8.09542 9.56664 7.00006 9.56664C5.90469 9.56664 5.01672 8.67867 5.01672 7.58331C5.01672 6.48794 5.90469 5.59998 7.00006 5.59998C8.09542 5.59998 8.98339 6.48794 8.98339 7.58331Z" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round" stroke="#3A3D45"/></svg>',
+aicVoice:'<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.3833 6.41667C3.3833 7.37587 3.76434 8.29578 4.4426 8.97404C5.12085 9.65229 6.04077 10.0333 6.99997 10.0333M6.99997 10.0333C7.95917 10.0333 8.87908 9.65229 9.55734 8.97404C10.2356 8.29578 10.6166 7.37587 10.6166 6.41667M6.99997 10.0333V12.25M6.99997 1.75C6.53584 1.75 6.09072 1.93437 5.76253 2.26256C5.43434 2.59075 5.24997 3.03587 5.24997 3.5V6.41667C5.24997 6.8808 5.43434 7.32591 5.76253 7.6541C6.09072 7.98229 6.53584 8.16667 6.99997 8.16667C7.4641 8.16667 7.90922 7.98229 8.2374 7.6541C8.56559 7.32591 8.74997 6.8808 8.74997 6.41667V3.5C8.74997 3.03587 8.56559 2.59075 8.2374 2.26256C7.90922 1.93437 7.4641 1.75 6.99997 1.75Z" stroke-width="1.16667" stroke-linecap="round" stroke-linejoin="round" stroke="#3A3D45"/></svg>',
+aicBolt:'<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.75 1L2.25 6.75H5.5L5 11L9.75 5.25H6.5L6.75 1Z" fill="#E59A0B"/></svg>',
+aicCta:'<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.66667 1.33331C7.2 4.79998 9.08889 6.79998 12.3333 7.33331C9.08889 7.86665 7.2 9.86665 6.66667 13.3333C6.13333 9.86665 4.24444 7.86665 1 7.33331C4.24444 6.79998 6.13333 4.79998 6.66667 1.33331Z" fill="#111111"/><path d="M13 1C13.1778 2.37778 13.8444 3.15556 15 3.33333C13.8444 3.51111 13.1778 4.28889 13 5.66667C12.8222 4.28889 12.1556 3.51111 11 3.33333C12.1556 3.15556 12.8222 2.37778 13 1Z" fill="#111111"/><path d="M12.6667 10.3333C12.8 11.4444 13.3556 12.0666 14.3333 12.2C13.3556 12.3333 12.8 12.9333 12.6667 14C12.5333 12.9333 11.9778 12.3333 11 12.2C11.9778 12.0666 12.5333 11.4444 12.6667 10.3333Z" fill="#111111"/></svg>',
+mipCheck:'<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 17.25C13.5563 17.25 17.25 13.5563 17.25 9C17.25 4.44365 13.5563 0.75 9 0.75C4.44365 0.75 0.75 4.44365 0.75 9C0.75 13.5563 4.44365 17.25 9 17.25Z" fill="#22C46B"/><path d="M5.25 9.225L7.8 11.7L12.75 6.75" stroke-width="1.95" stroke-linecap="round" stroke-linejoin="round" stroke="white"/></svg>',
+mipClock:'<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.25 6C10.25 8.34721 8.34721 10.25 6 10.25C3.65279 10.25 1.75 8.34721 1.75 6C1.75 3.65279 3.65279 1.75 6 1.75C8.34721 1.75 10.25 3.65279 10.25 6Z" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" stroke="#8E8E93"/><path d="M6 3.75V6L7.5 7" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" stroke="#8E8E93"/></svg>',
+searchClear:'<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" stroke="#3A3A3C"/></svg>',
+viewfinder:'<svg width="116" height="124" viewBox="0 0 116 124" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clipVF)"><path d="M102 0H14C6.26801 0 0 6.26801 0 14V110C0 117.732 6.26801 124 14 124H102C109.732 124 116 117.732 116 110V14C116 6.26801 109.732 0 102 0Z" fill="url(#vfBg)"/><path d="M87 34H29C26.2386 34 24 36.2386 24 39V83C24 85.7614 26.2386 88 29 88H87C89.7614 88 92 85.7614 92 83V39C92 36.2386 89.7614 34 87 34Z" fill="white"/><path d="M33.9 44H32V74H33.9V44Z" fill="#111111"/><path d="M37.6 44H36.65V74H37.6V44Z" fill="#111111"/><path d="M43.2 44H42.25V74H43.2V44Z" fill="#111111"/><path d="M47.85 44H46.9V74H47.85V44Z" fill="#111111"/><path d="M52.5 44H50.6V74H52.5V44Z" fill="#111111"/><path d="M58.1 44H57.15V74H58.1V44Z" fill="#111111"/><path d="M62.75 44H60.85V74H62.75V44Z" fill="#111111"/><path d="M68.35 44H65.5V74H68.35V44Z" fill="#111111"/><path d="M73 44H71.1V74H73V44Z" fill="#111111"/><path d="M76.7 44H75.75V74H76.7V44Z" fill="#111111"/><path d="M81.3499 44H80.3999V74H81.3499V44Z" fill="#111111"/><path d="M86.95 44H86V74H86.95V44Z" fill="#111111"/><path d="M91.6 44H89.7V74H91.6V44Z" fill="#111111"/><text x="58" y="84" text-anchor="middle" font-family="-apple-system,Helvetica,Arial,sans-serif" font-size="6" fill="#111111">0 16000 27512 0</text><path d="M14 30V20C14 18.4087 14.6321 16.8826 15.7574 15.7574C16.8826 14.6321 18.4087 14 20 14H30M86 14H96C97.5913 14 99.1174 14.6321 100.243 15.7574C101.368 16.8826 102 18.4087 102 20V30M102 94V104C102 105.591 101.368 107.117 100.243 108.243C99.1174 109.368 97.5913 110 96 110H86M30 110H20C18.4087 110 16.8826 109.368 15.7574 108.243C14.6321 107.117 14 105.591 14 104V94" stroke-width="2.6" stroke-linecap="round" stroke="white" class="vf-corners"/><g class="vf-laser"><path d="M106 52H10V68H106V52Z" fill="url(#vfLaser)"/><path d="M103 59H13C12.4477 59 12 59.4477 12 60C12 60.5523 12.4477 61 13 61H103C103.552 61 104 60.5523 104 60C104 59.4477 103.552 59 103 59Z" fill="#5AA0FF"/></g></g><defs><linearGradient id="vfBg" x1="0" y1="0" x2="116" y2="124" gradientUnits="userSpaceOnUse"><stop stop-color="#1B2436"/><stop offset="1" stop-color="#0C1220"/></linearGradient><linearGradient id="vfLaser" x1="0" y1="52" x2="0" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#3B8BFF" stop-opacity="0"/><stop offset="0.5" stop-color="#3B8BFF" stop-opacity="0.45"/><stop offset="1" stop-color="#3B8BFF" stop-opacity="0"/></linearGradient><clipPath id="clipVF"><rect width="116" height="124" fill="white"/></clipPath></defs></svg>',
+premLock:'<svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="13" height="13" rx="6.5" fill="#FFC446"/><path d="M8 6.125H5C4.58579 6.125 4.25 6.46079 4.25 6.875V8.75C4.25 9.16421 4.58579 9.5 5 9.5H8C8.41421 9.5 8.75 9.16421 8.75 8.75V6.875C8.75 6.46079 8.41421 6.125 8 6.125Z" fill="#111111"/><path d="M5.1875 6.125V5.1875C5.1875 4.8394 5.32578 4.50556 5.57192 4.25942C5.81806 4.01328 6.1519 3.875 6.5 3.875C6.8481 3.875 7.18194 4.01328 7.42808 4.25942C7.67422 4.50556 7.8125 4.8394 7.8125 5.1875V6.125" stroke-width="0.975" stroke-linecap="round" stroke-linejoin="round" stroke="#111111"/></svg>',
+coachCopy:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.6665 8.33317C6.6665 7.89114 6.8421 7.46722 7.15466 7.15466C7.46722 6.8421 7.89114 6.6665 8.33317 6.6665H15.8332C16.2752 6.6665 16.6991 6.8421 17.0117 7.15466C17.3242 7.46722 17.4998 7.89114 17.4998 8.33317V15.8332C17.4998 16.2752 17.3242 16.6991 17.0117 17.0117C16.6991 17.3242 16.2752 17.4998 15.8332 17.4998H8.33317C7.89114 17.4998 7.46722 17.3242 7.15466 17.0117C6.8421 16.6991 6.6665 16.2752 6.6665 15.8332V8.33317Z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/><path d="M13.3333 6.66667V4.16667C13.3333 3.72464 13.1577 3.30072 12.8452 2.98816C12.5326 2.67559 12.1087 2.5 11.6667 2.5H4.16667C3.72464 2.5 3.30072 2.67559 2.98816 2.98816C2.67559 3.30072 2.5 3.72464 2.5 4.16667V11.6667C2.5 12.1087 2.67559 12.5326 2.98816 12.8452C3.30072 13.1577 3.72464 13.3333 4.16667 13.3333H6.66667" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>',
+coachUp:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.8335 8.3335V18.3335" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/><path d="M12.4998 4.89984L11.6665 8.33317H16.5248C16.7836 8.33317 17.0388 8.39341 17.2702 8.50912C17.5016 8.62484 17.7029 8.79284 17.8582 8.99984C18.0134 9.20683 18.1183 9.44713 18.1646 9.70169C18.2109 9.95626 18.1973 10.2181 18.1248 10.4665L16.1832 17.1332C16.0822 17.4794 15.8717 17.7835 15.5832 17.9998C15.2947 18.2162 14.9438 18.3332 14.5832 18.3332H3.33317C2.89114 18.3332 2.46722 18.1576 2.15466 17.845C1.8421 17.5325 1.6665 17.1085 1.6665 16.6665V9.99984C1.6665 9.55781 1.8421 9.13389 2.15466 8.82133C2.46722 8.50877 2.89114 8.33317 3.33317 8.33317H5.63317C5.94324 8.33301 6.24712 8.24635 6.51063 8.08294C6.77415 7.91953 6.98686 7.68585 7.12484 7.40817L9.99984 1.6665C10.3928 1.67137 10.7796 1.76498 11.1313 1.94033C11.4831 2.11569 11.7906 2.36826 12.031 2.67917C12.2714 2.99009 12.4384 3.3513 12.5196 3.73584C12.6008 4.12037 12.594 4.51828 12.4998 4.89984Z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>',
+coachDown:'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.1665 11.6665V1.6665" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/><path d="M7.49977 15.0998L8.33311 11.6665H3.47477C3.21603 11.6665 2.96084 11.6063 2.72942 11.4905C2.49799 11.3748 2.29668 11.2068 2.14144 10.9998C1.98619 10.7928 1.88127 10.5525 1.83499 10.298C1.7887 10.0434 1.80232 9.78156 1.87477 9.53317L3.81644 2.8665C3.91741 2.52031 4.12795 2.21621 4.41644 1.99984C4.70493 1.78347 5.05582 1.6665 5.41644 1.6665H16.6664C17.1085 1.6665 17.5324 1.8421 17.8449 2.15466C18.1575 2.46722 18.3331 2.89114 18.3331 3.33317V9.99984C18.3331 10.4419 18.1575 10.8658 17.8449 11.1783C17.5324 11.4909 17.1085 11.6665 16.6664 11.6665H14.3664C14.0564 11.6667 13.7525 11.7533 13.489 11.9167C13.2255 12.0801 13.0128 12.3138 12.8748 12.5915L9.99977 18.3332C9.60679 18.3283 9.21999 18.2347 8.86827 18.0593C8.51655 17.884 8.209 17.6314 7.9686 17.3205C7.7282 17.0096 7.56117 16.6484 7.47999 16.2638C7.39881 15.8793 7.40557 15.4814 7.49977 15.0998Z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="currentColor"/></svg>',
+coachPlus:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4.5835V17.4168" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="black"/><path d="M4.5835 11H17.4168" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="black"/></svg>',
+coachMic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 1.8335C10.2707 1.8335 9.57118 2.12323 9.05546 2.63895C8.53973 3.15468 8.25 3.85415 8.25 4.5835V11.0002C8.25 11.7295 8.53973 12.429 9.05546 12.9447C9.57118 13.4604 10.2707 13.7502 11 13.7502C11.7293 13.7502 12.4288 13.4604 12.9445 12.9447C13.4603 12.429 13.75 11.7295 13.75 11.0002V4.5835C13.75 3.85415 13.4603 3.15468 12.9445 2.63895C12.4288 2.12323 11.7293 1.8335 11 1.8335Z" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="black"/><path d="M17.4168 9.1665V10.9998C17.4168 12.7016 16.7408 14.3337 15.5374 15.5371C14.3341 16.7405 12.702 17.4165 11.0002 17.4165C9.29836 17.4165 7.66625 16.7405 6.46289 15.5371C5.25954 14.3337 4.5835 12.7016 4.5835 10.9998V9.1665" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="black"/><path d="M11 17.4165V20.1665" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" stroke="black"/></svg>'
 };
 /* Small UI glyphs for screens not in the Figma frame (voice flow, review, edit sheet) */
 const IC={
@@ -561,6 +715,8 @@ function grams(f,u,q){q=Number(q)||0;const g=f.g||{};const V={cup:1,tbsp:1/16,ts
  if(u in V){if(g[u])return g[u]*q;for(const b of ['cup','tbsp','tsp'])if(g[b])return g[b]/V[b]*V[u]*q;return 240*V[u]*q}
  switch(u){case 'g':case 'ml':return q;case 'kg':case 'l':return q*1000;case 'oz':return q*28.35;case 'lb':return q*453.6;case 'pinch':return q*0.3;case 'handful':return q*(g.handful||30);case 'can':return q*400;default:return q*(g.piece||(g.cup?g.cup/4:50))}}
 function kcalOf(it){const f=FOODMAP[it.foodId];if(!f)return null;return Math.round(grams(f,it.unit||f.def[0],it.qty)*f.k/100)}
+const MACROS={'toor-dal':[63,1.5,22],'moong-dal':[63,1.2,24],'masoor-dal':[60,1,25],'chana-dal':[60,5,21],'rice':[80,0.6,7],'brown-rice':[77,3,8],'carrot':[10,0.2,0.9],'green-beans':[7,0.2,1.8],'potato':[17,0.1,2],'onion':[9,0.1,1.1],'tomato':[3.9,0.2,0.9],'garlic':[33,0.5,6.4],'ginger':[18,0.8,1.8],'green-chili':[9,0.2,2],'spinach':[3.6,0.4,2.9],'peas':[14,0.4,5.4],'cauliflower':[5,0.3,1.9],'cabbage':[6,0.1,1.3],'bell-pepper':[6,0.3,1],'eggplant':[6,0.2,1],'okra':[7,0.2,1.9],'drumstick':[9,0.1,2],'pumpkin':[6.5,0.1,1],'ghee':[0,100,0],'butter':[0.1,81,0.9],'oil':[0,100,0],'salt':[0,0,0],'sugar':[100,0,0],'jaggery':[98,0.1,0.4],'turmeric':[65,3,10],'chili-powder':[50,14,13],'cumin':[44,22,18],'mustard-seeds':[28,36,26],'coriander-powder':[55,18,12],'cilantro':[3.7,0.5,2.1],'curry-leaves':[18,1,6],'hing':[68,1,4],'garam-masala':[50,15,13],'sambar-powder':[50,10,13],'tamarind':[62,0.6,2.8],'coconut':[15,33,3.3],'coconut-milk':[6,24,2.3],'milk':[4.8,3.3,3.4],'yogurt':[4.7,3.3,3.5],'paneer':[3.6,20,18],'cheese':[1.3,33,25],'cream':[2.8,36,2],'egg':[1.1,11,13],'chicken':[0,3.6,31],'flour':[76,1,10],'atta':[72,1.7,13],'besan':[58,6.7,22],'chickpeas':[27,2.6,9],'kidney-beans':[23,0.5,8.7],'water':[0,0,0],'lemon':[9,0.3,1.1],'honey':[82,0,0.3],'bread':[49,3.2,9],'pasta':[75,1.5,13],'black-pepper':[64,3.3,10],'cinnamon':[81,1.2,4],'cardamom':[68,7,11],'bay-leaf':[75,8,8],'mint':[15,0.9,3.8],'banana':[23,0.3,1.1],'strawberries':[7.7,0.3,0.7],'blueberries':[14,0.3,0.7],'raspberries':[12,0.7,1.2]}; // per 100 g: carbs, fat, protein (approximate)
+function macrosOf(it){const f=FOODMAP[it.foodId];if(!f)return null;const g=grams(f,it.unit||f.def[0],it.qty),m=MACROS[f.id]||[0,0,0];return {c:g*m[0]/100,f:g*m[1]/100,p:g*m[2]/100}}
 const fmtCal=n=>Number(n).toLocaleString();
 
 /* ================= Ingredient parser ================= */
@@ -673,8 +829,9 @@ const DEFAULT_SCRIPT='1 banana, 1/2 cup of strawberries, 1/2 cup milk.';
 const OLD_SCRIPTS=['One cup of toor dal, two carrots, a cup of green beans, one onion, two tomatoes, one tablespoon sambar powder, half teaspoon turmeric, two tablespoons ghee, salt to taste.'];
 const CARD="Strawberry Banana Smoothie — serves 1\n\n• 1 banana\n• ½ cup strawberries\n• ½ cup milk";
 const TASK="You just made a strawberry banana smoothie for breakfast and want to track it. Starting from the Today screen, save it in the app as a recipe called “Strawberry Banana Smoothie” that serves 1. The ingredients are on this card.";
-const CFG=Object.assign({engine:'auto',lang:'en-US',trigger:'focus',plant:'off',showAd:true,bulkDefault:true,script:DEFAULT_SCRIPT},store.get('vp_cfg2',{}));
+const CFG=Object.assign({bcMeals:'snacks',bcDelay:'5',aiCard:'type',engine:'auto',lang:'en-US',trigger:'focus',plant:'off',showAd:true,bulkDefault:true,script:DEFAULT_SCRIPT},store.get('vp_cfg2',{}));
 const saveCfg=()=>store.set('vp_cfg2',CFG);
+if(!CFG.bcDelayV2){CFG.bcDelay='5';CFG.bcDelayV2=true;saveCfg()} // new default: 5 s (overrides the old saved 10 s once)
 if(!CFG.script||OLD_SCRIPTS.includes(CFG.script.trim())){CFG.script=DEFAULT_SCRIPT;saveCfg()} // replace the old saved sambar script
 const ERR_TYPES=new Set(['mic_denied','mic_prompt_dismissed','no_speech','speech_error','voice_unavailable','save_blocked','edit_invalid','added_with_unresolved','parse_empty','observed_error']);
 
@@ -689,7 +846,7 @@ function newSession(pid){
 const isRec=()=>!!(SESSION&&!SESSION.ended);
 const nextId=()=>'P'+(SESSIONS.filter(s=>s.events.length>1).length+1);
 function endSession(){if(!isRec())return;log('session_end');SESSION.ended=Date.now();store.set('vp_sessions_v2',SESSIONS);updateRecBadge()}
-function updateRecBadge(){const b=$('#modBtn');if(b)b.classList.toggle('rec',isRec())}
+function updateRecBadge(){const b=$('#modBtn');if(b){b.classList.toggle('rec',isRec());b.classList.toggle('taskrec',typeof REC!=='undefined'&&!!REC)}}
 let persistT=null;
 function persist(){clearTimeout(persistT);persistT=setTimeout(()=>store.set('vp_sessions_v2',SESSIONS),250)}
 function currentScreen(){if(SHEET)return 'sheet:'+SHEET;if(VOPEN)return 'voice:'+VSTATE;if(NAV.add)return 'add-recipe';if(NAV.search)return NAV.tab==='recipes'?'my-recipes':'food-search:'+NAV.tab;return 'today'}
@@ -699,14 +856,17 @@ function log(type,detail,opts){
  SESSION.events.push(ev);persist();updatePanelLive();
 }
 
-const SEED_FOODS=[['Kakara Ka Booka','326 cal, 1 serving',0],['Roti','239 cal, 2 medium',1],['moong','110 cal, 0.5 cup, moong daal',0],['Belvita','138 cal, 0.6 pkg, Belvita',1],['Pistachios','80 cal, 0.25 cup without shells, Wonderful',1],['Bisi Bele Bath','80 cal, 1 serving',0],['Peanut Butter Toast','210 cal, 1 slice',0],['White Bread','120 cal, 2 slices, Stroehmann',1]];
-const SEED_RECIPES=[['Peanut Butter Tofu','413 cal, 1 serving'],['Kakara Ka Booka','326 cal, 1 serving'],['Peanut Butter Tofu','346 cal, 1 serving'],['Quinoa Behl','442 cal, 1 serving'],['Bisi Bele Bath','80 cal, 1 serving'],['Quesadilla','523 cal, 1 serving'],['Lemon Pepper Tofu Sandwich','310 cal, 1 serving'],['Tuscan Bean Pasta','480 cal, 1 serving']];
+const MEALS=['Breakfast','Lunch','Dinner','Snacks'];
+const SEED_FOODS=[['Kakara Ka Booka','326 cal, 1 serving',0,[30,18,10]],['Roti','239 cal, 2 medium',1,[36,7,8]],['moong','110 cal, 0.5 cup, moong daal',0,[19,.4,7.5]],['Belvita','138 cal, 0.6 pkg, Belvita',1,[22,4.5,2.5]],['Pistachios','80 cal, 0.25 cup without shells, Wonderful',1,[4,6.5,3]],['Bisi Bele Bath','80 cal, 1 serving',0,[12,2.5,2.5]],['Peanut Butter Toast','210 cal, 1 slice',0,[18,12,8]],['White Bread','120 cal, 2 slices, Stroehmann',1,[24,1,3]]];
+const BRANDS=[['Granola Bar, Crunchy Oats ’n Honey','190 cal, 2 bars, Nature Valley',1,[29,7,4]],['Granola Bar, Chewy Trail Mix','140 cal, 1 bar, Nature Valley',0,[25,4,2]],['Protein Granola Bar, Peanut Butter','190 cal, 1 bar, Nature Valley',1,[14,11,10]],['Granola, Oats & Honey','230 cal, 0.5 cup, Nature Valley',0,[33,9,5]],['Greek Yogurt, Vanilla','140 cal, 1 container, Chobani',1,[16,2.5,12]],['Potato Chips, Classic','160 cal, 1 oz, Lay’s',1,[15,10,2]],['Almonds, Roasted & Salted','170 cal, 1 oz, Blue Diamond',1,[6,15,6]],['Apple, Medium','95 cal, 1 medium, Generic',1,[25,.3,.5]]];
+const SEED_RECIPES=[['Peanut Butter Tofu','413 cal, 1 serving',[20,26,26]],['Kakara Ka Booka','326 cal, 1 serving',[30,18,10]],['Peanut Butter Tofu','346 cal, 1 serving',[17,22,22]],['Quinoa Behl','442 cal, 1 serving',[60,15,15]],['Bisi Bele Bath','80 cal, 1 serving',[12,2.5,2.5]],['Quesadilla','523 cal, 1 serving',[40,28,25]],['Lemon Pepper Tofu Sandwich','310 cal, 1 serving',[32,11,18]],['Tuscan Bean Pasta','480 cal, 1 serving',[72,12,20]]];
+const mac=a=>a?{c:a[0],f:a[1],p:a[2]}:null;
 const freshState=()=>({title:'',servings:'',bulk:CFG.bulkDefault,bulkText:'',ingredients:[],upsellShown:false,trialUsed:false,upsellCtx:null,err:{},
- foods:SEED_FOODS.map(([n,d,v])=>({id:uid(),name:n,details:d,verified:!!v,added:false})),
- recipes:SEED_RECIPES.map(([n,d])=>({id:uid(),name:n,details:d,added:false})),meal:'Breakfast',query:'',logged:{Breakfast:[],Lunch:[],Dinner:[]}});
+ foods:SEED_FOODS.map(([n,d,v,m])=>({id:uid(),name:n,details:d,verified:!!v,added:false,m:mac(m)})),
+ recipes:SEED_RECIPES.map(([n,d,m])=>({id:uid(),name:n,details:d,added:false,m:mac(m)})),meal:'Breakfast',query:'',dbRows:{},searchAt:0,visitAdded:[],aiCard:{shown:false,dismissed:false,used:false},aiFocus:null,coachAdded:0,coachPick:null,bc:{shown:false,used:false,dueAt:0,typingAt:0},brands:BRANDS.map(([n,d,v,m])=>({id:uid(),name:n,details:d,verified:!!v,added:false,m:mac(m)})),logged:{Breakfast:[],Lunch:[],Dinner:[],Snacks:[]}});
 let S=freshState();
 const NAV={search:false,tab:'history',add:false};
-let sheetAt=0;
+let sheetClosedAt=0,sheetAt=0,VTARGET='recipe';
 let SHEET=null,EDIT=null,VOPEN=false,VSTATE='ready',VR={transcript:'',items:[],mode:'voice'},VMSG='',VTOKEN=0;
 
 /* ================= Voice engines ================= */
@@ -837,13 +997,16 @@ function markStep(n){const li=$('#st'+n);if(li)li.classList.add('done')}
 
 
 /* ================= Screens ================= */
+function sumMacros(list){return list.reduce((a,x)=>{if(x.m){a.c+=x.m.c;a.f+=x.m.f;a.p+=x.m.p}return a},{c:0,f:0,p:0})}
+const gfmt=v=>{const r=Math.round(v);return (r===0&&v>0.05?'<1':String(r))+'g'};
 function renderToday(){
- const cal=S.logged.Breakfast.concat(S.logged.Lunch,S.logged.Dinner).reduce((a,x)=>a+(x.kcal||0),0);
+ const cal=MEALS.flatMap(m=>S.logged[m]).reduce((a,x)=>a+(x.kcal||0),0);
  const left=1600-cal;
  const mealRow=m=>{const L=S.logged[m];
   if(!L.length)return `<div class="meal">${fi('dining')}<span class="name t-headline">${m}</span><span class="more" data-off="${m} more menu">•••</span><button class="btn-tonal press" data-act="meal-log" data-meal="${m}">Log</button></div>`;
   const tot=L.reduce((a,x)=>a+(x.kcal||0),0);
-  return `<div class="mcard"><div class="mc-hd"><span class="mc-t">${m}</span><span class="mc-c">${fmtCal(tot)} cal</span></div><div class="mc-div"></div>
+  const mm=sumMacros(L);
+  return `<div class="mcard"><div class="mc-hd"><span class="mc-t">${m}</span><span class="mc-c">${fmtCal(tot)} cal</span></div><div class="mc-mac"><span><b>C</b> ${gfmt(mm.c)}</span><span><b>F</b> ${gfmt(mm.f)}</span><span><b>P</b> ${gfmt(mm.p)}</span></div><div class="mc-div"></div>
    ${L.map(x=>`<div class="sw sw-row" data-kind="logged" data-id="${x.id}" data-name="${esc(x.name)}"><button class="sw-del" data-act="logged-delete" data-meal="${m}" data-id="${x.id}" aria-label="Delete ${esc(x.name)}">${IC.trash}</button><div class="sw-fg mi" data-off="Diary item: ${esc(x.name)}"><div class="mi-t"><div class="mi-n">${esc(x.name)}${x.verified?FI.verified:''}</div><div class="mi-s">${esc(x.sub)}</div></div><div class="mi-c">${fmtCal(x.kcal)}</div></div></div>`).join('')}
    <div class="mc-ft"><button class="btn-logmore press" data-act="meal-log" data-meal="${m}">Log more</button></div></div>`};
  const prevScroll=$('#sToday .scroll')?$('#sToday .scroll').scrollTop:0;
@@ -856,10 +1019,10 @@ function renderToday(){
    <div class="card"><div class="t-sub" style="font-weight:600">Calories</div>
     <div class="row2"><div class="val"><span class="big">${fmtCal(cal)} cal</span><span class="goal">/ 1,600</span></div><div class="val"><span class="mid">${fmtCal(left)}</span><span class="goal">left</span></div></div>
     <div class="track"${cal?` style="background:linear-gradient(90deg,var(--brand) ${Math.min(100,cal/16)}%,var(--subtle) 0)"`:''}></div></div>
-   <div class="card"><div class="macros">${[['Carbs','200'],['Fat','53'],['Protein','80']].map(([l,g])=>`<div><span class="t-sub" style="font-weight:600">${l}</span><div class="val"><span class="mid">0 g</span><span class="goal">/ ${g}</span></div><div class="track"></div></div>`).join('')}</div><span class="swap" data-off="Macro swap">${FI.swap}</span></div>
+   <div class="card"><div class="macros">${(()=>{const d=sumMacros(MEALS.flatMap(m=>S.logged[m]));return [['Carbs',d.c,200,'#1a8c7e'],['Fat',d.f,53,'#6a1b9a'],['Protein',d.p,80,'#c46a0a']].map(([l,v,g,col])=>`<div><span class="t-sub" style="font-weight:600">${l}</span><div class="val"><span class="mid">${Math.round(v)} g</span><span class="goal">/ ${g}</span></div><div class="track"${v>0?` style="background:linear-gradient(90deg,${col} ${Math.min(100,v/g*100).toFixed(1)}%,var(--subtle) 0)"`:''}></div></div>`).join('')})()}</div><span class="swap" data-off="Macro swap">${FI.swap}</span></div>
    ${CFG.showAd?`<div class="adslot"><div class="app-ad" data-off="App install ad"><div class="appicon"></div><div class="copy"><span class="t-body">QR Code Barcode Ai Reader</span><span class="t-foot" style="color:var(--text2)">4.6 ★&nbsp;&nbsp; Free</span></div><button class="btn-primary-sm" data-off="Ad Get button">Get</button></div><div class="t-foot" style="color:var(--text2)">Get ad-free tracking in Premium—<span class="link-blue" data-off="Upgrade now link">upgrade now</span></div></div>`:''}
    <div class="meals-h"><span class="t-title3">Meals</span><span class="t-sub link-blue" style="font-weight:600" data-off="View diary">View diary</span></div>
-   ${['Breakfast','Lunch','Dinner'].map(mealRow).join('')}
+   ${MEALS.map(mealRow).join('')}
   </div>
  </div>
  <div class="tabbar">
@@ -871,37 +1034,91 @@ function renderToday(){
  </div>`;
  if(prevScroll)$('#sToday .scroll').scrollTop=prevScroll;
 }
-function rowsHTML(list,kind){
- const q=S.query.trim().toLowerCase();const items=list.filter(x=>!q||x.name.toLowerCase().includes(q));
+function rowsHTML(list,kind,prefiltered){
+ const q=prefiltered?'':S.query.trim().toLowerCase();const items=list.filter(x=>!q||x.name.toLowerCase().includes(q));
  if(!items.length)return `<div class="empty t-sub">${q?`No ${kind==='recipe'?'recipes':'foods'} match “${esc(S.query)}”`:'Nothing here yet'}</div>`;
  return items.map(x=>{
-  const row=`<div class="frow ${x.fresh?'fresh':''} ${kind==='recipe'?'sw-fg':''}" data-off="${kind==='recipe'?'Recipe':'Food'} row: ${esc(x.name)}"><div class="txt"><div class="nm"><span class="t-body">${esc(x.name)}</span>${x.verified?FI.verified:''}${x.fresh?'<span class="newtag">New</span>':''}</div><div class="dt t-sub">${esc(x.details)}</div></div><button class="addbtn ${x.added?'added':''}" data-act="${kind}-add" data-id="${x.id}" aria-label="${x.added?'Added':'Add'} ${esc(x.name)}">${x.added?IC.checkW:FI.rowPlus}</button></div>`;
+  const row=`<div class="frow ${x.fresh?'fresh':''} ${S.coachPick&&x.name===S.coachPick&&inSearchMode()?'coach-pick':''} ${kind==='recipe'?'sw-fg':''}" data-off="${kind==='recipe'?'Recipe':'Food'} row: ${esc(x.name)}"><div class="txt"><div class="nm"><span class="t-body">${esc(x.name)}</span>${x.verified?FI.verified:''}${x.fresh?'<span class="newtag">New</span>':''}</div><div class="dt t-sub">${esc(x.details)}</div></div><button class="addbtn ${x.added?'added':''}" data-act="${kind}-add" data-id="${x.id}" aria-label="${x.added?'Added':'Add'} ${esc(x.name)}">${x.added?IC.checkW:FI.rowPlus}</button></div>`;
   return kind==='recipe'?`<div class="sw" data-kind="recipe" data-id="${x.id}" data-name="${esc(x.name)}"><button class="sw-del" data-act="recipe-delete" data-id="${x.id}" aria-label="Delete ${esc(x.name)}">${IC.trash}</button>${row}</div>`:row;
  }).join('');
+}
+const inSearchMode=()=>NAV.tab!=='recipes'&&!!S.query.trim();
+function dbRow(f){if(!S.dbRows[f.id]){const k=kcalOf({foodId:f.id,qty:f.def[1],unit:f.def[0]});S.dbRows[f.id]={m:macrosOf({foodId:f.id,qty:f.def[1],unit:f.def[0]}),id:'db-'+f.id,name:f.name,details:`${k} cal, ${fmtQty(f.def[1])} ${fmtUnit(f.def[0],f.def[1],f)}, Generic`,verified:true,added:false}}return S.dbRows[f.id]}
+const allFoods=()=>S.foods.concat(S.brands,Object.values(S.dbRows));
+function searchResults(){
+ const q=S.query.trim().toLowerCase();if(!q)return [];
+ const hist=S.foods.concat(S.brands).filter(x=>x.name.toLowerCase().includes(q)||x.details.toLowerCase().includes(q));
+ const seen=new Set(hist.map(x=>x.name.toLowerCase()));
+ const db=FOODS.filter(f=>f.name.toLowerCase().includes(q)||f.aliases.some(a=>a.includes(q))).map(dbRow).filter(x=>!seen.has(x.name.toLowerCase()));
+ return hist.concat(db);
+}
+function mipHTML(){
+ if(!S.visitAdded.length)return '';
+ return `<div class="mip" data-off="Meal in progress strip">${FI.mipCheck}<p><b>${S.visitAdded.length} added:</b> ${esc(S.visitAdded.join(', ').toLowerCase())}</p><span class="el">${FI.mipClock}<span id="mipTime">${fmtT(Date.now()-S.searchAt)}</span></span></div>`;
+}
+function aiCardHTML(){
+ const c=S.aiCard;if(!c.shown||c.dismissed)return '';
+ if(S.meal==='Snacks')return `<div class="aic"><div class="aic-hd"><span class="aic-who"><span class="aic-orb">${FI.aicSparkle}</span>AI Coach</span><button class="aic-x" data-act="aic-dismiss" aria-label="Dismiss">${FI.aicDismiss}</button></div>
+  <h3>Want to upgrade this snack?</h3><p>Let AI Coach suggest pairings or swaps to help you hit your remaining protein and fiber goals.</p>
+  <div class="aic-chips emoji"><button class="aic-chip" data-act="aic-chip" data-chip="pair">🎯 Macro-matched</button><button class="aic-chip" data-act="aic-chip" data-chip="swap">🔄 Smart swaps</button><button class="aic-chip fast" data-act="aic-chip" data-chip="idea">🥨 Snack ideas</button></div>
+  <button class="aic-cta" data-act="aic-cta">${FI.aicCta}Optimize Snack with AI Coach</button></div>`;
+ return `<div class="aic"><div class="aic-hd"><span class="aic-who"><span class="aic-orb">${FI.aicSparkle}</span>AI Coach</span><button class="aic-x" data-act="aic-dismiss" aria-label="Dismiss">${FI.aicDismiss}</button></div>
+  <h3>Tired of typing this out?</h3><p>Let the AI Coach parse your ingredients from a quick photo or voice note in 2 seconds.</p>
+  <div class="aic-chips"><button class="aic-chip" data-act="aic-chip" data-chip="photo">${FI.aicPhoto}Photo</button><button class="aic-chip" data-act="aic-chip" data-chip="voice">${FI.aicVoice}Voice note</button><span class="aic-chip fast" data-off="AI card ~2 sec chip">${FI.aicBolt}~2 sec</span></div>
+  <button class="aic-cta" data-act="aic-cta">${FI.aicCta}Try AI Meal Logging Free</button></div>`;
+}
+function searchBodyHTML(){
+ const t=NAV.tab,isRec=t==='recipes';
+ if(inSearchMode()){
+  const res=searchResults();
+  return `${mipHTML()}${aiCardHTML()}<div class="res-h"><b>Search results</b><span>${res.length} match${res.length===1?'':'es'}</span></div><div class="rows">${res.length?rowsHTML(res,'food',true):`<div class="empty t-sub">No foods match “${esc(S.query)}”</div>`}</div>`;
+ }
+ const tiles=isRec?`<div class="tiles"><button class="tile press" data-act="create-recipe">${FI.rowPlus}Create recipe</button><button class="tile press" data-off="Discover tile">${FI.discover}Discover</button><button class="tile press" data-off="Import tile">${FI.import}Import</button></div>`
+  :t==='history'?`<div class="tiles"><button class="tile press" data-act="barcode-tile">${FI.barcode}Barcode scan<span class="lk">${FI.premLock}</span></button><button class="tile press" data-act="voice-log-tile">${FI.voiceLog}Voice log<span class="lk">${FI.premLock}</span></button><button class="tile press" data-off="Meal scan tile">${FI.mealScan}Meal scan<span class="lk">${FI.premLock}</span></button><button class="tile press" data-off="Quick add tile">${FI.quickAdd}Quick add</button></div>`:'';
+ const head=isRec?`<div class="list-h"><span class="t-title3">My Recipes</span><button class="sortchip t-sub" data-off="Sort chip">${FI.sort}Date Created</button></div>`
+  :t==='history'?`<div class="list-h"><span class="t-title3">Recently logged</span><button class="circ-btn" data-off="Filter button">${FI.filter}</button></div>`:'';
+ const body=isRec?rowsHTML(S.recipes,'recipe'):t==='history'?rowsHTML(S.foods,'food'):`<div class="empty t-sub">${t==='meals'?'You haven’t saved any meals yet.':'You haven’t created any foods yet.'}</div>`;
+ return `${mipHTML()}${tiles}${head}<div class="rows">${body}</div>`;
 }
 function renderSearch(){
  const t=NAV.tab,isRec=t==='recipes';
  const tab=(k,l)=>`<button class="utab t-body ${t===k?'on':''}" data-act="tab" data-tab="${k}"><span>${l}</span><i></i></button>`;
- const tiles=isRec?`<div class="tiles"><button class="tile press" data-act="create-recipe">${FI.rowPlus}Create recipe</button><button class="tile press" data-off="Discover tile">${FI.discover}Discover</button><button class="tile press" data-off="Import tile">${FI.import}Import</button></div>`
-  :t==='history'?`<div class="tiles"><button class="tile press" data-off="Barcode scan tile">${FI.barcode}Barcode scan</button><button class="tile press" data-act="voice-log-tile">${FI.voiceLog}Voice log</button><button class="tile press" data-off="Meal scan tile">${FI.mealScan}Meal scan</button><button class="tile press" data-off="Quick add tile">${FI.quickAdd}Quick add</button></div>`:'';
- const head=isRec?`<div class="list-h"><span class="t-title3">My Recipes</span><button class="sortchip t-sub" data-off="Sort chip">${FI.sort}Date Created</button></div>`
-  :t==='history'?`<div class="list-h"><span class="t-title3">Recently logged</span><button class="circ-btn" data-off="Filter button">${FI.filter}</button></div>`:'';
- const body=isRec?rowsHTML(S.recipes,'recipe'):t==='history'?rowsHTML(S.foods,'food'):`<div class="empty t-sub">${t==='meals'?'You haven’t saved any meals yet.':'You haven’t created any foods yet.'}</div>`;
  $('#sSearch').innerHTML=`
   <div style="padding-top:var(--top);flex:none"></div>
   <div class="nav"><button class="lead" data-act="search-back" aria-label="Back">${FI.arrowLeft}</button><button class="ctr picker t-headline" data-off="Meal picker">${isRec?'Select a Meal':esc(S.meal)}${FI.pickerCaret}</button></div>
-  <div class="search-wrap"><label class="searchf">${FI.search}<input id="qInput" placeholder="${isRec?'Search my recipes...':'Search foods, brands, fl...'}" value="${esc(S.query)}" autocomplete="off"></label></div>
-  <div class="tabs">${tab('history','History')}${tab('meals','My Meals')}${tab('recipes','My Recipes')}${tab('foods','My Foods')}</div>
-  <div class="scroll" id="searchScroll">${tiles}${head}<div class="rows">${body}</div></div>
+  <div class="search-wrap"><label class="searchf">${FI.search}<input id="qInput" placeholder="${isRec?'Search my recipes...':'Search foods, brands, fl...'}" value="${esc(S.query)}" autocomplete="off" enterkeyhint="search"><button class="sclear" data-act="search-clear" aria-label="Clear search" style="${S.query?'':'display:none'}">${FI.searchClear}</button></label></div>
+  <div class="tabs" id="sTabs" style="${inSearchMode()?'display:none':''}">${tab('history','History')}${tab('meals','My Meals')}${tab('recipes','My Recipes')}${tab('foods','My Foods')}</div>
+  <div class="scroll" id="searchScroll"><div id="sBody">${searchBodyHTML()}</div></div>
   <div class="qbar"><button data-off="Quick log: Water">${FI.water}Water</button><button data-off="Quick log: Weight">${FI.weight}Weight</button><button data-off="Quick log: Exercise">${FI.exercise}Exercise</button></div>`;
  const qi=$('#qInput');
- qi.addEventListener('input',()=>{S.query=qi.value;$('#searchScroll .rows').innerHTML=isRec?rowsHTML(S.recipes,'recipe'):t==='history'?rowsHTML(S.foods,'food'):''});
+ qi.addEventListener('input',()=>{S.query=qi.value;maybeShowAiCard('typing');scheduleBarcode();refreshRows()});
  qi.addEventListener('change',()=>log('search_typed',{query:S.query,tab:t}));
+ qi.addEventListener('keydown',e=>{if(e.key==='Enter')qi.blur()});
+}
+function barcodeEligible(){const m=CFG.bcMeals;return m!=='off'&&(m==='all'||S.meal==='Snacks')}
+function scheduleBarcode(){
+ if(!barcodeEligible()||S.bc.shown||S.bc.used||S.bc.dueAt||NAV.tab==='recipes'||!S.query.trim())return;
+ S.bc.typingAt=Date.now();S.bc.dueAt=Date.now()+(+CFG.bcDelay||5)*1000;log('barcode_sheet_scheduled',{delay_s:+CFG.bcDelay||5,meal:S.meal});
+}
+let SCAN_OPEN=false;
+function barcodeTick(){
+ if(!S.bc.dueAt||S.bc.shown)return;
+ if(!NAV.search||NAV.add){S.bc.dueAt=0;return} // left the search screen: wait until they type again
+ if(Date.now()<S.bc.dueAt||VOPEN||SHEET||SCAN_OPEN||COACH_OPEN||Date.now()-sheetClosedAt<2000)return; // never on top of (or right after) another sheet or the voice flow
+ S.bc.shown=true;S.bc.dueAt=0;const qi=$('#qInput');if(qi)qi.blur();$('#toast').classList.remove('show');
+ log('barcode_sheet_shown',{meal:S.meal,query:S.query,sec_since_typing:+((Date.now()-S.bc.typingAt)/1000).toFixed(1),ai_card_visible:!!(S.aiCard.shown&&!S.aiCard.dismissed)});
+ openSheet('barcode');
+}
+function maybeShowAiCard(why){
+ if(NAV.tab==='recipes'||!S.query.trim()||S.aiCard.shown||S.aiCard.used)return;
+ const mode=CFG.aiCard;if(mode==='off')return;
+ if(mode==='after2'&&Date.now()-S.searchAt<120000)return;
+ S.aiCard.shown=true;log('ai_card_shown',{trigger:mode,query:S.query,sec_in_search:+((Date.now()-S.searchAt)/1000).toFixed(1),meal:S.meal});
 }
 function diaryEntry(src,kind){const parts=src.details.split(', ');const kcal=+(parts[0].match(/[\d,]+/)||['0'])[0].replace(/,/g,'');const serving=parts[1]||'1 serving';const brand=parts.slice(2).join(', ');
- return {id:uid(),srcId:src.id,kind,name:src.name,kcal,verified:!!src.verified,sub:brand?`${brand} • ${serving}`:serving}}
-function unlogSource(srcId){['Breakfast','Lunch','Dinner'].forEach(m=>{S.logged[m]=S.logged[m].filter(x=>x.srcId!==srcId)})}
-function refreshRows(){const r=$('#searchScroll .rows');if(!r){renderSearch();return}r.innerHTML=NAV.tab==='recipes'?rowsHTML(S.recipes,'recipe'):NAV.tab==='history'?rowsHTML(S.foods,'food'):r.innerHTML}
+ return {id:uid(),srcId:src.id,kind,name:src.name,m:src.m||null,kcal,verified:!!src.verified,sub:brand?`${brand} • ${serving}`:serving}}
+function unlogSource(srcId){MEALS.forEach(m=>{S.logged[m]=S.logged[m].filter(x=>x.srcId!==srcId)})}
+function refreshRows(){const b=$('#sBody');if(!b){renderSearch();return}b.innerHTML=searchBodyHTML();const tb=$('#sTabs');if(tb)tb.style.display=inSearchMode()?'none':'';const c=$('#sSearch .sclear');if(c)c.style.display=S.query?'':'none'}
 function ingRows(){return S.ingredients.map((it,i)=>{const k=kcalOf(it);return `<button class="ing" data-act="edit-ing" data-i="${i}"><span class="m"><span class="n">${esc(it.foodId?FOODMAP[it.foodId].name:it.name)}${it.source==='voice'?`<span class="vtag" title="Added by voice">${IC.micSm}</span>`:''}</span><span class="a">${esc(fmtAmt(it))}</span></span><span class="c ${k==null?'unk':''}">${k==null?'Calories unknown':fmtCal(k)+' cal'}</span></button>`}).join('')}
 function totalCal(list){return list.reduce((a,it)=>a+(kcalOf(it)||0),0)}
 function renderAdd(){
@@ -936,8 +1153,8 @@ function renderAdd(){
   fb.addEventListener('pointerdown',intercept);fb.addEventListener('focus',intercept);
  }
 }
-function syncTheme(){const c=VOPEN?'#ffffff':NAV.add?'#f6f7f9':NAV.search?'#ebebf0':'#e3f4ff';const m=$('#themeColor');if(m&&m.content!==c)m.content=c;if(!window.matchMedia('(min-width:600px) and (min-height:780px)').matches)document.body.style.background=c}
-function openSearch(meal){setTimeout(syncTheme,0);S.meal=meal;S.query='';NAV.search=true;NAV.tab='history';renderSearch();$('#sToday').classList.add('behind');$('#sSearch').classList.remove('off-right');log('screen_view',{screen:'food-search',meal})}
+function syncTheme(){const c=COACH_OPEN?'#b9d6f9':SCAN_OPEN?'#1b2436':VOPEN?'#ffffff':NAV.add?'#f6f7f9':NAV.search?'#ebebf0':'#e3f4ff';const m=$('#themeColor');if(m&&m.content!==c)m.content=c;if(!window.matchMedia('(min-width:600px) and (min-height:780px)').matches)document.body.style.background=c}
+function openSearch(meal){setTimeout(syncTheme,0);S.meal=meal;S.query='';S.searchAt=Date.now();S.bc.dueAt=0;S.visitAdded=[];S.aiCard.shown=false;if(!S.aiCard.used)S.aiCard.dismissed=false;NAV.search=true;NAV.tab='history';renderSearch();$('#sToday').classList.add('behind');$('#sSearch').classList.remove('off-right');log('screen_view',{screen:'food-search',meal})}
 function closeSearch(){setTimeout(syncTheme,0);NAV.search=false;$('#sSearch').classList.add('off-right');$('#sToday').classList.remove('behind');renderToday();log('screen_view',{screen:'today'})}
 function openAdd(){setTimeout(syncTheme,0);
  Object.assign(S,{title:'',servings:'',bulk:CFG.bulkDefault,bulkText:'',ingredients:[],err:{}});
@@ -960,6 +1177,42 @@ function upsellHTML(){return `<div class="grab"><i></i></div>
 <button class="btn-gold" data-act="upsell-try">${FI.micBtn}Try it for this meal</button>
 <div class="reassure">Free for this recipe · No subscription needed</div>
 <button class="btn-tert" data-act="upsell-keep">Keep typing</button>`}
+function barcodeHTML(){return `<div class="grab"><i></i></div>
+<div class="up-hd"><span class="eyebrow">${FI.crown}Premium feature</span><button class="xbtn" data-act="bc-close" aria-label="Close">${FI.x}</button></div>
+<h2 class="up-h">Skip the typing. Scan it instantly.</h2>
+<p class="bc-b">Free users search manually, but Premium members log meals <b>3x faster</b> with instant barcode scanning.</p>
+<div class="bc-demo">${FI.viewfinder}<div class="bc-res"><span class="speed" style="background:#fff1c7;color:#8a5a00">${FI.bolt}Scanned in 1 sec</span>
+ <div class="bc-match">${FI.check}<div><div class="n">Crunchy Granola Bar</div><div class="s">Nature Valley · 190 cal</div></div></div>
+ <div class="bc-cmp"><div><span>Search</span><i><b style="width:92%;background:#a1a4ad"></b></i><span>~45s</span></div><div><span>Scan</span><i><b style="width:6%;background:#e59a0b"></b></i><span style="color:#8a5a00">1s</span></div></div></div></div>
+<button class="btn-gold plain" data-act="bc-try">Try it for this meal</button>
+<div class="bc-fine">Unlocks barcode scanning &amp; more · Cancel anytime</div>
+<button class="btn-tert" style="height:38px;margin-top:4px" data-act="bc-keep">Keep typing</button>`}
+/* AI Coach snack suggestions — contextual to the search, each one loggable to Snacks */
+const SNACK_TIPS={
+ pair:{label:'🎯 Macro-matched pairing',brand:'Greek Yogurt, Vanilla',why:'Pairs well with what you’re snacking on',gain:'+12 g protein'},
+ swap:{label:'🔄 Smart swap',brand:'Protein Granola Bar, Peanut Butter',why:'Instead of a regular granola bar',gain:'+6 g protein · +2 g fiber'},
+ idea:{label:'🥨 Snack idea',brand:'Apple, Medium',why:'Crunchy, sweet and keeps you full',gain:'+4 g fiber'}
+};
+function snackTips(){
+ const q=S.query.toLowerCase(),t=JSON.parse(JSON.stringify(SNACK_TIPS));
+ if(/chip|crisp|fries/.test(q))t.swap={label:'🔄 Smart swap',brand:'Almonds, Roasted & Salted',why:'Instead of potato chips: same crunch',gain:'+4 g protein · +3 g fiber'};
+ else if(/yogurt|yoghurt/.test(q))t.pair={label:'🎯 Macro-matched pairing',brand:'Granola, Oats & Honey',why:'Adds crunch and fiber to your yogurt',gain:'+3 g fiber'};
+ else if(/apple|banana|fruit|berr/.test(q))t.pair={label:'🎯 Macro-matched pairing',brand:'Almonds, Roasted & Salted',why:'Adds protein and healthy fat to your fruit',gain:'+6 g protein'};
+ return t;
+}
+function suggestHTML(){
+ const tips=snackTips(),hl=S.aiFocus;
+ const loggedCal=S.logged.Snacks.reduce((a,x)=>a+(x.kcal||0),0);
+ const row=(k)=>{const tip=tips[k],r=S.brands.find(b=>b.name===tip.brand);if(!r)return '';const cal=r.details.split(', ')[0];
+  return `<div class="sg-sec ${hl===k?'on':''}">${tip.label}</div><div class="sg-row ${hl===k?'hl':''}"><div class="m"><div class="n">${esc(r.name)}</div><div class="w">${esc(tip.why)} · ${esc(cal)}</div><span class="gain">${esc(tip.gain)}</span></div><button class="sg-add ${r.added?'done':''}" data-act="sg-add" data-id="${r.id}" data-kind="${k}">${r.added?'Added ✓':'Add'}</button></div>`};
+ return `<div class="grab"><i></i></div>
+ <div class="up-hd"><span class="aic-who"><span class="aic-orb">${FI.aicSparkle}</span>AI Coach</span><button class="xbtn" data-act="sg-close" aria-label="Close">${FI.x}</button></div>
+ <h2 class="up-h">Upgrade this snack</h2>
+ <p class="sg-goal">You have about <b>58 g protein</b> and <b>19 g fiber</b> left today${loggedCal?` (${fmtCal(loggedCal)} cal in snacks so far)`:''}. Here’s what would help most:</p>
+ ${row('pair')}${row('swap')}${row('idea')}
+ <button class="btn-primary" style="margin-top:16px" data-act="sg-close">Done</button>
+ <div class="sg-fine">Free AI Coach preview · Premium unlocks daily suggestions</div>`;
+}
 function discardHTML(){return `<div class="grab"><i></i></div><h3 class="d-h">Discard this recipe?</h3><p class="d-p">Your title and ingredients will be lost.</p><button class="btn-danger" data-act="discard-yes">Discard recipe</button><button class="btn-plain" data-act="discard-no">Keep editing</button>`}
 function paywallHTML(){return `<div class="grab"><i></i></div><div class="up-hd"><span class="eyebrow">${FI.crown}Premium</span><button class="xbtn" data-act="paywall-close" aria-label="Close">${FI.x}</button></div>
 <h2 class="up-h">Keep adding recipes by voice</h2>
@@ -1001,14 +1254,14 @@ function bindEdit(){
 }
 function openSheet(type){
  SHEET=type;sheetAt=Date.now();const L=$('#layer');
- const html={upsell:upsellHTML,discard:discardHTML,paywall:paywallHTML,edit:editHTML}[type]();
+ const html={upsell:upsellHTML,discard:discardHTML,paywall:paywallHTML,edit:editHTML,barcode:barcodeHTML,suggest:suggestHTML}[type]();L.dataset.type=type;
  L.innerHTML=`<div class="backdrop" data-act="backdrop"></div><div class="sheet sheet-${type}">${html}</div>`;
  if(type==='edit')bindEdit();
  void L.offsetWidth;L.classList.add('open');
 }
 function rerenderSheet(){if(SHEET!=='edit')return;$('#layer .sheet').innerHTML=editHTML();bindEdit()}
 function closeSheet(cb){
- const L=$('#layer');L.classList.remove('open');SHEET=null;
+ const L=$('#layer');L.classList.remove('open');SHEET=null;sheetClosedAt=Date.now();
  setTimeout(()=>{if(!L.classList.contains('open'))L.innerHTML='';if(cb)cb()},300);
 }
 
@@ -1021,8 +1274,8 @@ function renderVoice(){
  switch(VSTATE){
  case 'ready':
   h=voiceNav('Cancel','Voice Assistant')+`<div class="v-body"><div class="v-center">
-   <span class="eyebrow">${FI.crown}Premium · free try</span>
-   <h2>Read your ingredients out loud</h2>
+   ${VTARGET==='meal'?`<span class="eyebrow" style="background:#efeaff;color:#4338ca">${FI.aicSparkle.replace(/white/g,'#6d4fe0')}AI Coach · free try</span>`:`<span class="eyebrow">${FI.crown}Premium · free try</span>`}
+   <h2>${VTARGET==='meal'?'Say what you’re logging':'Read your ingredients out loud'}</h2>
    <p>Say the amounts too, like “one banana, half a cup of strawberries.” Tap Done when you finish.</p>
    <button class="mic-big" data-act="mic" aria-label="Start speaking">${IC.micW}</button>
    <div class="v-hint">Tap to start speaking</div>
@@ -1045,7 +1298,7 @@ function renderVoice(){
    <div class="rv-sum"><span>${its.length} ingredient${its.length===1?'':'s'} found${warn?` · <span class="warn-t">${warn} need${warn===1?'s':''} a check</span>`:''}</span>${typed?'':`<span class="speed">${FI.bolt}Parsed in ${VR.secs}s</span>`}</div>
    ${its.length?`<div class="rv-list">${its.map(reviewRow).join('')}</div>`:''}
    <button class="rv-add" data-act="add-missing">${IC.plus} Add a missing ingredient</button>
-  </div><div class="v-foot"><div class="rv-total"><span>Total</span><b>≈ ${fmtCal(tot)} cal</b></div>${typed?`<button class="btn-primary" data-act="typed-save" ${its.length?'':'disabled'}>Save recipe</button>`:`<button class="btn-primary" data-act="voice-add" ${its.length?'':'disabled'}>Add ${its.length} ingredient${its.length===1?'':'s'} to recipe</button>`}</div>`;break;}
+  </div><div class="v-foot"><div class="rv-total"><span>Total</span><b>≈ ${fmtCal(tot)} cal</b></div>${typed?`<button class="btn-primary" data-act="typed-save" ${its.length?'':'disabled'}>Save recipe</button>`:`<button class="btn-primary" data-act="voice-add" ${its.length?'':'disabled'}>${VTARGET==='meal'?`Log ${its.length} item${its.length===1?'':'s'} to ${esc(S.meal)}`:`Add ${its.length} ingredient${its.length===1?'':'s'} to recipe`}</button>`}</div>`;break;}
  case 'empty':h=voiceNav('Cancel','Voice Assistant')+errorBlock(IC.ear,'No ingredients found',`We heard “${esc(VR.transcript)}” but couldn't find any ingredients in it.`,'<button class="btn-primary" data-act="voice-retry">Try again</button><button class="link" data-act="voice-type-instead">Type ingredients instead</button>');break;
  case 'nospeech':h=voiceNav('Cancel','Voice Assistant')+errorBlock(IC.ear,'We didn’t catch that','Make sure you’re in a quiet spot and speak after tapping the mic.','<button class="btn-primary" data-act="voice-retry">Try again</button><button class="link" data-act="voice-type-instead">Type ingredients instead</button>');break;
  case 'denied':h=voiceNav('Close','Voice Assistant')+errorBlock(IC.micOff,'Microphone is off','Voice entry needs your microphone. You can allow it in your browser settings, or type your ingredients.',`${VS.engine==='web'?'<button class="btn-secondary" data-act="voice-retry">Try again</button>':''}<button class="btn-primary" data-act="voice-type-instead">Type ingredients instead</button>`);break;
@@ -1065,7 +1318,7 @@ function reviewRow(it,i){
  if(!it.foodId)return `<div class="rv-row warn"><button class="rv-hit" data-act="edit-item" data-i="${i}"><span class="dot warn">${IC.warn}</span><span class="rv-main"><span class="rv-name">“${esc(it.name)}”</span><span class="rv-meta warn-t">Not recognized · tap to fix</span></span><span class="rv-chev">${IC.chev}</span></button>${it.sugg?`<button class="chip" data-act="accept-sugg" data-i="${i}">Did you mean <b>${esc(FOODMAP[it.sugg].name)}</b>?</button>`:''}</div>`;
  return `<div class="rv-row"><button class="rv-hit" data-act="edit-item" data-i="${i}"><span class="dot ok">${IC.check}</span><span class="rv-main"><span class="rv-name">${esc(FOODMAP[it.foodId].name)}</span><span class="rv-meta">${esc(fmtAmt(it))}</span></span><span class="rv-cal">${fmtCal(kcalOf(it))} cal</span><span class="rv-chev">${IC.chev}</span></button></div>`;
 }
-function openVoice(){setTimeout(syncTheme,0);VR={transcript:'',items:[],mode:'voice'};VOPEN=true;VMSG='';setV('ready');$('#voice').classList.add('open')}
+function openVoice(target){VTARGET=target||'recipe';$('#toast').classList.remove('show');setTimeout(syncTheme,0);VR={transcript:'',items:[],mode:'voice'};VOPEN=true;VMSG='';setV('ready');$('#voice').classList.add('open')}
 function openTypedReview(text){setTimeout(syncTheme,0);
  VR={transcript:text,items:[],mode:'typed'};VOPEN=true;setV('processing');$('#voice').classList.add('open');
  const tok=++VTOKEN;
@@ -1073,6 +1326,84 @@ function openTypedReview(text){setTimeout(syncTheme,0);
  setTimeout(()=>{if(tok!==VTOKEN)return;const items=parseIngredients(fixSpeech(text).replace(/\n/g,', '));VR.items=items;
   log('typed_parse_result',{matched:items.filter(x=>x.foodId).length,unrecognized:items.filter(x=>!x.foodId).length,items:items.map(x=>x.foodId?x.name:'?'+x.name).join('; ')});setV('review')},1000);
 }
+/* ================= AI Coach chat (Figma "ER 4b — AI Coach chat") ================= */
+let COACH_OPEN=false,coachTimers=[],coachBusy=false;
+function snackSubject(){
+ const last=S.visitAdded[S.visitAdded.length-1];
+ const src=last?allFoods().find(x=>x.name===last)||S.recipes.find(x=>x.name===last):null;
+ const short=(last||'').split(',')[0].trim();
+ return {name:short?short.toLowerCase():(S.query.trim()?S.query.trim().toLowerCase():'snack'),src};
+}
+function coachQuestion(focus,subj){
+ const s=subj.name==='snack'?'my snack':`my ${subj.name}`;
+ if(focus==='pair')return `What should I pair with ${s}?`;
+ if(focus==='swap')return `Is there a better swap for ${s}?`;
+ if(focus==='idea')return `Can you give me a better snack idea than ${s}?`;
+ return `How can I upgrade ${s} to get more protein and fiber?`;
+}
+function coachAnswerBlocks(focus,subj){
+ const tips=snackTips(),order=focus?[focus,...['pair','swap','idea'].filter(k=>k!==focus)]:['pair','swap','idea'];
+ const day=sumMacros(MEALS.flatMap(m=>S.logged[m])),pLeft=Math.max(0,Math.round(80-day.p)),fLeft=19;
+ const sp=subj.src&&subj.src.m?Math.round(subj.src.m.p):null;
+ const blocks=[];
+ blocks.push(`<p><b>Good call — small tweaks here go a long way.</b> You have about <b>${pLeft} g of protein</b> and <b>${fLeft} g of fiber</b> left for today.${sp!==null?` Your ${esc(subj.name)} adds ${sp} g of protein, so let’s give it more staying power:`:' Here’s what would help most:'}</p>`);
+ order.forEach(k=>{const tip=tips[k],r=S.brands.find(b=>b.name===tip.brand);if(!r)return;const cal=r.details.split(', ')[0];
+  blocks.push(`<div class="co-sug"><div class="m"><div class="k">${esc(tip.label)}</div><div class="n">${esc(r.name)}</div><div class="w">${esc(tip.why)} · ${esc(cal)}</div><span class="gain">${esc(tip.gain)}</span></div><button class="co-go" data-act="coach-search" data-id="${r.id}" data-kind="${k}">Search<svg width="8" height="13" viewBox="0 0 8 13" fill="none"><path d="M1.5 1.5l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`)});
+ blocks.push(`<p>Tap <b>Search</b> on any of these to find it and log it. Even one makes a real dent in what you have left. Want me to keep an eye on your snacks for the rest of the week?</p>`);
+ blocks.push(`<div class="co-fb"><button data-act="coach-copy" aria-label="Copy">${FI.coachCopy}</button><button data-act="coach-fb" data-v="up" aria-label="Helpful">${FI.coachUp}</button><button data-act="coach-fb" data-v="down" aria-label="Not helpful">${FI.coachDown}</button></div>`);
+ return blocks;
+}
+function coachUpsellHTML(){return `<div class="co-up"><span class="eyebrow" style="align-self:flex-start">${FI.crown}Premium</span><div class="t"><b>That was your free Coach session.</b> Premium gets you AI Coach for every meal and snack, plus barcode scanning and voice logging.</div><button class="btn-gold" data-act="coach-upgrade">Start 7-day free trial</button></div>`}
+function coachStartersHTML(){return `<div class="co-starters"><button class="co-start" data-act="coach-follow" data-q="How balanced are my snacks this week?"><span class="e">🥗</span>How balanced are my snacks this week?</button><button class="co-start" data-act="coach-follow" data-q="Ideas for more protein today"><span class="e">🍳</span>Ideas for more protein today</button></div>`}
+let coachAnchor=null; // keep the latest question pinned near the top while the answer streams in
+function coachScroll(){const c=$('#coConv');if(!c)return;requestAnimationFrame(()=>c.scrollTo({top:c.scrollHeight,behavior:'smooth'}))}
+function coachAppend(html,anchor){const c=$('#coConv');if(!c)return null;const d=document.createElement('div');d.innerHTML=html;const el=d.firstElementChild;c.appendChild(el);if(anchor)coachAnchor=el;coachScroll();return el}
+function coachSay(blocks,after){
+ coachBusy=true;const typing=coachAppend('<div class="co-typing"><i></i><i></i><i></i></div>');
+ coachTimers.push(setTimeout(()=>{if(typing)typing.remove();const msg=coachAppend('<div class="co-msg"></div>');
+  blocks.forEach((b,i)=>coachTimers.push(setTimeout(()=>{if(!msg)return;const d=document.createElement('div');d.innerHTML=b;msg.appendChild(d.firstElementChild);coachScroll()},i*420)));
+  coachTimers.push(setTimeout(()=>{coachBusy=false;if(after)after()},blocks.length*420+150));
+ },1300));
+}
+function openCoach(focus,via){
+ if(S.aiCard.used){log('upgrade_tap',{from:'ai_card'});openSheet('paywall');return}
+ const qi=$('#qInput');if(qi)qi.blur();$('#toast').classList.remove('show');
+ const subj=snackSubject(),q=coachQuestion(focus,subj);
+ S.aiCard.used=true;COACH_OPEN=true;S.coachAdded=0;coachTimers.forEach(clearTimeout);coachTimers=[];
+ $('#coach').innerHTML=`<div class="nav"><button class="lead" data-act="coach-back" aria-label="Back">${FI.arrowLeft}</button><span class="ctr t-headline tt">Coach</span></div>
+  <div class="co-conv" id="coConv"></div>
+  <div class="co-comp"><div class="co-in" id="coIn"><button data-act="coach-plus" aria-label="Add">${FI.coachPlus}</button><input id="coInput" placeholder="Ask your coach anything…" autocomplete="off" enterkeyhint="send"><button class="co-mic" data-act="coach-mic" aria-label="Voice">${FI.coachMic}</button><button class="co-send" data-act="coach-send" aria-label="Send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div></div>`;
+ $('#coach').classList.add('open');setTimeout(syncTheme,0);
+ const inp=$('#coInput');inp.addEventListener('input',()=>$('#coIn').classList.toggle('has',!!inp.value.trim()));inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ACT['coach-send']()}});
+ log('coach_open',{via,focus:focus||'all',question:q,snack:subj.name,meal:S.meal});
+ coachTimers.push(setTimeout(()=>{coachAppend(`<div class="co-user">${esc(q)}</div>`,true);
+  coachSay(coachAnswerBlocks(focus,subj),()=>{log('coach_answer_shown');coachAppend(`<div class="co-msg">${coachUpsellHTML()}</div>`);coachAppend(coachStartersHTML())})},350));
+}
+function coachGate(text,via){
+ if(coachBusy)return;log('coach_followup',{text,via});
+ coachAppend(`<div class="co-user">${esc(text)}</div>`,true);
+ coachSay([`<p>I’d love to dig into that! <b>Your free Coach session covered one snack</b>, so keep chatting with Premium. It also unlocks barcode scanning and voice logging.</p>`,`<button class="btn-gold" style="margin-top:0;height:46px;font-size:16px" data-act="coach-upgrade">Start 7-day free trial</button>`]);
+}
+function closeCoach(){COACH_OPEN=false;coachTimers.forEach(clearTimeout);coachTimers=[];coachBusy=false;$('#coach').classList.remove('open');setTimeout(syncTheme,0)}
+function openSuggest(focus){
+ if(S.aiCard.used){log('upgrade_tap',{from:'ai_card'});openSheet('paywall');return}
+ const qi=$('#qInput');if(qi)qi.blur();S.aiFocus=focus||null;log('ai_suggestions_open',{focus:focus||'all',query:S.query});openSheet('suggest');
+}
+function startAiVoice(via){if(S.aiCard.used){log('upgrade_tap',{from:'ai_card'});openSheet('paywall');return}const qi=$('#qInput');if(qi)qi.blur();openVoice('meal')}
+let scanT=null;
+function openScanner(){
+ SCAN_OPEN=true;$('#toast').classList.remove('show');const qi=$('#qInput');if(qi)qi.blur();
+ const sc=$('#scan');sc.classList.remove('found');
+ sc.innerHTML=`<div class="sc-top"><button class="l" data-act="scan-cancel">Cancel</button><span class="t-headline tt">Scan barcode</span><span class="sp"></span></div>
+ <div class="sc-cam"><span class="eyebrow">${FI.crown}Premium · free try</span><div class="sc-vf">${FI.viewfinder}<div class="sc-ok">${IC.checkW}</div></div><div class="sc-hint" id="scHint">Hold your phone over the barcode</div></div>
+ <div class="sc-foot"><button data-act="scan-manual">Enter it manually instead</button></div>
+ <div class="sc-res"><span class="speed" style="background:#fff1c7;color:#8a5a00;align-self:flex-start">${FI.bolt}Scanned in 1 sec</span>
+  <div class="sc-item">${FI.check}<div><b>Granola Bar, Crunchy Oats ’n Honey</b><span>Nature Valley · 2 bars · 190 cal</span></div></div>
+  <button class="btn-primary" data-act="scan-log">Log to ${esc(S.meal)}</button><button class="link" style="text-align:center" data-act="scan-again">Scan again</button></div>`;
+ sc.classList.add('open');setTimeout(syncTheme,0);
+ clearTimeout(scanT);const t0=Date.now();scanT=setTimeout(()=>{if(!SCAN_OPEN)return;sc.classList.add('found');const h=$('#scHint');if(h)h.textContent='Found it!';log('barcode_scanned',{seconds:+((Date.now()-t0)/1000).toFixed(1),product:'Granola Bar, Crunchy Oats ’n Honey'})},2400);
+}
+function closeScanner(){SCAN_OPEN=false;clearTimeout(scanT);$('#scan').classList.remove('open');setTimeout(syncTheme,0)}
 function closeVoice(){setTimeout(syncTheme,0);abortVoice();VTOKEN++;VOPEN=false;$('#voice').classList.remove('open')}
 
 /* ================= Misc ================= */
@@ -1122,7 +1453,7 @@ function finalizeSave(via){
  const method=byVoice&&(typed||manual)?'mixed':byVoice?'voice':typed?'typed':'manual';
  log('recipe_saved',{title:S.title,servings:sv,ingredients:S.ingredients.length,method,by_voice:byVoice,typed,manual,kcal:tot,via});
  S.recipes.forEach(r=>r.fresh=false);
- S.recipes.unshift({id:uid(),name:S.title.trim(),details:`${fmtCal(Math.round(tot/sv))} cal, 1 serving`,added:false,fresh:true,kcal:Math.round(tot/sv)});
+ S.recipes.unshift({m:(()=>{const s={c:0,f:0,p:0};S.ingredients.forEach(it=>{const x=macrosOf(it);if(x){s.c+=x.c;s.f+=x.f;s.p+=x.p}});return {c:s.c/sv,f:s.f/sv,p:s.p/sv}})(),id:uid(),name:S.title.trim(),details:`${fmtCal(Math.round(tot/sv))} cal, 1 serving`,added:false,fresh:true,kcal:Math.round(tot/sv)});
  S.query='';NAV.tab='recipes';renderSearch();closeAdd();
  setTimeout(()=>{const sc=$('#searchScroll');if(sc)sc.scrollTop=0;toast('Recipe saved')},380);
  log('screen_view',{screen:'my-recipes'});
@@ -1136,16 +1467,50 @@ const ACT={
  'search-back'(){log('back_tap',{from:NAV.tab});closeSearch()},
  'tab'(el){const t=el.dataset.tab;if(t===NAV.tab)return;log('tab_tap',{tab:t});NAV.tab=t;S.query='';renderSearch();log('screen_view',{screen:t==='recipes'?'my-recipes':'food-search:'+t})},
  'voice-log-tile'(){log('voice_log_tile_tap');toast('Voice log isn’t part of this prototype')},
- 'food-add'(el){const f=S.foods.find(x=>x.id===el.dataset.id);if(!f)return;f.added=!f.added;log(f.added?'food_logged':'food_unlogged',{name:f.name,meal:S.meal});if(f.added){S.logged[S.meal].push(diaryEntry(f,'food'));toast(`Added to ${S.meal}`)}else unlogSource(f.id);refreshRows()},
+ 'food-add'(el){const f=allFoods().find(x=>x.id===el.dataset.id);if(!f)return;f.added=!f.added;log(f.added?'food_logged':'food_unlogged',{name:f.name,meal:S.meal,from:S.coachPick===f.name?'coach_search':inSearchMode()?'search':'list',query:S.query});
+  if(f.added){S.logged[S.meal].push(diaryEntry(f,'food'));S.visitAdded.push(f.name);toast(`Added to ${S.meal}`)}else{unlogSource(f.id);const k=S.visitAdded.lastIndexOf(f.name);if(k>=0)S.visitAdded.splice(k,1)}refreshRows()},
+ 'search-clear'(){log('search_cleared',{query:S.query});S.query='';const qi=$('#qInput');if(qi){qi.value='';qi.focus()}refreshRows()},
+ 'bc-try'(){log('barcode_try',{meal:S.meal});closeSheet(()=>openScanner())},
+ 'bc-keep'(){log('barcode_keep_typing');closeSheet(()=>{const qi=$('#qInput');if(qi)qi.focus()})},
+ 'bc-close'(){log('barcode_close_x');closeSheet()},
+ 'barcode-tile'(){log('barcode_tile_tap',{meal:S.meal});if(S.bc.used){openSheet('paywall');return}if(!S.bc.shown){S.bc.shown=true;S.bc.dueAt=0;log('barcode_sheet_shown',{meal:S.meal,trigger:'tile'})}openSheet('barcode')},
+ 'scan-cancel'(){log('barcode_scan_cancel',{stage:$('#scan').classList.contains('found')?'found':'scanning'});closeScanner()},
+ 'scan-manual'(){log('barcode_scan_manual');closeScanner();setTimeout(()=>{const qi=$('#qInput');if(qi)qi.focus()},380)},
+ 'scan-again'(){log('barcode_scan_again');openScanner()},
+ 'scan-log'(){const r=S.brands[0];r.added=true;S.logged[S.meal].push(diaryEntry(r,'food'));S.visitAdded.push(r.name);S.bc.used=true;log('barcode_logged',{meal:S.meal,product:r.name});closeScanner();refreshRows();renderToday();setTimeout(()=>toast(`Logged to ${S.meal} · free scan used`,{label:'Upgrade',act:'upgrade'}),400)},
+ 'aic-dismiss'(){log('ai_card_dismiss',{query:S.query});S.aiCard.dismissed=true;refreshRows()},
+ 'aic-chip'(el){const c=el.dataset.chip;log('ai_card_chip',{chip:c,meal:S.meal});if(c==='voice')startAiVoice('chip');else if(c==='photo')toast('Photo logging isn’t part of this prototype');else openCoach(c,'chip')},
+ 'aic-cta'(){log('ai_card_cta',{query:S.query,meal:S.meal});if(S.meal==='Snacks')openCoach(null,'cta');else startAiVoice('cta')},
+ 'coach-add'(el){const r=S.brands.find(b=>b.id===el.dataset.id);if(!r)return;r.added=!r.added;
+  if(r.added){S.logged[S.meal].push(diaryEntry(r,'food'));S.visitAdded.push(r.name);S.coachAdded++;log('coach_add',{item:r.name,kind:el.dataset.kind,meal:S.meal})}
+  else{unlogSource(r.id);const k=S.visitAdded.lastIndexOf(r.name);if(k>=0)S.visitAdded.splice(k,1);S.coachAdded--;log('coach_remove',{item:r.name})}
+  el.classList.toggle('done',r.added);el.textContent=r.added?'Added ✓':'Add';renderToday()},
+ 'coach-search'(el){const r=S.brands.find(b=>b.id===el.dataset.id);if(!r)return;
+  log('coach_search_tap',{item:r.name,kind:el.dataset.kind,meal:S.meal});
+  closeCoach();S.aiCard.dismissed=true;S.coachPick=r.name;S.query=r.name;sheetClosedAt=Date.now();
+  const qi=$('#qInput');if(qi){qi.value=r.name}refreshRows();const sb=$('#sSearch .scroll');if(sb)sb.scrollTop=0},
+ 'coach-back'(){log('coach_close',{added:S.coachAdded||0});closeCoach();S.aiCard.dismissed=true;refreshRows();const n=S.coachAdded||0;if(n)setTimeout(()=>toast(`Added ${n} to ${S.meal} from AI Coach`),380)},
+ 'coach-copy'(){log('coach_copy');try{navigator.clipboard.writeText(($('#coConv .co-msg')||{}).innerText||'').catch(()=>{})}catch(e){}toast('Copied')},
+ 'coach-fb'(el){const on=!el.classList.contains('on');el.parentNode.querySelectorAll('[data-act=coach-fb]').forEach(b=>b.classList.remove('on'));el.classList.toggle('on',on);log('coach_feedback',{value:on?el.dataset.v:'cleared'})},
+ 'coach-upgrade'(){log('coach_upgrade_tap');openSheet('paywall')},
+ 'coach-follow'(el){coachGate(el.dataset.q,'starter')},
+ 'coach-send'(){const i=$('#coInput');if(!i)return;const v=i.value.trim();if(!v)return;i.value='';$('#coIn').classList.remove('has');coachGate(v,'typed')},
+ 'coach-mic'(){log('coach_mic_tap');toast('Voice chat isn’t part of this prototype')},
+ 'coach-plus'(){log('coach_plus_tap');toast('Attachments aren’t part of this prototype')},
+ 'sg-add'(el){const r=S.brands.find(b=>b.id===el.dataset.id);if(!r)return;r.added=!r.added;
+  if(r.added){S.logged[S.meal].push(diaryEntry(r,'food'));S.visitAdded.push(r.name);log('ai_suggestion_added',{item:r.name,kind:el.dataset.kind,meal:S.meal})}
+  else{unlogSource(r.id);const k=S.visitAdded.lastIndexOf(r.name);if(k>=0)S.visitAdded.splice(k,1);log('ai_suggestion_removed',{item:r.name})}
+  el.classList.toggle('done',r.added);el.textContent=r.added?'Added ✓':'Add';renderToday()},
+ 'sg-close'(){const n=S.brands.filter(b=>b.added&&Object.values(snackTips()).some(t=>t.brand===b.name)).length;log('ai_suggestions_close',{added:n});S.aiCard.used=true;S.aiCard.dismissed=true;closeSheet(()=>{refreshRows();if(n)toast(`Added ${n} to ${S.meal} · free AI Coach preview used`,{label:'Upgrade',act:'upgrade'})})},
  'recipe-add'(el){const r=S.recipes.find(x=>x.id===el.dataset.id);if(!r)return;r.added=!r.added;log(r.added?'recipe_logged':'recipe_unlogged',{name:r.name,meal:S.meal,new_recipe:!!r.kcal});if(r.added){S.logged[S.meal].push(diaryEntry(r,'recipe'));toast(`Added to ${S.meal}`)}else unlogSource(r.id);refreshRows()},
  'logged-delete'(el){
   const m=el.dataset.meal,id=el.dataset.id,i=S.logged[m].findIndex(x=>x.id===id);if(i<0)return;const it=S.logged[m][i],sw=el.closest('.sw');openSw=null;
   log('diary_item_deleted',{name:it.name,meal:m,kind:it.kind});
   sw.style.height=sw.offsetHeight+'px';void sw.offsetHeight;sw.classList.add('gone');sw.style.height='0px';
-  setTimeout(()=>{S.logged[m].splice(i,1);const src=(it.kind==='recipe'?S.recipes:S.foods).find(x=>x.id===it.srcId);if(src&&!S.logged.Breakfast.concat(S.logged.Lunch,S.logged.Dinner).some(x=>x.srcId===src.id))src.added=false;
+  setTimeout(()=>{S.logged[m].splice(i,1);const src=(it.kind==='recipe'?S.recipes:allFoods()).find(x=>x.id===it.srcId);if(src&&!MEALS.flatMap(m=>S.logged[m]).some(x=>x.srcId===src.id))src.added=false;
    lastDiaryDeleted={it,m,i};renderToday();refreshRows();toast(`Removed from ${m}`,{label:'Undo',act:'logged-undo'})},270);
  },
- 'logged-undo'(){if(!lastDiaryDeleted)return;const {it,m,i}=lastDiaryDeleted;lastDiaryDeleted=null;S.logged[m].splice(Math.min(i,S.logged[m].length),0,it);const src=(it.kind==='recipe'?S.recipes:S.foods).find(x=>x.id===it.srcId);if(src)src.added=true;log('diary_item_delete_undo',{name:it.name,meal:m});renderToday();refreshRows()},
+ 'logged-undo'(){if(!lastDiaryDeleted)return;const {it,m,i}=lastDiaryDeleted;lastDiaryDeleted=null;S.logged[m].splice(Math.min(i,S.logged[m].length),0,it);const src=(it.kind==='recipe'?S.recipes:allFoods()).find(x=>x.id===it.srcId);if(src)src.added=true;log('diary_item_delete_undo',{name:it.name,meal:m});renderToday();refreshRows()},
  'recipe-delete'(el){
   const id=el.dataset.id,i=S.recipes.findIndex(r=>r.id===id);if(i<0)return;const r=S.recipes[i],sw=el.closest('.sw');openSw=null;
   log('recipe_deleted',{name:r.name,new_recipe:!!r.kcal,position:i+1});
@@ -1161,7 +1526,7 @@ const ACT={
  'toggle-bulk'(){S.bulk=!S.bulk;log('bulk_toggle',{on:S.bulk});renderAdd()},
  'add-ingredient'(){log('add_ingredient_tap');if(CFG.trigger==='focus'&&showUpsell('add-ingredient-tap'))return;openEdit('recipe-new')},
  'edit-ing'(el){openEdit('recipe',+el.dataset.i)},
- 'backdrop'(){const s=SHEET;if(s==='upsell'){log('upsell_dismiss_outside');closeSheet()}else if(s==='edit'){log('edit_cancel',{via:'outside'});closeSheet()}else{log(s+'_dismiss');closeSheet()}},
+ 'backdrop'(){const s=SHEET;if(s==='suggest'){ACT['sg-close']();return}if(s==='barcode'){log('barcode_dismiss_outside');closeSheet();return}if(s==='upsell'){log('upsell_dismiss_outside');closeSheet()}else if(s==='edit'){log('edit_cancel',{via:'outside'});closeSheet()}else{log(s+'_dismiss');closeSheet()}},
  'upsell-try'(){log('upsell_try');closeSheet();setTimeout(openVoice,150)},
  'upsell-keep'(){log('upsell_keep_typing');const ctx=S.upsellCtx;closeSheet(()=>{if(ctx==='add-ingredient-tap')openEdit('recipe-new');else{const fb=$('#fBulk');if(fb)fb.focus()}})},
  'upsell-close'(){log('upsell_close_x');closeSheet()},
@@ -1169,13 +1534,21 @@ const ACT={
  'mic-done'(){userStop(false)},
  'voice-cancel'(){log(VR.mode==='typed'?'typed_review_back':'voice_cancel',{stage:VSTATE,heard:VR.mode==='typed'?'':vText()});closeVoice()},
  'voice-retry'(){log('voice_retry',{from:VSTATE});VMSG='';VR={transcript:'',items:[],mode:'voice'};setV('ready')},
- 'voice-type-instead'(){log('voice_type_instead',{from:VSTATE});closeVoice();setTimeout(()=>{if(S.bulk){const fb=$('#fBulk');if(fb)fb.focus()}else openEdit('recipe-new')},380)},
+ 'voice-type-instead'(){log('voice_type_instead',{from:VSTATE,target:VTARGET});closeVoice();if(VTARGET==='meal'){setTimeout(()=>{const qi=$('#qInput');if(qi)qi.focus()},380);return}setTimeout(()=>{if(S.bulk){const fb=$('#fBulk');if(fb)fb.focus()}else openEdit('recipe-new')},380)},
  'rerecord'(){log('rerecord');VR={transcript:'',items:[],mode:'voice'};setV('ready')},
  'edit-item'(el){openEdit('voice',+el.dataset.i)},
  'accept-sugg'(el){const i=+el.dataset.i,it=VR.items[i],f=FOODMAP[it.sugg];if(!f)return;log('item_corrected',{via:'suggestion',from:'?'+it.name,to:f.name,planted:it.planted||'',review:VR.mode});VR.items[i]=Object.assign({},it,{foodId:f.id,name:f.name,unit:it.unit||f.def[0],fixed:true,matched:true});renderVoice()},
  'add-missing'(){openEdit('voice-new')},
  'voice-add'(){
   const its=VR.items;if(!its.length)return;
+  if(VTARGET==='meal'){
+   const unres=its.filter(x=>!x.foodId).length,wrong=its.filter(x=>x.planted==='wrong').length;
+   log('voice_added',{target:'meal',meal:S.meal,count:its.length,unrecognized_left:unres,planted_wrong_left:wrong});
+   if(unres||wrong)log('added_with_unresolved',{unrecognized:unres,wrong_match:wrong,review:'voice-meal'});
+   its.forEach(x=>{const k=kcalOf(x);S.logged[S.meal].push({id:uid(),srcId:null,kind:'voice',m:macrosOf(x),name:x.foodId?FOODMAP[x.foodId].name:x.name,kcal:k||0,verified:false,sub:fmtAmt(x)});S.visitAdded.push(x.foodId?FOODMAP[x.foodId].name:x.name)});
+   S.aiCard.used=true;S.aiCard.dismissed=true;closeVoice();refreshRows();renderToday();
+   setTimeout(()=>toast(`Logged ${its.length} items to ${S.meal} · free AI try used`,{label:'Upgrade',act:'upgrade'}),400);return;
+  }
   const unres=its.filter(x=>!x.foodId).length,wrong=its.filter(x=>x.planted==='wrong').length;
   log('voice_added',{count:its.length,unrecognized_left:unres,planted_wrong_left:wrong});
   if(unres||wrong)log('added_with_unresolved',{unrecognized:unres,wrong_match:wrong,review:'voice'});
@@ -1207,7 +1580,7 @@ phone.addEventListener('touchstart',e=>{if(e.touches.length>=2){clearTimeout(two
 ['touchend','touchcancel'].forEach(ev=>phone.addEventListener(ev,e=>{if(e.touches.length<2){clearTimeout(twoT);twoT=null}},{passive:true}));
 phone.addEventListener('touchmove',e=>{if(twoT&&e.touches.length>=2){/* small finger drift is fine */}},{passive:true});
 // The shell must never scroll (browsers nudge focused buttons into view); real scrolling happens inside .scroll areas.
-[phone,$('#sToday'),$('#sSearch'),$('#sAdd'),$('#voice')].forEach(el=>el.addEventListener('scroll',()=>{if(el.scrollTop||el.scrollLeft){el.scrollTop=0;el.scrollLeft=0}}));
+[phone,$('#sToday'),$('#sSearch'),$('#sAdd'),$('#voice'),$('#scan'),$('#coach')].forEach(el=>el.addEventListener('scroll',()=>{if(el.scrollTop||el.scrollLeft){el.scrollTop=0;el.scrollLeft=0}}));
 phone.addEventListener('click',e=>{
  if(swSwallow){swSwallow=false;return}
  if(e.target.closest('.tt')){const now=Date.now();titleTaps=titleTaps.filter(x=>now-x<800);titleTaps.push(now);if(titleTaps.length>=3){titleTaps=[];togglePanel(true)}return} // moderator gesture: not logged
@@ -1231,11 +1604,13 @@ function refreshEngineLabel(){const el=$('#pEng');if(!el)return;const l=engineLa
 function metrics(s){
  const E=s.events,first=t=>E.find(e=>e.type===t),cnt=t=>E.filter(e=>e.type===t).length,sec=(a,b)=>a&&b?+((b.t-a.t)/1000).toFixed(1):'';
  const firstView=sc=>E.find(e=>e.type==='screen_view'&&e.detail.screen===sc);
- const sh=first('upsell_shown'),tr=first('upsell_try'),va=first('voice_added'),rs=first('recipe_saved'),ar=firstView('add-recipe'),mr=firstView('my-recipes');
+ const sh=first('upsell_shown'),tr=first('upsell_try'),va=E.find(e=>e.type==='voice_added'&&e.detail.target!=='meal'),rs=first('recipe_saved'),ar=firstView('add-recipe'),mr=firstView('my-recipes');
  const choice=tr?'Tried it':first('upsell_keep_typing')?'Keep typing':first('upsell_close_x')?'Closed (X)':first('upsell_dismiss_outside')?'Tapped outside':sh?'No choice yet':'Not shown';
  const unres=E.filter(e=>e.type==='added_with_unresolved').reduce((a,e)=>a+(e.detail.unrecognized||0)+(e.detail.wrong_match||0),0);
  return {participant:s.participant,session:s.id,started:new Date(s.started).toLocaleString(),engine:s.config.engine,trigger:s.config.trigger,planted_error:s.config.plant,
   found_my_recipes:mr?'yes':'no',sec_to_my_recipes:mr?+(mr.t/1000).toFixed(1):'',reached_add_recipe:ar?'yes':'no',sec_to_add_recipe:ar?+(ar.t/1000).toFixed(1):'',
+  barcode_sheet:first('barcode_sheet_shown')?(first('barcode_try')?'Tried it':first('barcode_keep_typing')?'Keep typing':first('barcode_close_x')?'Closed (X)':first('barcode_dismiss_outside')?'Tapped outside':'No choice yet'):'Not shown',barcode_logged:first('barcode_logged')?'yes':'no',sec_typing_to_barcode_sheet:(first('barcode_sheet_shown')||{detail:{}}).detail.sec_since_typing??'',
+  ai_card_shown:first('ai_card_shown')?'yes':'no',ai_card_choice:first('ai_card_cta')||first('ai_card_chip')?'Tried it':first('ai_card_dismiss')?'Dismissed':first('ai_card_shown')?'Ignored':'Not shown',ai_card_items_logged:(E.find(e=>e.type==='voice_added'&&e.detail.target==='meal')||{detail:{count:0}}).detail.count+cnt('ai_suggestion_added')-cnt('ai_suggestion_removed')+E.filter(e=>e.type==='food_logged'&&e.detail&&e.detail.from==='coach_search').length-E.filter(e=>e.type==='food_unlogged'&&e.detail&&e.detail.from==='coach_search').length,coach_search_taps:cnt('coach_search_tap'),coach_opened:first('coach_open')?'yes':'no',coach_followups:cnt('coach_followup'),coach_upgrade_taps:cnt('coach_upgrade_tap'),
   saw_upsell:sh?'yes':'no',upsell_choice:choice,mic_started:first('mic_start')?'yes':'no',voice_completed:va?'yes':'no',ingredients_by_voice:va?va.detail.count:0,
   unresolved_on_add:(va||first('typed_added'))?unres:'',corrections:cnt('item_corrected'),rerecords:cnt('rerecord')+cnt('voice_retry'),
   recipe_saved:rs?'yes':'no',recipes_deleted:cnt('recipe_deleted'),diary_items_deleted:cnt('diary_item_deleted'),logged_new_recipe:E.some(e=>e.type==='recipe_logged'&&e.detail.new_recipe)?'yes':'no',deleted_own_recipe:E.some(e=>e.type==='recipe_deleted'&&e.detail.new_recipe)&&!E.some(e=>e.type==='recipe_delete_undo')?'yes':'no',save_method:rs?rs.detail.method:'',errors:E.filter(e=>e.error).length,off_path_taps:cnt('off_path_tap'),dead_taps:cnt('dead_tap'),voice_log_tile_taps:cnt('voice_log_tile_tap'),
@@ -1247,29 +1622,39 @@ function renderPanel(){
  const sel=(k,opts)=>`<select data-pset="${k}">${opts.map(([v,l])=>`<option value="${v}" ${String(CFG[k])===v?'selected':''}>${l}</option>`).join('')}</select>`;
  const canDl=!!downloadsCap||!inClaude;
  $('#pBody').innerHTML=`
- <section><div id="pEng" class="p-eng"></div><div class="p-hint"><b>Reopening this panel during a session:</b> on a phone, press and hold anywhere with <b>two fingers</b> for about a second, or tap the “Today”, “Add Recipe” or “Voice Assistant” title three times quickly. On a laptop, press <b>Shift+M</b>. When you’re not recording, a round button also shows in the bottom-right corner.</div></section>
+ <section><div id="pEng" class="p-eng"></div><div class="p-hint"><b>Reopening this panel:</b> tap the round <b>Moderator</b> button in the bottom-right corner (it stays there during recording, with a red dot). You can also press <b>Shift+M</b> on a laptop, hold two fingers on the screen for about a second, or tap a screen title three times quickly.</div></section>
  <section><h4>Session</h4><div id="pRec"></div>
-  ${isRec()?`<div class="p-row"><button class="p-btn stop" data-pact="end">■ End session</button></div><div class="p-sub">End the session after any follow-up questions. Its data is saved for export.</div>`
-   :`<div class="p-row"><input id="pId" placeholder="Participant ID (e.g. P3)" value="${esc(nextId())}"><button class="p-btn primary" data-pact="start">● Start recording</button></div><div class="p-sub">Starting resets the app to the Today screen, starts the clock, and closes this panel. Nothing the participant does is logged until you start.</div>`}</section>
+  ${isRec()?`<div class="p-row"><button class="p-btn stop" data-pact="end">■ End session${REC?' and download recording':''}</button></div><div class="p-sub">End the session after any follow-up questions. Its data is saved for export${REC?', and the screen recording downloads as a video file':''}.</div>`
+   :`<div class="p-row"><input id="pId" placeholder="Participant ID (e.g. P3)" value="${esc(nextId())}"><button class="p-btn primary" data-pact="start">● Start recording</button></div>
+   ${recMode()?`<label class="p-check" style="margin-top:10px"><input type="checkbox" id="pRecOn" ${CFG.taskRec===false?'':'checked'}> Also record the ${recMode()}</label>`:`<div class="p-sub">This browser can’t record the screen or audio. Use the phone’s own screen recorder.</div>`}
+   <div class="p-sub">Starting resets the app to the Today screen, starts the clock, and closes this panel. Nothing the participant does is logged until you start.${recMode()?' If the screen recording is on, your browser first asks what to share (pick this tab) and for the microphone.':''}</div>`}
+  <div class="p-sub" id="pTaskMsg" style="color:#b25e00">${esc(TASKUI.msg||'')}</div>
+  ${recListHTML()}</section>
+ <section><h4>Task to read aloud</h4><pre class="p-card">${esc(TASK)}</pre><button class="p-btn" data-pact="copy-task">Copy task</button></section>
  <section><h4>Live results</h4><div id="pSum" class="p-tiles"></div></section>
  <section><h4>Log what you observe</h4><textarea id="pNote" rows="2" placeholder="e.g. Looked for recipes under My Meals first"></textarea><div class="p-row"><button class="p-btn" data-pact="obs-error">+ Observed error</button><button class="p-btn" data-pact="obs-assist">+ Moderator assist</button><button class="p-btn" data-pact="obs-note">+ Note</button></div></section>
  <section><h4>Test settings</h4>
   <label class="p-set">Voice engine ${sel('engine',[['auto','Real voice (microphone)'],['sim','Simulated: plays the script below']])}</label>
   <label class="p-set">Speech language (browser engine only) ${sel('lang',[['en-US','English (US)'],['en-IN','English (India)'],['en-GB','English (UK)']])}<span class="p-sub" style="display:block">If ingredient names keep coming out wrong, try switching the language here (e.g. English (India) for Indian dish names). Check what was heard in the event log (“transcript” rows).</span></label>
   <label class="p-set">When the upsell appears ${sel('trigger',[['focus','When they tap the Ingredients box (or Add Ingredient)'],['load','2 seconds after Add Recipe opens'],['off','Never (control group)']])}</label>
+  <label class="p-set">AI Coach card in food search ${sel('aiCard',[['type','As soon as they start typing'],['after2','After 2+ minutes in search, while typing'],['off','Never']])}</label>
+  <label class="p-set">Barcode scan half sheet ${sel('bcMeals',[['snacks','Snacks search only'],['all','Every meal’s search'],['off','Never']])}</label>
+  <label class="p-set">Barcode sheet delay after they start typing ${sel('bcDelay',[['5','5 seconds'],['10','10 seconds'],['15','15 seconds'],['20','20 seconds'],['30','30 seconds'],['60','1 minute']])}<span class="p-sub" style="display:block">The AI Coach card appears right away; the barcode sheet waits this long so the two never show at once. It also waits if another sheet or the voice flow is open.</span></label>
   <label class="p-set">Bulk Import toggle starts ${sel('bulkDefault',[['true','On (as in Figma)'],['false','Off']])}</label>
   <label class="p-set">Planted parsing error ${sel('plant',[['off','None: show real results'],['unrec','Last item shows as “not recognized”'],['wrong','Last item silently matched to the wrong food']])}</label>
   <label class="p-check"><input type="checkbox" data-pset="showAd" ${CFG.showAd?'checked':''}> Show the ad banners</label>
   <label class="p-set">Simulated script<textarea data-pset="script" rows="3">${esc(CFG.script)}</textarea></label>
   <div class="p-sub">Start a new session after changing settings so each participant gets the same setup.</div>
  </section>
- <section><h4>Task to read aloud</h4><pre class="p-card">${esc(TASK)}</pre><button class="p-btn" data-pact="copy-task">Copy task</button></section>
  <section><h4>Recipe card for participants</h4><pre class="p-card">${esc(CARD)}</pre><button class="p-btn" data-pact="copy-card">Copy card text</button></section>
  <section><h4>Event log (this session) <span id="pCount"></span></h4><div id="pLog" class="p-log"></div></section>
  <section><h4>Export</h4><div class="p-col">
-  <button data-pact="copy-summary">Copy summary CSV (one row per participant)</button>
-  <button data-pact="copy-all">Copy all events CSV (every session)</button>
-  <button data-pact="copy-session">Copy this session’s events CSV</button>
+  <a class="p-btn primary" style="text-align:center;text-decoration:none;display:block" href="${esc(CFG.sheetUrl||SHEET_URL)}" target="_blank" rel="noopener" data-pact="open-sheet">Open Google Sheet ↗</a>
+  <div class="p-sub" style="margin:0 0 2px"><b>To add a session:</b> end it, copy the summary, click the first empty cell in column A of the <b>Summary</b> tab and paste. Do the same for events on the <b>Events</b> tab.</div>
+  <label class="p-sub" style="display:flex;gap:8px;align-items:center;margin:0 0 4px"><input type="checkbox" id="pHdr" data-pset="sheetHdr" ${CFG.sheetHdr===true?'checked':''}> Include the header row (leave off: the Google Sheet already has headers)</label>
+  <button data-pact="copy-summary">Copy summary for Sheets (one row per participant)</button>
+  <button data-pact="copy-all">Copy all events for Sheets (every session)</button>
+  <button data-pact="copy-session">Copy this session’s events for Sheets</button>
   ${canDl?'<button data-pact="dl-summary">Download summary CSV</button><button data-pact="dl-all">Download all events CSV</button>':''}
  </div><div class="p-sub" id="pExpMsg"></div><textarea id="pExport" class="p-export" rows="4" readonly placeholder="Exported text also appears here, in case copying is blocked."></textarea>
  <div class="p-sub" id="pStored"></div><button class="p-btn danger" data-pact="clear">Delete saved sessions</button></section>`;
@@ -1282,14 +1667,21 @@ updateRecStatus();
  const m=metrics(SESSION);
  const tile=(l,v,cls)=>`<div class="p-tile ${cls||''}"><span>${l}</span><b>${esc(v===''?'–':v)}</b></div>`;
  const y=v=>v==='yes'?'yes':'';
- $('#pSum').innerHTML=[tile('Found My Recipes',m.found_my_recipes+(m.sec_to_my_recipes!==''?` (${m.sec_to_my_recipes}s)`:''),y(m.found_my_recipes)),tile('Reached Add Recipe',m.reached_add_recipe+(m.sec_to_add_recipe!==''?` (${m.sec_to_add_recipe}s)`:''),y(m.reached_add_recipe)),
+ const hd=t=>`<div class="p-grp">${t}</div>`;
+ const E=SESSION.events,ts=E.find(e=>e.type==='screen_view'&&e.detail.screen==='food-search'&&e.detail.meal==='Snacks');
+ const sl=E.filter(e=>(e.type==='food_logged'||e.type==='barcode_logged'||e.type==='recipe_logged'||e.type==='ai_suggestion_added'||e.type==='voice_added')&&(e.detail.meal==='Snacks'||e.detail.target==='meal'||e.type==='barcode_logged')).pop();
+ const t2=!ts?'Not started':sl&&sl.t>ts.t?+((sl.t-ts.t)/1000).toFixed(1):'Nothing logged yet';
+ const coachTaps=m.coach_opened==='yes'?(m.coach_search_taps+m.coach_followups+m.coach_upgrade_taps)+` (${m.coach_search_taps} search · ${m.coach_followups} follow-up · ${m.coach_upgrade_taps} upgrade)`:'Not opened';
+ $('#pSum').innerHTML=[hd('Task 1 · Save the smoothie recipe'),
+  tile('Found My Recipes',m.found_my_recipes+(m.sec_to_my_recipes!==''?` (${m.sec_to_my_recipes}s)`:''),y(m.found_my_recipes)),tile('Reached Add Recipe',m.reached_add_recipe+(m.sec_to_add_recipe!==''?` (${m.sec_to_add_recipe}s)`:''),y(m.reached_add_recipe)),
   tile('Saw upsell',m.saw_upsell,y(m.saw_upsell)),tile('Upsell choice',m.upsell_choice,m.upsell_choice==='Tried it'?'yes':''),
-  tile('Voice completed',m.voice_completed+(m.voice_completed==='yes'?` (${m.ingredients_by_voice})`:''),y(m.voice_completed)),tile('Recipe saved (task done)',m.recipe_saved+(m.save_method?` · ${m.save_method}`:''),y(m.recipe_saved)),
-  tile('Errors',m.errors,m.errors?'bad':''),tile('Left unresolved',m.unresolved_on_add,m.unresolved_on_add>0?'bad':''),
-  tile('Corrections in review',m.corrections),tile('Off-path / dead taps',m.off_path_taps+' / '+m.dead_taps),
-  tile('Recipes deleted',m.recipes_deleted+(m.deleted_own_recipe==='yes'?' (incl. theirs)':''),m.deleted_own_recipe==='yes'?'bad':''),tile('Voice log tile taps',m.voice_log_tile_taps),
-  tile('Upsell → Try (s)',m.sec_upsell_to_try),tile('Try → added (s)',m.sec_try_to_voice_added),
-  tile('Add Recipe → saved (s)',m.sec_add_recipe_to_save),tile('Total time to save (s)',m.sec_total_to_save)].join('');
+  tile('Voice completed',m.voice_completed+(m.voice_completed==='yes'?` (${m.ingredients_by_voice})`:''),y(m.voice_completed)),tile('Errors',m.errors,m.errors?'bad':''),
+  tile('Off-path / dead taps',m.off_path_taps+' / '+m.dead_taps),tile('Upsell → Try (s)',m.sec_upsell_to_try),
+  tile('Add Recipe → saved (s)',m.sec_add_recipe_to_save),tile('Total time to save (s)',m.sec_total_to_save),
+  hd('Task 2 · Log a snack'),
+  tile('Barcode sheet',m.barcode_sheet,m.barcode_sheet==='Tried it'?'yes':''),tile('Logged by barcode scan',m.barcode_logged,y(m.barcode_logged)),
+  tile('AI card (search)',m.ai_card_shown==='yes'?m.ai_card_choice:'Not shown',m.ai_card_choice==='Tried it'?'yes':''),tile('Items logged via AI card',m.ai_card_items_logged),
+  tile('Coach chat taps',coachTaps),tile('Task total time (s)',t2)].join('');
  $('#pLog').innerHTML=SESSION.events.slice().reverse().map(e=>`<div class="lg ${e.error?'err':e.type==='off_path_tap'?'off':''}"><span class="lg-t">${fmtT(e.t)}</span><span class="lg-e">${esc(e.type)}</span><span class="lg-d">${esc(e.screen)}${Object.keys(e.detail).length?' · '+esc(detailStr(e.detail)):''}</span></div>`).join('');
  $('#pCount').textContent='· '+SESSION.events.length+' events';
  $('#pStored').textContent=SESSIONS.filter(s=>s.events.length>1).length+' session(s) saved in this browser.';
@@ -1303,6 +1695,11 @@ function updateRecStatus(){
  else{el.className='rec ended';el.innerHTML=`<span class="rd"></span><b>Ended · ${esc(SESSION.participant)}</b><span style="font-size:12px">saved</span><span class="rt">${el2}</span>`}
 }
 function togglePanel(open){const p=$('#panel');const o=open==null?!p.classList.contains('open'):open;p.classList.toggle('open',o);if(o)renderPanel()}
+const SHEET_URL='https://docs.google.com/spreadsheets/d/1tJA08tz9-BHAgo8SPZPRGJAEIhZ1JaeC2AgLJKnx_7w/edit';
+const tsvq=v=>String(v==null?'':v).replace(/[\t\r\n]+/g,' ').trim();
+function toTSV(rows){const hdr=!!($('#pHdr')&&$('#pHdr').checked);return (hdr?rows:rows.slice(1)).map(r=>r.map(tsvq).join('\t')).join('\n')}
+function eventRows(list){const rows=[['participant','session','seconds','screen','event','is_error','details']];list.forEach(s=>s.events.forEach(e=>rows.push([s.participant,s.id,(e.t/1000).toFixed(1),e.screen,e.type,e.error?1:0,detailStr(e.detail)])));return rows}
+function summaryRows(list){if(!list.length)return [];const ms=list.map(metrics);const keys=Object.keys(ms[0]);return [keys].concat(ms.map(m=>keys.map(k=>m[k])))}
 const csvq=v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
 function eventsCSV(list){const rows=[['participant','session','seconds','screen','event','is_error','details']];list.forEach(s=>s.events.forEach(e=>rows.push([s.participant,s.id,(e.t/1000).toFixed(1),e.screen,e.type,e.error?1:0,detailStr(e.detail)])));return rows.map(r=>r.map(csvq).join(',')).join('\n')}
 function summaryCSV(list){if(!list.length)return '';const ms=list.map(metrics);const keys=Object.keys(ms[0]);return [keys.map(csvq).join(',')].concat(ms.map(m=>keys.map(k=>csvq(m[k])).join(','))).join('\n')}
@@ -1314,28 +1711,90 @@ function downloadOut(text,name){
  if(downloadsCap){Promise.resolve().then(()=>downloadsCap.save({filename:name,data:text})).then(()=>pmsg('Saved '+name)).catch(()=>pmsg('Download was declined or blocked. The text is below.'));return}
  try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();a.remove();pmsg('Downloaded '+name)}catch(e){pmsg('Download blocked. The text is below.')}
 }
+/* ================= Tasks + screen/audio recording ================= */
+const TASKUI={msg:''};
+const RECS=[]; // recordings made since the page was opened (kept in memory; saved as files)
+let REC=null;  // {mr,chunks,streams,ctx,mode,startedAt}
+const canScreen=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia);
+const canMic=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+const recMode=()=>canScreen?'screen and audio':canMic?'audio (this browser can’t record the screen)':'';
+function recListHTML(){
+ const live=REC?`<div class="rec on" style="margin-top:8px"><span class="rd"></span><b>Recording ${REC.mode==='screen'?'screen + audio':'audio'}</b></div>`:'';
+ return live+(RECS.length?`<div class="p-recs">${RECS.map((r,i)=>`<div class="p-recrow"><span><b>${esc(r.filename)}</b><br>${fmtT(r.ms)} · ${(r.blob.size/1048576).toFixed(1)} MB · ${r.saved?'downloaded':'not downloaded yet'}</span><button class="p-btn" data-pact="task-resave" data-i="${i}">${r.saved?'Download again':'Download'}</button></div>`).join('')}</div>`:'');
+}
+function pickMime(){const c=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4'];for(const m of c)if(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))return m;return ''}
+function pickAudioMime(){const c=['audio/webm;codecs=opus','audio/webm','audio/mp4'];for(const m of c)if(window.MediaRecorder&&MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m))return m;return ''}
+async function startRecording(){
+ const streams=[];let mic=null,scr=null;
+ if(canScreen){
+  try{scr=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:true,preferCurrentTab:true,selfBrowserSurface:'include',surfaceSwitching:'exclude'});streams.push(scr)}
+  catch(e){pmsgT('Screen sharing was cancelled or blocked'+(inClaude?' here. Open the prototype from your GitHub Pages link to record the screen.':'.')+' The session will run without a screen recording.');}
+ }
+ if(canMic){try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});streams.push(mic)}catch(e){if(!scr){pmsgT('Microphone access was blocked, so nothing is being recorded.');}}}
+ if(!scr&&!mic)return null;
+ let out;
+ const auds=streams.flatMap(s=>s.getAudioTracks());
+ let ctx=null;
+ if(auds.length>1){ctx=new (window.AudioContext||window.webkitAudioContext)();const dest=ctx.createMediaStreamDestination();streams.forEach(s=>{if(s.getAudioTracks().length)ctx.createMediaStreamSource(new MediaStream(s.getAudioTracks())).connect(dest)});out=new MediaStream([...(scr?scr.getVideoTracks():[]),...dest.stream.getAudioTracks()])}
+ else out=new MediaStream([...(scr?scr.getVideoTracks():[]),...auds]);
+ const mode=scr?'screen':'audio',mime=mode==='screen'?pickMime():pickAudioMime();
+ let mr;try{mr=new MediaRecorder(out,mime?{mimeType:mime,videoBitsPerSecond:2500000}:undefined)}catch(e){streams.forEach(s=>s.getTracks().forEach(t=>t.stop()));pmsgT('This browser can’t record here.');return null}
+ const r={mr,chunks:[],streams,ctx,mode,startedAt:Date.now(),mime:mr.mimeType||mime};
+ mr.ondataavailable=e=>{if(e.data&&e.data.size)r.chunks.push(e.data)};
+ mr.start(1000);
+ if(scr)scr.getVideoTracks()[0].addEventListener('ended',()=>{if(REC===r){log('recording_stopped_by_browser');REC=null;updateRecBadge();finishRec(r);togglePanel(true)}});
+ return r;
+}
+function stopRecording(r){return new Promise(res=>{const done=()=>{r.streams.forEach(s=>s.getTracks().forEach(t=>t.stop()));if(r.ctx)r.ctx.close().catch(()=>{});
+  const type=(r.mime||'video/webm').split(';')[0],ext=type.includes('mp4')?(r.mode==='screen'?'mp4':'m4a'):'webm';
+  const blob=new Blob(r.chunks,{type});const who=(SESSION&&SESSION.participant)||'P';const d=new Date(r.startedAt);
+  const stamp=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
+  res({blob,filename:`${who}_${r.mode==='screen'?'screen':'audio'}_${stamp}.${ext==='m4a'?'mp4':ext}`,ms:Date.now()-r.startedAt,participant:who,saved:false})};
+  if(r.mr.state==='inactive')done();else{r.mr.onstop=done;try{r.mr.requestData()}catch(e){}r.mr.stop()}})}
+function saveRec(rec){
+ const ok=()=>{rec.saved=true;log('recording_saved',{file:rec.filename,sec:Math.round(rec.ms/1000),mb:+(rec.blob.size/1048576).toFixed(1)});pmsgT('Downloaded '+rec.filename+'. Check your Downloads folder.');renderPanel()};
+ if(downloadsCap){Promise.resolve().then(()=>downloadsCap.save({filename:rec.filename,data:rec.blob})).then(ok).catch(e=>{pmsgT((e&&e.code==='declined')?'Download cancelled. Tap Download to try again.':'Couldn’t download here. Tap Download to try again.');renderPanel()});return}
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(rec.blob);a.download=rec.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),60000);ok()}catch(e){pmsgT('Download was blocked. Tap Download to try again.')}
+}
+function pmsgT(t){TASKUI.msg=t;const el=$('#pTaskMsg');if(el)el.textContent=t}
+let starting=false;
+async function beginSession(id){
+ if(starting)return;starting=true;TASKUI.msg='';
+ if(CFG.taskRec!==false&&recMode()){pmsgT('Waiting for screen and microphone permission…');REC=await startRecording()}
+ starting=false;if(REC)pmsgT('');
+ resetApp();newSession(id);log('screen_view',{screen:'today'});
+ if(REC)log('recording_start',{mode:REC.mode==='screen'?'screen+audio':'audio'});
+ updateRecBadge();renderPanel();pmsg('');setTimeout(()=>togglePanel(false),900);
+}
+async function finishRec(r){
+ pmsgT('Finishing the recording…');const rec=await stopRecording(r);
+ if(rec.blob.size){RECS.push(rec);TASKUI.msg='';renderPanel();saveRec(rec)}else{pmsgT('The recording came out empty.');renderPanel()}
+}
+window.__vpDebug=()=>({msg:TASKUI.msg,rec:REC?REC.mode:'none',events:SESSION?SESSION.events.filter(e=>/task|recording/.test(e.type)).map(e=>e.type+' '+JSON.stringify(e.detail)).join('\n'):''});
 let clearArm=false;
 $('#panel').addEventListener('click',e=>{
- const b=e.target.closest('[data-pact]');if(!b)return;const a=b.dataset.pact;const note=()=>{const n=$('#pNote');const v=n.value.trim();n.value='';return v};
+ const b=e.target.closest('[data-pact]');if(!b)return;const a=b.dataset.pact;if(a==='open-sheet')return;const note=()=>{const n=$('#pNote');const v=n.value.trim();n.value='';return v};
  const stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
  switch(a){
   case 'close':togglePanel(false);break;
-  case 'start':{const id=$('#pId').value.trim()||nextId();resetApp();newSession(id);log('screen_view',{screen:'today'});updateRecBadge();renderPanel();pmsg('');setTimeout(()=>togglePanel(false),900);break}
-  case 'end':endSession();renderPanel();break;
+  case 'start':{const id=$('#pId').value.trim()||nextId();beginSession(id);break}
+  case 'end':{const r=REC;REC=null;endSession();renderPanel();if(r)finishRec(r);break}
   case 'obs-error':log('observed_error',{note:note()});break;
   case 'obs-assist':log('moderator_assist',{note:note()});break;
   case 'obs-note':log('note',{note:note()});break;
   case 'copy-task':copyOut(TASK,'task');break;
+  case 'task-resave':{const r=RECS[+b.dataset.i];if(r)saveRec(r);break}
   case 'copy-card':copyOut(CARD,'recipe card');break;
-  case 'copy-session':if(SESSION)copyOut(eventsCSV([SESSION]),'this session');else pmsg('No session yet.');break;
-  case 'copy-all':copyOut(eventsCSV(doneSessions()),'all events');break;
-  case 'copy-summary':copyOut(summaryCSV(doneSessions()),'summary');break;
+  case 'copy-session':if(SESSION)copyOut(toTSV(eventRows([SESSION])),'this session’s events. Paste into Google Sheets.');else pmsg('No session yet.');break;
+  case 'copy-all':if(!doneSessions().length){pmsg('No finished sessions yet.');break}copyOut(toTSV(eventRows(doneSessions())),'all events ('+doneSessions().length+(doneSessions().length===1?' session':' sessions')+'). Paste into Google Sheets.');break;
+  case 'copy-summary':if(!doneSessions().length){pmsg('No finished sessions yet.');break}copyOut(toTSV(summaryRows(doneSessions())),'summary for '+doneSessions().length+' participant(s). Paste into Google Sheets.');break;
   case 'dl-all':downloadOut(eventsCSV(doneSessions()),'voice-upsell-events-'+stamp+'.csv');break;
   case 'dl-summary':downloadOut(summaryCSV(doneSessions()),'voice-upsell-summary-'+stamp+'.csv');break;
   case 'clear':if(!clearArm){clearArm=true;b.textContent='Tap again to delete every saved session';setTimeout(()=>{clearArm=false;b.textContent='Delete saved sessions'},4000)}else{clearArm=false;SESSIONS=isRec()?[SESSION]:[];if(!isRec())SESSION=null;store.set('vp_sessions_v2',[]);renderPanel();pmsg('Saved sessions deleted.')}break;
  }
 });
 $('#panel').addEventListener('change',e=>{
+ if(e.target.id==='pRecOn'){CFG.taskRec=e.target.checked;saveCfg();return}
  const k=e.target.dataset.pset;if(!k)return;
  let v=e.target.type==='checkbox'?e.target.checked:e.target.value;if(k==='bulkDefault')v=v==='true';
  CFG[k]=v;saveCfg();
@@ -1383,9 +1842,10 @@ function swEnd(e){
  box.addEventListener('scroll',()=>{if(openSw)swClose(openSw)},true);
 });
 
+setInterval(()=>{barcodeTick();const m=$('#mipTime');if(m&&NAV.search)m.textContent=fmtT(Date.now()-S.searchAt);if(NAV.search&&CFG.aiCard==='after2'&&!S.aiCard.shown&&S.query.trim()){maybeShowAiCard('timer');if(S.aiCard.shown)refreshRows()}},1000);
 /* ================= Boot ================= */
 $('#statusInd').innerHTML=FI.indicators;
-function resetApp(){setTimeout(syncTheme,0);
+function resetApp(){if(typeof closeCoach==='function')closeCoach();setTimeout(syncTheme,0);
  closeVoice();const L=$('#layer');L.classList.remove('open');L.innerHTML='';SHEET=null;EDIT=null;$('#toast').classList.remove('show');
  S=freshState();NAV.search=false;NAV.add=false;NAV.tab='history';openSw=null;lastDeleted=null;lastDiaryDeleted=null;SWG={sw:null};
  $('#sSearch').classList.add('off-right');$('#sAdd').classList.add('off-bottom');$('#sToday').classList.remove('behind');
