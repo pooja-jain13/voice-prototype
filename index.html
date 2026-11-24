@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
- <script type="text/javascript">
+   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -514,6 +513,8 @@ svg{display:block;flex:none}
 .lg-t{color:#999}
 .lg-e{font-weight:600}
 .lg-d{grid-column:2;color:#666;word-break:break-word}
+.p-warn{background:#fff4e5;border:1px solid #ffd9a8;color:#7a4300;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13px;line-height:18px}
+.p-warn b{color:#5c3200}
 .p-recs{margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .p-recrow{display:flex;align-items:center;gap:8px;justify-content:space-between;background:#f6f6f9;border-radius:8px;padding:8px 10px;font-size:12px;color:#55555c;word-break:break-all}
 .p-recrow b{color:#1c1c1e}
@@ -1601,6 +1602,17 @@ function engineLabel(){
  return {t:'<b>Real voice isn’t available in this browser.</b> Open the page in Chrome, or switch the voice engine to Simulated below.',w:true};
 }
 function refreshEngineLabel(){const el=$('#pEng');if(!el)return;const l=engineLabel();el.innerHTML=l.t;el.className='p-eng'+(l.w?' warn':'')}
+function task2Time(s){const E=s.events,ts=E.find(e=>e.type==='screen_view'&&e.detail.screen==='food-search'&&e.detail.meal==='Snacks');
+ const sl=E.filter(e=>(e.type==='food_logged'||e.type==='barcode_logged'||e.type==='recipe_logged'||e.type==='ai_suggestion_added'||e.type==='voice_added')&&(e.detail.meal==='Snacks'||e.detail.target==='meal'||e.type==='barcode_logged')).pop();
+ return !ts?'':sl&&sl.t>ts.t?+((sl.t-ts.t)/1000).toFixed(1):''}
+/* The columns that go to the Google Sheet, in order. */
+function sheetRow(s){const m=metrics(s);
+ return [['Participant',m.participant],
+  ['T1 · Found recipes',m.found_my_recipes],['T1 · Reached Add Recipe',m.reached_add_recipe],['T1 · Saw upsell',m.saw_upsell],['T1 · Upsell choice',m.upsell_choice],
+  ['T1 · Voice completed',m.voice_completed],['T1 · Errors',m.errors],['T1 · Off-path / dead taps',m.off_path_taps+' / '+m.dead_taps],
+  ['T1 · Upsell → Try (s)',m.sec_upsell_to_try],['T1 · Add Recipe → saved (s)',m.sec_add_recipe_to_save],['T1 · Total time to save (s)',m.sec_total_to_save],
+  ['T2 · Barcode sheet',m.barcode_sheet],['T2 · Logged by barcode scan',m.barcode_logged],['T2 · AI card (search)',m.ai_card_shown==='yes'?m.ai_card_choice:'Not shown'],
+  ['T2 · Items logged via AI card',m.ai_card_items_logged],['T2 · Coach chat taps',m.coach_search_taps+m.coach_followups+m.coach_upgrade_taps],['T2 · Task total time (s)',task2Time(s)]]}
 function metrics(s){
  const E=s.events,first=t=>E.find(e=>e.type===t),cnt=t=>E.filter(e=>e.type===t).length,sec=(a,b)=>a&&b?+((b.t-a.t)/1000).toFixed(1):'';
  const firstView=sc=>E.find(e=>e.type==='screen_view'&&e.detail.screen===sc);
@@ -1628,6 +1640,7 @@ function renderPanel(){
    :`<div class="p-row"><input id="pId" placeholder="Participant ID (e.g. P3)" value="${esc(nextId())}"><button class="p-btn primary" data-pact="start">● Start recording</button></div>
    ${recMode()?`<label class="p-check" style="margin-top:10px"><input type="checkbox" id="pRecOn" ${CFG.taskRec===false?'':'checked'}> Also record the ${recMode()}</label>`:`<div class="p-sub">This browser can’t record the screen or audio. Use the phone’s own screen recorder.</div>`}
    <div class="p-sub">Starting resets the app to the Today screen, starts the clock, and closes this panel. Nothing the participant does is logged until you start.${recMode()?' If the screen recording is on, your browser first asks what to share (pick this tab) and for the microphone.':''}</div>`}
+  ${RECFAIL?`<div class="p-warn"><b>The recording didn’t start, so the session hasn’t started either.</b><br>${esc(RECFAIL.msg)}<div class="p-row" style="margin-top:8px"><button class="p-btn primary" data-pact="start">Try again</button><button class="p-btn" data-pact="start-norec">Start without recording</button></div></div>`:''}
   <div class="p-sub" id="pTaskMsg" style="color:#b25e00">${esc(TASKUI.msg||'')}</div>
   ${recListHTML()}</section>
  <section><h4>Task to read aloud</h4><pre class="p-card">${esc(TASK)}</pre><button class="p-btn" data-pact="copy-task">Copy task</button></section>
@@ -1650,9 +1663,10 @@ function renderPanel(){
  <section><h4>Event log (this session) <span id="pCount"></span></h4><div id="pLog" class="p-log"></div></section>
  <section><h4>Export</h4><div class="p-col">
   <a class="p-btn primary" style="text-align:center;text-decoration:none;display:block" href="${esc(CFG.sheetUrl||SHEET_URL)}" target="_blank" rel="noopener" data-pact="open-sheet">Open Google Sheet ↗</a>
-  <div class="p-sub" style="margin:0 0 2px"><b>To add a session:</b> end it, copy the summary, click the first empty cell in column A of the <b>Summary</b> tab and paste. Do the same for events on the <b>Events</b> tab.</div>
-  <label class="p-sub" style="display:flex;gap:8px;align-items:center;margin:0 0 4px"><input type="checkbox" id="pHdr" data-pset="sheetHdr" ${CFG.sheetHdr===true?'checked':''}> Include the header row (leave off: the Google Sheet already has headers)</label>
-  <button data-pact="copy-summary">Copy summary for Sheets (one row per participant)</button>
+  <div class="p-sub" style="margin:0 0 2px"><b>To add a participant:</b> end their session, tap <b>Copy column</b> next to their name, then in the <b>Summary</b> tab click row 1 of the next empty column (B1, C1, …) and paste. Their ID lands in row 1 and each metric fills the rows below.</div>
+  ${participantRowsHTML()}
+  <button data-pact="copy-header">Copy metric labels (paste once into cell A1)</button>
+  <button data-pact="copy-summary">Copy all participants (side by side, paste into B1)</button>
   <button data-pact="copy-all">Copy all events for Sheets (every session)</button>
   <button data-pact="copy-session">Copy this session’s events for Sheets</button>
   ${canDl?'<button data-pact="dl-summary">Download summary CSV</button><button data-pact="dl-all">Download all events CSV</button>':''}
@@ -1668,9 +1682,7 @@ updateRecStatus();
  const tile=(l,v,cls)=>`<div class="p-tile ${cls||''}"><span>${l}</span><b>${esc(v===''?'–':v)}</b></div>`;
  const y=v=>v==='yes'?'yes':'';
  const hd=t=>`<div class="p-grp">${t}</div>`;
- const E=SESSION.events,ts=E.find(e=>e.type==='screen_view'&&e.detail.screen==='food-search'&&e.detail.meal==='Snacks');
- const sl=E.filter(e=>(e.type==='food_logged'||e.type==='barcode_logged'||e.type==='recipe_logged'||e.type==='ai_suggestion_added'||e.type==='voice_added')&&(e.detail.meal==='Snacks'||e.detail.target==='meal'||e.type==='barcode_logged')).pop();
- const t2=!ts?'Not started':sl&&sl.t>ts.t?+((sl.t-ts.t)/1000).toFixed(1):'Nothing logged yet';
+ const t2v=task2Time(SESSION),t2=t2v!==''?t2v:SESSION.events.some(e=>e.type==='screen_view'&&e.detail.screen==='food-search'&&e.detail.meal==='Snacks')?'Nothing logged yet':'Not started';
  const coachTaps=m.coach_opened==='yes'?(m.coach_search_taps+m.coach_followups+m.coach_upgrade_taps)+` (${m.coach_search_taps} search · ${m.coach_followups} follow-up · ${m.coach_upgrade_taps} upgrade)`:'Not opened';
  $('#pSum').innerHTML=[hd('Task 1 · Save the smoothie recipe'),
   tile('Found My Recipes',m.found_my_recipes+(m.sec_to_my_recipes!==''?` (${m.sec_to_my_recipes}s)`:''),y(m.found_my_recipes)),tile('Reached Add Recipe',m.reached_add_recipe+(m.sec_to_add_recipe!==''?` (${m.sec_to_add_recipe}s)`:''),y(m.reached_add_recipe)),
@@ -1697,9 +1709,11 @@ function updateRecStatus(){
 function togglePanel(open){const p=$('#panel');const o=open==null?!p.classList.contains('open'):open;p.classList.toggle('open',o);if(o)renderPanel()}
 const SHEET_URL='https://docs.google.com/spreadsheets/d/1tJA08tz9-BHAgo8SPZPRGJAEIhZ1JaeC2AgLJKnx_7w/edit';
 const tsvq=v=>String(v==null?'':v).replace(/[\t\r\n]+/g,' ').trim();
-function toTSV(rows){const hdr=!!($('#pHdr')&&$('#pHdr').checked);return (hdr?rows:rows.slice(1)).map(r=>r.map(tsvq).join('\t')).join('\n')}
+function participantRowsHTML(){const d=doneSessions();if(!d.length)return '<div class="p-sub">Rows appear here once you end a session.</div>';
+ return `<div class="p-recs">${d.slice().reverse().map(x=>`<div class="p-recrow"><span><b>${esc(x.participant)}</b><br>${esc(new Date(x.started).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))}</span><button class="p-btn" data-pact="copy-row" data-id="${esc(x.id)}">Copy column</button></div>`).join('')}</div>`}
+function toTSV(rows,hdr){return (hdr?rows:rows.slice(1)).map(r=>r.map(tsvq).join('\t')).join('\n')}
 function eventRows(list){const rows=[['participant','session','seconds','screen','event','is_error','details']];list.forEach(s=>s.events.forEach(e=>rows.push([s.participant,s.id,(e.t/1000).toFixed(1),e.screen,e.type,e.error?1:0,detailStr(e.detail)])));return rows}
-function summaryRows(list){if(!list.length)return [];const ms=list.map(metrics);const keys=Object.keys(ms[0]);return [keys].concat(ms.map(m=>keys.map(k=>m[k])))}
+function summaryRows(list){if(!list.length)return [];const rs=list.map(sheetRow);return [rs[0].map(p=>p[0])].concat(rs.map(r=>r.map(p=>p[1])))}
 const csvq=v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
 function eventsCSV(list){const rows=[['participant','session','seconds','screen','event','is_error','details']];list.forEach(s=>s.events.forEach(e=>rows.push([s.participant,s.id,(e.t/1000).toFixed(1),e.screen,e.type,e.error?1:0,detailStr(e.detail)])));return rows.map(r=>r.map(csvq).join(',')).join('\n')}
 function summaryCSV(list){if(!list.length)return '';const ms=list.map(metrics);const keys=Object.keys(ms[0]);return [keys.map(csvq).join(',')].concat(ms.map(m=>keys.map(k=>csvq(m[k])).join(','))).join('\n')}
@@ -1728,9 +1742,9 @@ async function startRecording(){
  const streams=[];let mic=null,scr=null;
  if(canScreen){
   try{scr=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:true,preferCurrentTab:true,selfBrowserSurface:'include',surfaceSwitching:'exclude'});streams.push(scr)}
-  catch(e){pmsgT('Screen sharing was cancelled or blocked'+(inClaude?' here. Open the prototype from your GitHub Pages link to record the screen.':'.')+' The session will run without a screen recording.');}
+  catch(e){pmsgT(inClaude?'Screen recording is blocked inside claude.ai. Open the prototype from your GitHub Pages link in Chrome on a laptop to record.':(e&&e.name==='NotAllowedError'?'Screen sharing was cancelled. When the browser asks, pick this tab and click Share.':'Screen sharing failed ('+((e&&e.name)||'error')+').'));}
  }
- if(canMic){try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});streams.push(mic)}catch(e){if(!scr){pmsgT('Microphone access was blocked, so nothing is being recorded.');}}}
+ if(canMic){try{mic=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});streams.push(mic)}catch(e){if(!scr){pmsgT(TASKUI.msg||(inClaude?'Recording is blocked inside claude.ai. Open the prototype from your GitHub Pages link in Chrome on a laptop to record.':'Microphone access was blocked. Allow the microphone in the browser’s address bar and try again.'))}}}
  if(!scr&&!mic)return null;
  let out;
  const auds=streams.flatMap(s=>s.getAudioTracks());
@@ -1758,10 +1772,12 @@ function saveRec(rec){
 }
 function pmsgT(t){TASKUI.msg=t;const el=$('#pTaskMsg');if(el)el.textContent=t}
 let starting=false;
-async function beginSession(id){
- if(starting)return;starting=true;TASKUI.msg='';
- if(CFG.taskRec!==false&&recMode()){pmsgT('Waiting for screen and microphone permission…');REC=await startRecording()}
- starting=false;if(REC)pmsgT('');
+let RECFAIL=null;
+async function beginSession(id,skipRec){
+ if(starting)return;starting=true;TASKUI.msg='';RECFAIL=null;
+ if(!skipRec&&CFG.taskRec!==false&&recMode()){pmsgT('Waiting for screen and microphone permission…');REC=await startRecording();
+  if(!REC){starting=false;RECFAIL={id,msg:TASKUI.msg||'The recording couldn’t start.'};TASKUI.msg='';renderPanel();return}}
+ starting=false;TASKUI.msg='';
  resetApp();newSession(id);log('screen_view',{screen:'today'});
  if(REC)log('recording_start',{mode:REC.mode==='screen'?'screen+audio':'audio'});
  updateRecBadge();renderPanel();pmsg('');setTimeout(()=>togglePanel(false),900);
@@ -1777,7 +1793,8 @@ $('#panel').addEventListener('click',e=>{
  const stamp=new Date().toISOString().slice(0,16).replace(/[:T]/g,'-');
  switch(a){
   case 'close':togglePanel(false);break;
-  case 'start':{const id=$('#pId').value.trim()||nextId();beginSession(id);break}
+  case 'start':{const id=(RECFAIL&&RECFAIL.id)||($('#pId')&&$('#pId').value.trim())||nextId();beginSession(id);break}
+  case 'start-norec':{const id=(RECFAIL&&RECFAIL.id)||nextId();RECFAIL=null;beginSession(id,true);break}
   case 'end':{const r=REC;REC=null;endSession();renderPanel();if(r)finishRec(r);break}
   case 'obs-error':log('observed_error',{note:note()});break;
   case 'obs-assist':log('moderator_assist',{note:note()});break;
@@ -1785,9 +1802,11 @@ $('#panel').addEventListener('click',e=>{
   case 'copy-task':copyOut(TASK,'task');break;
   case 'task-resave':{const r=RECS[+b.dataset.i];if(r)saveRec(r);break}
   case 'copy-card':copyOut(CARD,'recipe card');break;
-  case 'copy-session':if(SESSION)copyOut(toTSV(eventRows([SESSION])),'this session’s events. Paste into Google Sheets.');else pmsg('No session yet.');break;
-  case 'copy-all':if(!doneSessions().length){pmsg('No finished sessions yet.');break}copyOut(toTSV(eventRows(doneSessions())),'all events ('+doneSessions().length+(doneSessions().length===1?' session':' sessions')+'). Paste into Google Sheets.');break;
-  case 'copy-summary':if(!doneSessions().length){pmsg('No finished sessions yet.');break}copyOut(toTSV(summaryRows(doneSessions())),'summary for '+doneSessions().length+' participant(s). Paste into Google Sheets.');break;
+  case 'copy-row':{const x=doneSessions().find(z=>z.id===b.dataset.id);if(x)copyOut(sheetRow(x).map(p=>tsvq(p[1])).join('\n'),x.participant+'’s column. Click row 1 of the next empty column (B1, C1, …) and paste.');break}
+  case 'copy-header':copyOut(['',...sheetRow({participant:'',events:[],config:{},started:Date.now(),id:''}).slice(1).map(p=>p[0])].join('\n'),'metric labels. Click cell A1 of the Summary tab and paste.');break;
+  case 'copy-session':if(SESSION)copyOut(toTSV(eventRows([SESSION]),true),'this session’s events. Paste into Google Sheets.');else pmsg('No session yet.');break;
+  case 'copy-all':if(!doneSessions().length){pmsg('No finished sessions yet.');break}copyOut(toTSV(eventRows(doneSessions()),true),'all events ('+doneSessions().length+(doneSessions().length===1?' session':' sessions')+'). Paste into Google Sheets.');break;
+  case 'copy-summary':if(!doneSessions().length){pmsg('No finished sessions yet.');break}{const cols=doneSessions().map(sheetRow);copyOut(cols[0].map((_,k)=>cols.map(c=>tsvq(c[k][1])).join('\t')).join('\n'),doneSessions().length+' participant column(s). Click B1 and paste.')};break;
   case 'dl-all':downloadOut(eventsCSV(doneSessions()),'voice-upsell-events-'+stamp+'.csv');break;
   case 'dl-summary':downloadOut(summaryCSV(doneSessions()),'voice-upsell-summary-'+stamp+'.csv');break;
   case 'clear':if(!clearArm){clearArm=true;b.textContent='Tap again to delete every saved session';setTimeout(()=>{clearArm=false;b.textContent='Delete saved sessions'},4000)}else{clearArm=false;SESSIONS=isRec()?[SESSION]:[];if(!isRec())SESSION=null;store.set('vp_sessions_v2',[]);renderPanel();pmsg('Saved sessions deleted.')}break;
